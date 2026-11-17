@@ -1,9 +1,9 @@
 name: CI
 
+# One run per PR. Split into parallel jobs only when a full run gets slow (> ~5 min).
 on:
   pull_request:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}

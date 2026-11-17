@@ -31,6 +31,14 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "swogvexs-teams",
+          "project": "binku",
+          "url": "https://sentry.io/"
+        }
       ]
     ],
     "experiments": {

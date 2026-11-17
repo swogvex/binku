@@ -20,7 +20,8 @@ GoogleService-Info.plist
 .sentryclirc
 
 # Claude Code local settings
-.claude/settings.local.json
+.claude/
+.githooks/
 
 # Node / Expo
 node_modules/
