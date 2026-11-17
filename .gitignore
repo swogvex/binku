@@ -39,3 +39,10 @@ coverage/
 .DS_Store
 Thumbs.db
 *.log
+
+# Local AI agent guide from the Expo template
+AGENTS.md
+
+# Metro
+.metro-health-check*
+.kotlin/

@@ -23,5 +23,8 @@
       "Bash(npx expo install:*)",
       "Bash(rm:*)"
     ]
+  },
+  "enabledPlugins": {
+    "expo@claude-plugins-official": true
   }
 }
