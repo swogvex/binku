@@ -1,0 +1,53 @@
+{
+  "dock": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "scan": "Scan",
+    "binder": "Binder",
+    "profile": "Profile"
+  },
+  "card": {
+    "have": "Have",
+    "want": "Want",
+    "dupe": "Dupe ×{count}",
+    "a11y": "{member}, {album}, version {version}, {format}",
+    "photoOf": "Photo of {member}",
+    "format": {
+      "album": "album",
+      "pob": "POB",
+      "luckyDraw": "lucky draw",
+      "event": "event"
+    }
+  },
+  "pocket": {
+    "missing": "Missing",
+    "a11yEmpty": "{member}, missing"
+  },
+  "states": {
+    "loading": "Loading",
+    "error": {
+      "badge": "Oops",
+      "title": "This card fell out of the binder",
+      "body": "We couldn't load it. Your collection is safe.",
+      "retry": "Try again",
+      "code": "Code: {code}"
+    },
+    "noResults": {
+      "title": "Not here (yet)",
+      "body": "If it exists, suggest it and the community will review it.",
+      "action": "Suggest this card"
+    },
+    "cameraDenied": {
+      "title": "We can't scan without the camera",
+      "settings": "Open Settings",
+      "gallery": "Choose from gallery"
+    },
+    "offline": {
+      "title": "Offline · Your binder still works.",
+      "pending": {
+        "one": "{count} photo waiting to upload.",
+        "other": "{count} photos waiting to upload."
+      }
+    }
+  }
+}

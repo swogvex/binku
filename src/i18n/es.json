@@ -1,0 +1,53 @@
+{
+  "dock": {
+    "home": "Inicio",
+    "catalog": "Catálogo",
+    "scan": "Escanear",
+    "binder": "Binder",
+    "profile": "Perfil"
+  },
+  "card": {
+    "have": "Tengo",
+    "want": "Busco",
+    "dupe": "Repe ×{count}",
+    "a11y": "{member}, {album}, versión {version}, {format}",
+    "photoOf": "Foto de {member}",
+    "format": {
+      "album": "álbum",
+      "pob": "POB",
+      "luckyDraw": "lucky draw",
+      "event": "evento"
+    }
+  },
+  "pocket": {
+    "missing": "Te falta",
+    "a11yEmpty": "{member}, te falta"
+  },
+  "states": {
+    "loading": "Cargando",
+    "error": {
+      "badge": "Ups",
+      "title": "Esta carta se ha caído del binder",
+      "body": "No hemos podido cargarla. Tu colección está a salvo.",
+      "retry": "Reintentar",
+      "code": "Código: {code}"
+    },
+    "noResults": {
+      "title": "No está (todavía)",
+      "body": "Si existe, proponla y la comunidad la revisa.",
+      "action": "Proponer esta carta"
+    },
+    "cameraDenied": {
+      "title": "Sin cámara no podemos escanear",
+      "settings": "Abrir Ajustes",
+      "gallery": "Elegir de la galería"
+    },
+    "offline": {
+      "title": "Sin conexión · Tu binder funciona igual.",
+      "pending": {
+        "one": "{count} foto espera para subirse.",
+        "other": "{count} fotos esperan para subirse."
+      }
+    }
+  }
+}
