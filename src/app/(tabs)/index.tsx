@@ -1,21 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { TabScreen } from '@/ui/TabScreen';
+import { Txt } from '@/ui/Txt';
 
 export default function Home() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title} accessibilityRole="header">
+    <TabScreen>
+      <Txt variant="display" size={46} accessibilityRole="header">
         Binku
-      </Text>
-    </View>
+      </Txt>
+    </TabScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  title: { fontSize: 32, fontWeight: '700', color: '#111111' },
-});
