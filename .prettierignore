@@ -6,3 +6,4 @@ claude-project-instructions.md
 .docs.git/
 assets/
 package-lock.json
+supabase/.temp/
