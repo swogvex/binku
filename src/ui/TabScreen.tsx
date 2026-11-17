@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
-import { useDockScrollHandler, useDockSpace } from './Dock';
+import { useDockScrollHandler, useDockSpace } from './dockVisibility';
 
 /** Scrollable tab root: theme background, safe area, room for the dock, hide-on-scroll. */
 export function TabScreen({ children }: { children: ReactNode }) {

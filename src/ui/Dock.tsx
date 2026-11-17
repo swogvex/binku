@@ -1,25 +1,17 @@
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { Keyboard, Pressable, useColorScheme, View } from 'react-native';
-import Animated, {
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withTiming,
-  type SharedValue,
-} from 'react-native-reanimated';
+import { Pressable, useColorScheme, View } from 'react-native';
+import Animated, { useAnimatedStyle, useReducedMotion, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { t, type TKey } from '@/i18n';
 import { colors, fonts } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
+import { DOCK_HEIGHT, useDockHidden, useKeyboardVisible } from './dockVisibility';
 import { Icon, type IconName } from './icons/Icon';
 import { Txt } from './Txt';
 
 // Measurements from the approved canvas (dock-variantes.dc.html, variant A).
-const DOCK_HEIGHT = 66;
 const RING = 4; // ring in `bg` around the scan tile, makes it read as a separate piece
 const SCAN_W = 58;
 const SCAN_H = 74;
@@ -32,45 +24,6 @@ const items: Record<string, { icon: IconName; label: TKey }> = {
   binder: { icon: 'binder', label: 'dock.binder' },
   profile: { icon: 'profile', label: 'dock.profile' },
 };
-
-const DockHidden = createContext<SharedValue<number> | null>(null);
-
-export function DockProvider({ children }: { children: ReactNode }) {
-  const hidden = useSharedValue(0);
-  return <DockHidden.Provider value={hidden}>{children}</DockHidden.Provider>;
-}
-
-/** Bottom space a tab screen must leave so content can scroll above the dock. */
-export function useDockSpace() {
-  return useSafeAreaInsets().bottom + DOCK_HEIGHT + 24;
-}
-
-/** Scroll handler for tab screens: dock hides on scroll down, returns on scroll up. */
-export function useDockScrollHandler() {
-  const hidden = useContext(DockHidden);
-  const lastY = useSharedValue(0);
-  return useAnimatedScrollHandler((e) => {
-    if (!hidden) return;
-    const y = e.contentOffset.y;
-    const dy = y - lastY.value;
-    if (y > 0 && Math.abs(dy) < 12) return; // ignore jitter
-    hidden.set(y > 0 && dy > 0 ? 1 : 0); // .set(): React Compiler forbids assigning to context values
-    lastY.value = y;
-  });
-}
-
-function useKeyboardVisible() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const show = Keyboard.addListener('keyboardDidShow', () => setVisible(true));
-    const hide = Keyboard.addListener('keyboardDidHide', () => setVisible(false));
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
-  return visible;
-}
 
 type LabelProps = { text: string; color: string; bold: boolean; size: 10 | 11 };
 
@@ -99,7 +52,7 @@ export function Dock({ state, emitter, navigateToTab }: BottomTabBarProps) {
   const c = useTheme();
   const dark = useColorScheme() === 'dark';
   const insets = useSafeAreaInsets();
-  const hidden = useContext(DockHidden);
+  const hidden = useDockHidden();
   const reduced = useReducedMotion();
   const keyboard = useKeyboardVisible();
   const bottom = Math.max(insets.bottom, 12);
@@ -142,7 +95,7 @@ export function Dock({ state, emitter, navigateToTab }: BottomTabBarProps) {
           // Light: hairline of ink at 6 % + soft shadow. Dark: deeper shadow, no hairline.
           borderWidth: dark ? 0 : 1,
           borderColor: `${colors.light.ink}0F`,
-          shadowColor: dark ? '#000000' : colors.light.ink,
+          shadowColor: colors.light.ink,
           shadowOpacity: dark ? 0.4 : 0.12,
           shadowRadius: 12,
           shadowOffset: { width: 0, height: 8 },
