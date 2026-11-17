@@ -1,5 +1,5 @@
 // Dev-only: shows the native sheet presentation from `sheetOptions`.
-import { Redirect, router } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { View } from 'react-native';
 
 import { screenPadding } from '@/theme/tokens';
@@ -9,6 +9,7 @@ import { CardMarker } from '@/ui/CardMarker';
 import { Txt } from '@/ui/Txt';
 
 export default function SheetDemo() {
+  const router = useRouter();
   const c = useTheme();
   if (!__DEV__) return <Redirect href="/" />;
   return (

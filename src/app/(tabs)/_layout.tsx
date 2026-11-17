@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router/js-tabs';
 
-import { Dock, DockProvider } from '@/ui/Dock';
+import { Dock } from '@/ui/Dock';
+import { DockProvider } from '@/ui/dockVisibility';
 
 export default function TabsLayout() {
   return (

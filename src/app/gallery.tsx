@@ -1,5 +1,5 @@
 // Dev-only component gallery (not shipped to users): section labels are English on purpose.
-import { Redirect, router } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -78,6 +78,7 @@ function Swatch({ name, value }: { name: string; value: string }) {
 }
 
 export default function Gallery() {
+  const router = useRouter();
   const c = useTheme();
   const insets = useSafeAreaInsets();
   const [chip, setChip] = useState('NEVIRA');
