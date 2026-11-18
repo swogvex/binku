@@ -2,17 +2,11 @@
 
 export type Dob = { day: number; month: number; year: number };
 
-/** Parses day/month/year fields; null if it is not a real past date within 120 years. */
-export function parseDob(day: string, month: string, year: string, today = new Date()): Dob | null {
-  const d = Number(day);
-  const m = Number(month);
-  const y = Number(year);
-  if (![d, m, y].every(Number.isInteger) || year.length !== 4) return null;
-  const date = new Date(y, m - 1, d);
-  const real = date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
-  if (!real || date > today || today.getFullYear() - y > 120) return null;
-  return { day: d, month: m, year: y };
-}
+export const fromDate = (d: Date): Dob => ({
+  day: d.getDate(),
+  month: d.getMonth() + 1,
+  year: d.getFullYear(),
+});
 
 /** Completed years on `today`. */
 export function ageOn(dob: Dob, today = new Date()) {

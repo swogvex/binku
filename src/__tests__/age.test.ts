@@ -1,15 +1,10 @@
-import { ageOn, isoDate, parseDob } from '@/features/onboarding/age';
+import { ageOn, fromDate, isoDate } from '@/features/onboarding/age';
 
 const today = new Date(2026, 10, 18); // 18 Nov 2026
 
 describe('age gate', () => {
-  it('parses only real past dates', () => {
-    expect(parseDob('14', '3', '2011', today)).toEqual({ day: 14, month: 3, year: 2011 });
-    expect(parseDob('31', '2', '2011', today)).toBeNull();
-    expect(parseDob('1', '1', '2030', today)).toBeNull();
-    expect(parseDob('1', '1', '11', today)).toBeNull();
-    expect(parseDob('', '1', '2011', today)).toBeNull();
-    expect(parseDob('1', '1', '1890', today)).toBeNull();
+  it('converts picker dates', () => {
+    expect(fromDate(new Date(2011, 2, 14))).toEqual({ day: 14, month: 3, year: 2011 });
   });
 
   it('counts completed years around the birthday', () => {

@@ -1,4 +1,5 @@
 import { Pressable, View } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import { t } from '@/i18n';
@@ -21,6 +22,8 @@ type Props = {
   width?: number;
   /** Iridescent shine for special cards (lucky draw, POB, event, user-marked). */
   holo?: boolean;
+  /** Finger rotation for the 3D view, forwarded to the holo shine. */
+  holoRotate?: { x: SharedValue<number>; y: SharedValue<number> };
   /** Makes the whole card a button that keeps the card's accessibility label. */
   onPress?: () => void;
 };
@@ -64,6 +67,7 @@ export function CardMarker({
   width = 110,
   holo = false,
   onPress,
+  holoRotate,
 }: Props) {
   const bg = era[eraColor];
   const fg = textOn(bg);
@@ -130,7 +134,7 @@ export function CardMarker({
           {album}
         </Txt>
       </View>
-      {holo ? <Holo width={width} /> : null}
+      {holo ? <Holo width={width} rotateX={holoRotate?.x} rotateY={holoRotate?.y} /> : null}
     </Container>
   );
 }

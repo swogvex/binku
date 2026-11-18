@@ -1,12 +1,14 @@
 // First launch, < 1 min: 3 skippable intros → country + region → date of birth (age gate)
 // → groups + bias → binder ready. Nothing is stored until the last step, so a blocked
 // under-age user leaves no data. No OS permission is asked here.
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { getLocales } from 'expo-localization';
 import { useRouter } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   BackHandler,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   TextInput,
@@ -21,8 +23,8 @@ import geo from '@/content/geo/subdivisions.json';
 import { selectBinder } from '@/features/binder/useBinder';
 import { useCatalogData } from '@/features/catalog/useCatalog';
 import { fold } from '@/features/catalog/filter';
-import { ageOn, isoDate, parseDob, type Dob } from '@/features/onboarding/age';
-import { t, type TKey } from '@/i18n';
+import { ageOn, fromDate, isoDate, type Dob } from '@/features/onboarding/age';
+import { locale, t, type TKey } from '@/i18n';
 import { textOn } from '@/lib/contrast';
 import { era, fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -40,44 +42,13 @@ type Step = 'intro0' | 'intro1' | 'intro2' | 'place' | 'dob' | 'blocked' | 'grou
 const ORDER: Step[] = ['intro0', 'intro1', 'intro2', 'place', 'dob', 'groups'];
 const INTROS = ['collect', 'mark', 'match'] as const;
 const COUNTRIES = Object.keys(geo) as Country[];
+const formatDate = (d: Date) =>
+  d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 
 const deviceCountry = (): Country => {
   const region = getLocales()[0]?.regionCode as Country | undefined;
   return region && region in geo ? region : 'ES';
 };
-
-function Field(props: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  max: number;
-  flex: number;
-}) {
-  const c = useTheme();
-  return (
-    <View style={{ flex: props.flex, gap: 6 }}>
-      <Txt variant="label">{props.label}</Txt>
-      <TextInput
-        value={props.value}
-        onChangeText={(v) => props.onChange(v.replace(/\D/g, '').slice(0, props.max))}
-        keyboardType="number-pad"
-        accessibilityLabel={props.label}
-        maxLength={props.max}
-        style={{
-          height: 50,
-          borderRadius: radius.control,
-          borderWidth: 1.5,
-          borderColor: c.line,
-          backgroundColor: c.surface,
-          paddingHorizontal: 14,
-          fontFamily: fonts.text400,
-          fontSize: 17,
-          color: c.ink,
-        }}
-      />
-    </View>
-  );
-}
 
 function Circle({ children }: { children: ReactNode }) {
   const c = useTheme();
@@ -206,9 +177,8 @@ export default function Onboarding() {
   const [country, setCountry] = useState<Country>(deviceCountry);
   const [subdivision, setSubdivision] = useState<string>();
   const [regionQuery, setRegionQuery] = useState('');
-  const [dobFields, setDobFields] = useState({ day: '', month: '', year: '' });
+  const [dobDate, setDobDate] = useState<Date>();
   const [dob, setDob] = useState<Dob>();
-  const [dobError, setDobError] = useState<string>();
   const [groupQuery, setGroupQuery] = useState('');
   const [groups, setGroups] = useState<string[]>([]);
   const [bias, setBias] = useState<Record<string, string>>({});
@@ -364,56 +334,65 @@ export default function Onboarding() {
     );
     action = <Button label={t('onboarding.continue')} disabled={!subdivision} onPress={next} />;
   } else if (step === 'dob') {
-    const set = (k: keyof typeof dobFields) => (v: string) => {
-      setDobFields((f) => ({ ...f, [k]: v }));
-      setDobError(undefined);
-    };
+    const value = dobDate ?? new Date(new Date().getFullYear() - 16, 0, 1);
+    const pick = (_: unknown, d?: Date) => d && setDobDate(d);
     body = (
       <View style={{ gap: 16 }}>
         <Txt variant="display" size={40} accessibilityRole="header">
           {t('onboarding.dob.title')}
         </Txt>
         <Txt muted>{t('onboarding.dob.body')}</Txt>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Field
-            label={t('onboarding.dob.day')}
-            value={dobFields.day}
-            onChange={set('day')}
-            max={2}
-            flex={1}
+        {Platform.OS === 'ios' ? (
+          // iOS: wheel, as in the approved canvas.
+          <DateTimePicker
+            value={value}
+            mode="date"
+            display="spinner"
+            maximumDate={new Date()}
+            onChange={pick}
+            locale={locale}
           />
-          <Field
-            label={t('onboarding.dob.month')}
-            value={dobFields.month}
-            onChange={set('month')}
-            max={2}
-            flex={1}
-          />
-          <Field
-            label={t('onboarding.dob.year')}
-            value={dobFields.year}
-            onChange={set('year')}
-            max={4}
-            flex={1.4}
-          />
-        </View>
-        <Txt
-          size={13}
-          muted={!dobError}
-          color={dobError ? c.accentText : undefined}
-          accessibilityLiveRegion="polite"
-        >
-          {dobError ?? t('onboarding.dob.min', { age: rules.minAge })}
+        ) : (
+          // Android: field that opens the Material calendar dialog.
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('onboarding.dob.title')}
+            accessibilityValue={{ text: dobDate ? formatDate(dobDate) : t('onboarding.dob.pick') }}
+            onPress={() =>
+              DateTimePickerAndroid.open({
+                value,
+                mode: 'date',
+                maximumDate: new Date(),
+                onChange: pick,
+              })
+            }
+            style={{
+              height: 50,
+              borderRadius: radius.control,
+              borderWidth: 1.5,
+              borderColor: c.line,
+              backgroundColor: c.surface,
+              paddingHorizontal: 14,
+              justifyContent: 'center',
+            }}
+          >
+            <Txt size={17} muted={!dobDate}>
+              {dobDate ? formatDate(dobDate) : t('onboarding.dob.pick')}
+            </Txt>
+          </Pressable>
+        )}
+        <Txt size={13} muted>
+          {t('onboarding.dob.min', { age: rules.minAge })}
         </Txt>
       </View>
     );
     action = (
       <Button
         label={t('onboarding.continue')}
-        disabled={!dobFields.day || !dobFields.month || dobFields.year.length < 4}
+        // Must be picked on both platforms: the iOS wheel's default would let anyone through.
+        disabled={!dobDate}
         onPress={() => {
-          const parsed = parseDob(dobFields.day, dobFields.month, dobFields.year);
-          if (!parsed) return setDobError(t('onboarding.dob.invalid'));
+          const parsed = fromDate(value);
           setDob(parsed);
           setStep(ageOn(parsed) < rules.minAge ? 'blocked' : 'groups');
         }}

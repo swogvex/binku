@@ -97,7 +97,8 @@
     "type": "Type",
     "store": "Store",
     "korean": "Korean",
-    "notFound": "This card is no longer in the catalog"
+    "notFound": "This card is no longer in the catalog",
+    "turnHint": "Drag to turn it. Tap to flip it."
   },
   "binder": {
     "new": "+ New",
@@ -176,11 +177,8 @@
     "dob": {
       "title": "When were you born?",
       "body": "We use it to protect minors: under 18 means a private profile, limited chat and quiet hours. Nobody else sees it.",
-      "day": "Day",
-      "month": "Month",
-      "year": "Year",
-      "invalid": "Check the date.",
-      "min": "You need to be at least {age}."
+      "min": "You need to be at least {age}.",
+      "pick": "Pick your date"
     },
     "blocked": {
       "title": "You can't use Binku yet",

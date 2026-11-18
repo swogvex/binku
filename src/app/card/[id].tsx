@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { UserMark } from '@/data/catalog';
 import { getDb } from '@/data/db';
 import { setMark } from '@/data/userCards';
+import { Card3D } from '@/features/card/Card3D';
+import { CardBack } from '@/features/card/CardBack';
 import { markerProps } from '@/features/catalog/cardView';
 import { useCatalogData } from '@/features/catalog/useCatalog';
 import { t } from '@/i18n';
@@ -17,6 +19,8 @@ import { Icon, type IconName } from '@/ui/icons/Icon';
 import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
 
+// Larger than the canvas (150) so the 3D turn reads well.
+const CARD_W = 180;
 const STATUSES: UserMark['status'][] = ['have', 'want', 'dupe'];
 
 function RoundButton(props: { icon: IconName; label: string; onPress: () => void }) {
@@ -113,7 +117,26 @@ export default function CardScreen() {
       ) : (
         <>
           <View style={{ alignItems: 'center', paddingVertical: 6 }}>
-            <CardMarker {...markerProps(card, mark)} holo={card.isSpecial} width={160} />
+            <Card3D
+              width={CARD_W}
+              label={`${card.memberName}, ${card.releaseTitle}, ${markerProps(card).version}`}
+              front={(rotate) => (
+                <CardMarker
+                  {...markerProps(card, mark)}
+                  holo={card.isSpecial}
+                  holoRotate={rotate}
+                  width={CARD_W}
+                />
+              )}
+              back={
+                <CardBack
+                  width={CARD_W}
+                  color={card.groupColor}
+                  monogram={card.groupMonogram}
+                  groupName={card.groupName}
+                />
+              }
+            />
           </View>
 
           <View

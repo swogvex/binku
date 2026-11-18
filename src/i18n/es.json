@@ -97,7 +97,8 @@
     "type": "Tipo",
     "store": "Tienda",
     "korean": "Coreano",
-    "notFound": "Esta carta ya no está en el catálogo"
+    "notFound": "Esta carta ya no está en el catálogo",
+    "turnHint": "Arrastra para girarla. Toca para darle la vuelta."
   },
   "binder": {
     "new": "+ Nuevo",
@@ -176,11 +177,8 @@
     "dob": {
       "title": "¿Cuándo naciste?",
       "body": "Lo usamos para proteger a los menores: por debajo de 18, perfil privado, chat limitado y horas de silencio. Nadie más lo ve.",
-      "day": "Día",
-      "month": "Mes",
-      "year": "Año",
-      "invalid": "Revisa la fecha.",
-      "min": "Necesitas tener al menos {age} años."
+      "min": "Necesitas tener al menos {age} años.",
+      "pick": "Elige tu fecha"
     },
     "blocked": {
       "title": "Aún no puedes usar Binku",

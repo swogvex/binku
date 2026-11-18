@@ -6,6 +6,7 @@ import Animated, {
   useReducedMotion,
   useSharedValue,
   withTiming,
+  type SharedValue,
 } from 'react-native-reanimated';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
@@ -18,7 +19,14 @@ const bands = [era.tomato, era.mango, era.mint, era.cobalt, era.bubblegum, era.t
  * Tilting the phone slides the shine. Uses the accelerometer (no permission needed on iOS or
  * Android). Hidden entirely with reduced motion.
  */
-export function Holo({ width }: { width: number }) {
+type Props = {
+  width: number;
+  /** Card rotation in degrees when the user turns it with a finger (3D card view). */
+  rotateX?: SharedValue<number>;
+  rotateY?: SharedValue<number>;
+};
+
+export function Holo({ width, rotateX, rotateY }: Props) {
   const reduced = useReducedMotion();
   const x = useSharedValue(0);
   const y = useSharedValue(0);
@@ -34,9 +42,12 @@ export function Holo({ width }: { width: number }) {
     return () => sub.remove();
   }, [reduced, width, x, y]);
 
-  const shine = useAnimatedStyle(() => ({
-    transform: [{ translateX: x.get() }, { translateY: y.get() }],
-  }));
+  // Phone tilt and finger rotation add up, so both move the shine.
+  const shine = useAnimatedStyle(() => {
+    const dragX = rotateY ? Math.sin((rotateY.get() * Math.PI) / 180) * width * 0.3 : 0;
+    const dragY = rotateX ? Math.sin((rotateX.get() * Math.PI) / 180) * width * 0.3 : 0;
+    return { transform: [{ translateX: x.get() + dragX }, { translateY: y.get() - dragY }] };
+  });
 
   if (reduced) return null;
 
