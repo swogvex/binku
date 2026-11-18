@@ -10,13 +10,23 @@ type Keys<T, P extends string = ''> = {
 }[keyof T & string];
 export type TKey = Keys<Dict>;
 
-export const locale = getLocales()[0]?.languageCode === 'es' ? 'es' : 'en';
+type Lang = 'es' | 'en';
+const pick = (code?: string | null): Lang => (code === 'es' ? 'es' : 'en');
+
+// `let`: follows the per-app language chosen in the OS settings while the app runs.
+export let locale: Lang = pick(getLocales()[0]?.languageCode);
+
+/** Sets the active language from an OS language code (es → es, anything else → en). */
+export function setLocale(code?: string | null) {
+  locale = pick(code);
+  return locale;
+}
 
 // Typed as Dict so a key missing in en.json fails typecheck.
-const dicts: Record<'es' | 'en', Dict> = { es, en };
+const dicts: Record<Lang, Dict> = { es, en };
 
 export function translate(
-  lang: 'es' | 'en',
+  lang: Lang,
   key: TKey,
   params: Record<string, string | number> = {},
 ): string {

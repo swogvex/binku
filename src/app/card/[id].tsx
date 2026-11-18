@@ -15,38 +15,13 @@ import { haptics } from '@/lib/haptics';
 import { fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
-import { Icon, type IconName } from '@/ui/icons/Icon';
+import { RoundButton } from '@/ui/RoundButton';
 import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
 
 // Larger than the canvas (150) so the 3D turn reads well.
 const CARD_W = 180;
 const STATUSES: UserMark['status'][] = ['have', 'want', 'dupe'];
-
-function RoundButton(props: { icon: IconName; label: string; onPress: () => void }) {
-  const c = useTheme();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={props.label}
-      onPress={props.onPress}
-      style={({ pressed }) => ({
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: c.surface,
-        borderWidth: 1,
-        borderColor: c.line,
-        opacity: pressed ? 0.7 : 1,
-      })}
-      hitSlop={4}
-    >
-      <Icon name={props.icon} size={20} />
-    </Pressable>
-  );
-}
 
 function Row({ label, value, hangul }: { label: string; value: string; hangul?: boolean }) {
   const c = useTheme();

@@ -26,6 +26,8 @@ type Props = {
   holoRotate?: { x: SharedValue<number>; y: SharedValue<number> };
   /** Makes the whole card a button that keeps the card's accessibility label. */
   onPress?: () => void;
+  /** Illustration only (hidden from screen readers): text keeps its size at any font scale. */
+  decorative?: boolean;
 };
 
 function FormatMark({ format, color }: { format: CardFormat; color: string }) {
@@ -68,6 +70,7 @@ export function CardMarker({
   holo = false,
   onPress,
   holoRotate,
+  decorative = false,
 }: Props) {
   const bg = era[eraColor];
   const fg = textOn(bg);
@@ -99,7 +102,15 @@ export function CardMarker({
       }}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Txt variant="label" size={12} color={fg} numberOfLines={1} style={{ flexShrink: 1 }}>
+        <Txt
+          variant="label"
+          size={12}
+          color={fg}
+          numberOfLines={1}
+          maxFontSizeMultiplier={1.3}
+          allowFontScaling={!decorative}
+          style={{ flexShrink: 1 }}
+        >
           {version}
         </Txt>
         <FormatMark format={format} color={fg} />
@@ -121,16 +132,32 @@ export function CardMarker({
             size={12}
             color={state?.kind === 'have' ? colors.light.onInk : fg}
             numberOfLines={1}
+            maxFontSizeMultiplier={1.3}
+            allowFontScaling={!decorative}
           >
             {stateLabel}
           </Txt>
         </View>
       ) : null}
       <View>
-        <Txt variant="display" size={22} color={fg} numberOfLines={1} maxFontSizeMultiplier={1.3}>
+        <Txt
+          variant="display"
+          size={22}
+          color={fg}
+          numberOfLines={1}
+          maxFontSizeMultiplier={1.3}
+          allowFontScaling={!decorative}
+        >
           {member}
         </Txt>
-        <Txt variant="body" size={12} color={fg} numberOfLines={1} maxFontSizeMultiplier={1.3}>
+        <Txt
+          variant="body"
+          size={12}
+          color={fg}
+          numberOfLines={1}
+          maxFontSizeMultiplier={1.3}
+          allowFontScaling={!decorative}
+        >
           {album}
         </Txt>
       </View>

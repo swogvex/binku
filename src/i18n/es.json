@@ -144,15 +144,22 @@
         "body": "Tu binder digital, con tus propias fotos dentro de cada bolsillo."
       },
       "mark": {
-        "title": "Marca Tengo",
+        "title": "Marca Tengo y Busco",
         "body": "Con un toque. Sin precios de mercado ni rankings."
       },
       "match": {
-        "title": "Te avisamos",
+        "title": "Te avisamos del match",
         "body": "Cuando alguien tiene lo que buscas y busca lo que tienes."
       },
       "youWant": "Tú buscas",
       "youHave": "Tú tienes"
+    },
+    "welcome": {
+      "body": "Tu colección de photocards, ordenada en tu binder y lista para cambiar.",
+      "signUp": "Crear cuenta",
+      "signIn": "Iniciar sesión",
+      "explore": "Explorar sin cuenta",
+      "unofficial": "App no oficial creada por fans."
     },
     "place": {
       "title": "¿Dónde vives?",
@@ -172,7 +179,8 @@
         "CO": "Colombia",
         "CL": "Chile",
         "PE": "Perú"
-      }
+      },
+      "none": "No hay resultados"
     },
     "dob": {
       "title": "¿Cuándo naciste?",
@@ -192,12 +200,105 @@
       "bias": "Bias de {group}",
       "all": "Todos",
       "create": "Crear mi binder",
-      "explore": "Explorar sin cuenta"
+      "skip": "Ir al catálogo"
     },
     "ready": {
       "time": "Listo en {seconds} segundos",
       "body": "Toca un hueco o pulsa Escanear para meter tu primera carta.",
       "dismiss": "Entendido"
-    }
+    },
+    "page": "Página {n} de {total}",
+    "step": "Paso {n} de {total}"
+  },
+  "auth": {
+    "close": "Volver",
+    "email": {
+      "title": "Guarda tu colección",
+      "body": "Crea una cuenta para sincronizar tu binder entre móviles y encontrar coincidencias.",
+      "label": "Tu email",
+      "placeholder": "tu@email.com",
+      "send": "Enviarme un código",
+      "legal": "Al continuar aceptas las normas de la comunidad y la política de privacidad.",
+      "signInTitle": "Vuelve a tu colección",
+      "signInBody": "Escribe el email de tu cuenta y te mandamos un código para entrar."
+    },
+    "code": {
+      "title": "Revisa tu correo",
+      "body": "Te hemos enviado un código de 6 cifras a {email}",
+      "label": "Código de 6 cifras",
+      "resendIn": "Reenviar en {time}",
+      "resend": "Reenviar código",
+      "change": "Cambiar email",
+      "help": "Sin contraseñas que recordar. ¿No llega? Mira en spam o promociones."
+    },
+    "finish": {
+      "title": "Preparando tu cuenta…",
+      "retry": "Reintentar"
+    },
+    "username": {
+      "title": "Elige tu @usuario",
+      "body": "Así te verán otros coleccionistas cuando hagáis match. Puedes cambiarlo más adelante.",
+      "label": "Nombre de usuario",
+      "rules": "De 3 a 20 caracteres: letras minúsculas, números, punto o guion bajo.",
+      "save": "Guardar"
+    },
+    "profile": {
+      "signIn": "Crear cuenta o entrar",
+      "signOut": "Cerrar sesión",
+      "finish": "Terminar de crear tu cuenta"
+    },
+    "errors": {
+      "offline": "Sin conexión. Vuelve a intentarlo cuando tengas internet.",
+      "rateLimit": "Has pedido demasiados códigos. Espera un poco y vuelve a probar.",
+      "badCode": "Código incorrecto o caducado. Revisa el último correo o pide otro.",
+      "badEmail": "Ese email no parece válido.",
+      "taken": "Ese @usuario ya está cogido. Prueba con otro.",
+      "generic": "Algo ha fallado. Vuelve a intentarlo.",
+      "captcha": "No hemos podido comprobar que no eres un robot. Espera a que aparezca el visto verde y vuelve a probar."
+    },
+    "upload": {
+      "title": "¡Hola, @{username}!",
+      "body": "Tenías un binder guardado en este móvil sin cuenta. ¿Lo subimos?",
+      "binders": {
+        "one": "{count} binder",
+        "other": "{count} binders"
+      },
+      "cards": {
+        "one": "{count} carta marcada",
+        "other": "{count} cartas marcadas"
+      },
+      "keep": "Subir a mi cuenta",
+      "fresh": "Empezar de cero"
+    },
+    "google": "Continuar con Google",
+    "or": "o con tu email"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "account": "Tu cuenta",
+    "provider": {
+      "email": "Email"
+    },
+    "data": "Tus datos",
+    "cancel": "Cancelar",
+    "export": {
+      "title": "Exportar mis datos",
+      "body": "Elige el formato. Se abrirá el menú de compartir para guardarlo o enviarlo.",
+      "json": "Todos mis datos (JSON)",
+      "csv": "Mi colección (CSV)"
+    },
+    "delete": {
+      "title": "Borrar mi cuenta",
+      "confirmTitle": "¿Borrar tu cuenta?",
+      "confirmBody": "Tu cuenta deja de verse ahora y se borra del todo en 14 días, con tus binders y marcas. Si vuelves a entrar antes, se cancela.",
+      "confirm": "Borrar",
+      "doneTitle": "Cuenta programada para borrarse",
+      "doneBody": "Se borrará el {date}. Si cambias de idea, entra con tu email antes de esa fecha.",
+      "cancelledTitle": "Borrado cancelado",
+      "cancelledBody": "Habías pedido borrar tu cuenta. Como has vuelto a entrar, la mantenemos."
+    },
+    "preferences": "Preferencias",
+    "language": "Idioma",
+    "languageName": "Español"
   }
 }

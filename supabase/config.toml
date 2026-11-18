@@ -54,9 +54,9 @@ port = 54329
 # Configure one of the supported pooler modes: `transaction`, `session`.
 pool_mode = "transaction"
 # How many server connections to allow per user/database pair.
-default_pool_size = 20
+default_pool_size = 15
 # Maximum number of client connections allowed.
-max_client_conn = 100
+max_client_conn = 200
 
 # [db.vault]
 # secret_key = "env(SECRET_VALUE)"
@@ -150,7 +150,7 @@ max_catalogs = 2
 
 # Store vector embeddings in S3 for large and durable datasets
 [storage.vector]
-enabled = true
+enabled = false
 max_buckets = 10
 max_indexes = 5
 
@@ -161,11 +161,11 @@ max_indexes = 5
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "http://127.0.0.1:3000"
+site_url = "https://binku.app"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000"]
+additional_redirect_urls = []
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -201,7 +201,8 @@ password_requirements = ""
 
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+# Resend free tier: 100 emails/day, 3,000/month (16-costs.md).
+email_sent = 30
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -215,11 +216,11 @@ token_verifications = 30
 # Number of Web3 logins that can be made in a 5 minute interval per IP address.
 web3 = 30
 
-# Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
-# [auth.captcha]
-# enabled = true
-# provider = "hcaptcha"
-# secret = ""
+# Cloudflare Turnstile before sending codes / signing in (widget hostname binku.app).
+[auth.captcha]
+enabled = true
+provider = "turnstile"
+secret = "env(TURNSTILE_SECRET)"
 
 [auth.email]
 # Allow/disallow the email provider. When false, users can't sign up or sign in with email.
@@ -229,28 +230,38 @@ enabled = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # If enabled, users will need to provide their current password to change their password, unless
 # they signed in with a one-time password, magic link, or recovery link.
 # require_current_password = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+# One code per email per minute (the app shows the same countdown).
+max_frequency = "60s"
 # Number of characters used in the email OTP.
 otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
-otp_expiry = 3600
+otp_expiry = 600
 
-# Use a production-ready SMTP server
-# [auth.email.smtp]
-# enabled = true
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# Resend (EU region), domain binku.app. The API key lives only in supabase/.env (git-ignored).
+[auth.email.smtp]
+enabled = true
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "env(RESEND_API_KEY)"
+admin_email = "no-reply@binku.app"
+sender_name = "Binku"
+
+# Sign-in is a 6-digit code, never a link. New users get "confirmation", returning ones "magic_link".
+[auth.email.template.confirmation]
+subject = "Tu código de Binku · Your Binku code"
+content_path = "./supabase/templates/code.html"
+
+[auth.email.template.magic_link]
+subject = "Tu código de Binku · Your Binku code"
+content_path = "./supabase/templates/code.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
@@ -268,7 +279,7 @@ otp_expiry = 3600
 # To block new signups only, set enable_signup = false under [auth] instead.
 enabled = false
 # If enabled, users need to confirm their phone number before signing in.
-enable_confirmations = false
+enable_confirmations = true
 # Template for sending OTP to users
 template = "Your code is {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
@@ -310,9 +321,10 @@ auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 max_enrolled_factors = 10
 
 # Control MFA via App Authenticator (TOTP)
+# TOTP on: the admin (moderation) role requires 2FA.
 [auth.mfa.totp]
-enroll_enabled = false
-verify_enabled = false
+enroll_enabled = true
+verify_enabled = true
 
 # Configure MFA via Phone Messaging
 [auth.mfa.phone]
@@ -330,6 +342,17 @@ max_frequency = "5s"
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
 # `twitter`, `x`, `slack_oidc`, `spotify`, `workos`, `zoom`.
+# Native Google sign-in (ID token from @react-native-google-signin, audience = the web client).
+[auth.external.google]
+enabled = true
+client_id = "34139401992-ggl41t9db7n0jfteqte9rifbasgsfu44.apps.googleusercontent.com"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+redirect_uri = ""
+url = ""
+# The Android SDK returns ID tokens without a nonce.
+skip_nonce_check = true
+email_optional = false
+
 [auth.external.apple]
 enabled = false
 client_id = ""

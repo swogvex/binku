@@ -2,7 +2,9 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { dataVersion } from '@/data/catalog';
+import { enqueue } from '@/data/outbox';
 import type { Path } from '@/features/catalog/filter';
+import { uuid } from '@/lib/uuid';
 
 export type BinderKind = 'group' | 'member' | 'era' | 'custom';
 export type Layout = '3x3' | '2x2';
@@ -15,8 +17,6 @@ export type Binder = {
 };
 
 const now = () => new Date().toISOString();
-// shortcut: local-only id; the server assigns uuids when binders sync (M3).
-const newId = () => `b-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 export function listBinders(db: SQLiteDatabase): Binder[] {
   return db
@@ -27,7 +27,8 @@ export function listBinders(db: SQLiteDatabase): Binder[] {
 }
 
 export function createBinder(db: SQLiteDatabase, b: Omit<Binder, 'id' | 'layout'>) {
-  const id = newId();
+  // Same id on the server: created offline, uploaded later.
+  const id = uuid();
   const sort =
     db.getFirstSync<{ n: number }>('select coalesce(max(sort), -1) + 1 n from binders')?.n ?? 0;
   db.runSync(
@@ -40,6 +41,7 @@ export function createBinder(db: SQLiteDatabase, b: Omit<Binder, 'id' | 'layout'
     sort,
     now(),
   );
+  enqueue(db, 'binder', id);
   dataVersion.bump();
   return id;
 }
@@ -56,6 +58,7 @@ export function updateBinder(
     now(),
     id,
   );
+  enqueue(db, 'binder', id);
   dataVersion.bump();
 }
 
@@ -63,6 +66,7 @@ export function deleteBinder(db: SQLiteDatabase, id: string) {
   db.withTransactionSync(() => {
     db.runSync('delete from binder_slots where binder_id = ?', id);
     db.runSync('delete from binders where id = ?', id);
+    enqueue(db, 'binder', id);
   });
   dataVersion.bump();
 }
@@ -90,6 +94,7 @@ export function saveOrder(db: SQLiteDatabase, binderId: string, cardIds: string[
         cardId,
       ),
     );
+    enqueue(db, 'slots', binderId);
   });
   dataVersion.bump();
 }

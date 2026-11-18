@@ -144,15 +144,22 @@
         "body": "Your digital binder, with your own photos inside every pocket."
       },
       "mark": {
-        "title": "Mark Have",
+        "title": "Mark Have and Want",
         "body": "One tap. No market prices or rankings."
       },
       "match": {
-        "title": "We'll tell you",
+        "title": "We'll find your match",
         "body": "When someone has what you want and wants what you have."
       },
       "youWant": "You want",
       "youHave": "You have"
+    },
+    "welcome": {
+      "body": "Your photocard collection, sorted in your binder and ready to trade.",
+      "signUp": "Create account",
+      "signIn": "Sign in",
+      "explore": "Explore without an account",
+      "unofficial": "Unofficial app made by fans."
     },
     "place": {
       "title": "Where do you live?",
@@ -172,7 +179,8 @@
         "CO": "Colombia",
         "CL": "Chile",
         "PE": "Peru"
-      }
+      },
+      "none": "No results"
     },
     "dob": {
       "title": "When were you born?",
@@ -192,12 +200,105 @@
       "bias": "{group} bias",
       "all": "All",
       "create": "Create my binder",
-      "explore": "Explore without an account"
+      "skip": "Go to the catalog"
     },
     "ready": {
       "time": "Ready in {seconds} seconds",
       "body": "Tap a pocket or press Scan to add your first card.",
       "dismiss": "Got it"
-    }
+    },
+    "page": "Page {n} of {total}",
+    "step": "Step {n} of {total}"
+  },
+  "auth": {
+    "close": "Back",
+    "email": {
+      "title": "Keep your collection safe",
+      "body": "Create an account to sync your binder across phones and find matches.",
+      "label": "Your email",
+      "placeholder": "you@email.com",
+      "send": "Send me a code",
+      "legal": "By continuing you accept the community rules and the privacy policy.",
+      "signInTitle": "Back to your collection",
+      "signInBody": "Enter your account's email and we'll send you a code to sign in."
+    },
+    "code": {
+      "title": "Check your email",
+      "body": "We sent a 6-digit code to {email}",
+      "label": "6-digit code",
+      "resendIn": "Resend in {time}",
+      "resend": "Resend code",
+      "change": "Change email",
+      "help": "No passwords to remember. Not there? Check spam or promotions."
+    },
+    "finish": {
+      "title": "Setting up your account…",
+      "retry": "Try again"
+    },
+    "username": {
+      "title": "Pick your @username",
+      "body": "This is how other collectors see you when you match. You can change it later.",
+      "label": "Username",
+      "rules": "3 to 20 characters: lowercase letters, numbers, dot or underscore.",
+      "save": "Save"
+    },
+    "profile": {
+      "signIn": "Create account or sign in",
+      "signOut": "Sign out",
+      "finish": "Finish creating your account"
+    },
+    "errors": {
+      "offline": "No connection. Try again when you're online.",
+      "rateLimit": "Too many codes requested. Wait a bit and try again.",
+      "badCode": "Wrong or expired code. Check the latest email or ask for a new one.",
+      "badEmail": "That email doesn't look right.",
+      "taken": "That @username is taken. Try another one.",
+      "generic": "Something went wrong. Please try again.",
+      "captcha": "We couldn't confirm you're not a robot. Wait for the green tick and try again."
+    },
+    "upload": {
+      "title": "Hi, @{username}!",
+      "body": "You had a binder saved on this phone without an account. Shall we upload it?",
+      "binders": {
+        "one": "{count} binder",
+        "other": "{count} binders"
+      },
+      "cards": {
+        "one": "{count} marked card",
+        "other": "{count} marked cards"
+      },
+      "keep": "Upload to my account",
+      "fresh": "Start from scratch"
+    },
+    "google": "Continue with Google",
+    "or": "or with your email"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Your account",
+    "provider": {
+      "email": "Email"
+    },
+    "data": "Your data",
+    "cancel": "Cancel",
+    "export": {
+      "title": "Export my data",
+      "body": "Choose a format. The share menu will open so you can save or send it.",
+      "json": "All my data (JSON)",
+      "csv": "My collection (CSV)"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "confirmTitle": "Delete your account?",
+      "confirmBody": "Your account is hidden now and fully deleted in 14 days, with your binders and marks. Signing in again before then cancels it.",
+      "confirm": "Delete",
+      "doneTitle": "Account scheduled for deletion",
+      "doneBody": "It will be deleted on {date}. If you change your mind, sign in with your email before then.",
+      "cancelledTitle": "Deletion cancelled",
+      "cancelledBody": "You had asked to delete your account. Since you signed in again, we're keeping it."
+    },
+    "preferences": "Preferences",
+    "language": "Language",
+    "languageName": "English"
   }
 }

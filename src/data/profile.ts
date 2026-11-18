@@ -8,7 +8,8 @@ import { getKv, setKv } from '@/data/db';
 export type LocalProfile = {
   country: string;
   subdivision: string;
-  dob: string;
+  /** Deleted once uploaded at sign-up. */
+  dob?: string;
   isMinor: boolean;
   groups: string[];
   /** groupId → memberId, or 'all'. */
@@ -26,9 +27,26 @@ export function countryRules(db: SQLiteDatabase, country: string) {
   return { minAge: row?.min_age ?? 14, minorLimit: row?.minor_limit ?? 18 };
 }
 
+export function getLocalProfile(db: SQLiteDatabase) {
+  const v = getKv(db, 'profile');
+  return v ? (JSON.parse(v) as LocalProfile) : null;
+}
+
+/** The DOB never stays on the device once an account holds it. */
+export function forgetDob(db: SQLiteDatabase) {
+  const p = getLocalProfile(db);
+  if (!p?.dob) return;
+  delete p.dob;
+  setKv(db, 'profile', JSON.stringify(p));
+}
+
+/** Answers so far (sign-up reads country + DOB before the onboarding is finished). */
+export const saveLocalProfile = (db: SQLiteDatabase, p: LocalProfile) =>
+  setKv(db, 'profile', JSON.stringify(p));
+
 export function saveOnboarding(db: SQLiteDatabase, p: LocalProfile) {
   db.withTransactionSync(() => {
-    setKv(db, 'profile', JSON.stringify(p));
+    saveLocalProfile(db, p);
     setKv(db, 'onboarding:done', '1');
   });
   dataVersion.bump();

@@ -72,7 +72,7 @@ export function Holo({ width, rotateX, rotateY }: Props) {
           <Defs>
             <LinearGradient id="holo" x1="0" y1="0" x2="1" y2="1">
               {bands.map((c, i) => (
-                <Stop key={i} offset={i / (bands.length - 1)} stopColor={c} stopOpacity={0.4} />
+                <Stop key={i} offset={i / (bands.length - 1)} stopColor={c} stopOpacity={0.25} />
               ))}
             </LinearGradient>
           </Defs>
@@ -88,9 +88,9 @@ export function Holo({ width, rotateX, rotateY }: Props) {
         <Svg width="100%" height="100%">
           <Defs>
             <LinearGradient id="glint" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset={0.4} stopColor={colors.light.surface} stopOpacity={0} />
-              <Stop offset={0.5} stopColor={colors.light.surface} stopOpacity={0.55} />
-              <Stop offset={0.6} stopColor={colors.light.surface} stopOpacity={0} />
+              <Stop offset={0.44} stopColor={colors.light.surface} stopOpacity={0} />
+              <Stop offset={0.5} stopColor={colors.light.surface} stopOpacity={0.3} />
+              <Stop offset={0.56} stopColor={colors.light.surface} stopOpacity={0} />
             </LinearGradient>
           </Defs>
           <Rect width="100%" height="100%" fill="url(#glint)" />
