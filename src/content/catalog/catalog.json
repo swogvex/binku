@@ -1,0 +1,2163 @@
+{
+  "_comment": "FAKE development data. Replace with the real catalog before beta. Format: docs in src/content/catalog/README.md",
+  "groups": [
+    {
+      "id": "fake-nova",
+      "name": "NOVA TEST",
+      "monogram": "NVT",
+      "color": "tomato",
+      "members": [
+        {
+          "id": "ari",
+          "name": "Ari"
+        },
+        {
+          "id": "bo",
+          "name": "Bo"
+        },
+        {
+          "id": "cel",
+          "name": "Cel"
+        },
+        {
+          "id": "dami",
+          "name": "Dami"
+        },
+        {
+          "id": "eun",
+          "name": "Eun"
+        },
+        {
+          "id": "fi",
+          "name": "Fi"
+        },
+        {
+          "id": "gyu",
+          "name": "Gyu"
+        }
+      ],
+      "releases": [
+        {
+          "id": "r1",
+          "title": "Fake Album One",
+          "kind": "album",
+          "year": 2024,
+          "era_color": "tomato",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            },
+            {
+              "id": "c",
+              "label": "Ver. C"
+            }
+          ],
+          "cards": [
+            {
+              "member": "ari",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "bo",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "cel",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "dami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "eun",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "fi",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "gyu",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ari",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "bo",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "cel",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "dami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "eun",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "fi",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "gyu",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ari",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "bo",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "cel",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "dami",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "eun",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "fi",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "gyu",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "ari",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "bo",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "cel",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "dami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "eun",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "fi",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "gyu",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ari",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "bo",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "cel",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "dami",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "eun",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "fi",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "gyu",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "ari",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "bo",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "cel",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "dami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "eun",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "fi",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "gyu",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Fake Mini Two",
+          "kind": "album",
+          "year": 2025,
+          "era_color": "cobalt",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            }
+          ],
+          "cards": [
+            {
+              "member": "ari",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "bo",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "cel",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "dami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "eun",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "fi",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "gyu",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ari",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "bo",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "cel",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "dami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "eun",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "fi",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "gyu",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ari",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "bo",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "cel",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "dami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "eun",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "fi",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "gyu",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ari",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "bo",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "cel",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "dami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "eun",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "fi",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "gyu",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Fake Season's Greetings 2026",
+          "kind": "sg",
+          "year": 2026,
+          "era_color": "mango",
+          "versions": [],
+          "cards": [
+            {
+              "member": "ari",
+              "type": "season_greetings"
+            },
+            {
+              "member": "bo",
+              "type": "season_greetings"
+            },
+            {
+              "member": "cel",
+              "type": "season_greetings"
+            },
+            {
+              "member": "dami",
+              "type": "season_greetings"
+            },
+            {
+              "member": "eun",
+              "type": "season_greetings"
+            },
+            {
+              "member": "fi",
+              "type": "season_greetings"
+            },
+            {
+              "member": "gyu",
+              "type": "season_greetings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fake-lumen",
+      "name": "LUMEN TEST",
+      "monogram": "LMT",
+      "color": "cobalt",
+      "members": [
+        {
+          "id": "haru",
+          "name": "Haru"
+        },
+        {
+          "id": "io",
+          "name": "Io"
+        },
+        {
+          "id": "jae",
+          "name": "Jae"
+        },
+        {
+          "id": "kei",
+          "name": "Kei"
+        },
+        {
+          "id": "lio",
+          "name": "Lio"
+        },
+        {
+          "id": "mo",
+          "name": "Mo"
+        }
+      ],
+      "releases": [
+        {
+          "id": "r1",
+          "title": "Fake Album One",
+          "kind": "album",
+          "year": 2024,
+          "era_color": "cobalt",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            },
+            {
+              "id": "c",
+              "label": "Ver. C"
+            }
+          ],
+          "cards": [
+            {
+              "member": "haru",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "io",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "jae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "kei",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "lio",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "mo",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "haru",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "io",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "jae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "kei",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "lio",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "mo",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "haru",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "io",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "jae",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "kei",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "lio",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "mo",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "haru",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "io",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "jae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "kei",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "lio",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "mo",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "haru",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "io",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "jae",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "kei",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "lio",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "mo",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "haru",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "io",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "jae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "kei",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "lio",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "mo",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Fake Mini Two",
+          "kind": "album",
+          "year": 2025,
+          "era_color": "mango",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            }
+          ],
+          "cards": [
+            {
+              "member": "haru",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "io",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "jae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "kei",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "lio",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "mo",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "haru",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "io",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "jae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "kei",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "lio",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "mo",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "haru",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "io",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "jae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "kei",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "lio",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "mo",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "haru",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "io",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "jae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "kei",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "lio",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "mo",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Fake Season's Greetings 2026",
+          "kind": "sg",
+          "year": 2026,
+          "era_color": "mint",
+          "versions": [],
+          "cards": [
+            {
+              "member": "haru",
+              "type": "season_greetings"
+            },
+            {
+              "member": "io",
+              "type": "season_greetings"
+            },
+            {
+              "member": "jae",
+              "type": "season_greetings"
+            },
+            {
+              "member": "kei",
+              "type": "season_greetings"
+            },
+            {
+              "member": "lio",
+              "type": "season_greetings"
+            },
+            {
+              "member": "mo",
+              "type": "season_greetings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fake-orbit",
+      "name": "ORBIT TEST",
+      "monogram": "OBT",
+      "color": "mango",
+      "members": [
+        {
+          "id": "nami",
+          "name": "Nami"
+        },
+        {
+          "id": "ola",
+          "name": "Ola"
+        },
+        {
+          "id": "pia",
+          "name": "Pia"
+        },
+        {
+          "id": "quinn",
+          "name": "Quinn"
+        },
+        {
+          "id": "rae",
+          "name": "Rae"
+        },
+        {
+          "id": "sol",
+          "name": "Sol"
+        },
+        {
+          "id": "tae",
+          "name": "Tae"
+        },
+        {
+          "id": "uri",
+          "name": "Uri"
+        }
+      ],
+      "releases": [
+        {
+          "id": "r1",
+          "title": "Fake Album One",
+          "kind": "album",
+          "year": 2024,
+          "era_color": "mango",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            },
+            {
+              "id": "c",
+              "label": "Ver. C"
+            }
+          ],
+          "cards": [
+            {
+              "member": "nami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ola",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "pia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "quinn",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "rae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "sol",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "tae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "uri",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "nami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ola",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "pia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "quinn",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "rae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "sol",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "tae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "uri",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "nami",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "ola",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "pia",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "quinn",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "rae",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "sol",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "tae",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "uri",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "nami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ola",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "pia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "quinn",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "rae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "sol",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "tae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "uri",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "nami",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "ola",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "pia",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "quinn",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "rae",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "sol",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "tae",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "uri",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "nami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "ola",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "pia",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "quinn",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "rae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "sol",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "tae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "uri",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Fake Mini Two",
+          "kind": "album",
+          "year": 2025,
+          "era_color": "mint",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            }
+          ],
+          "cards": [
+            {
+              "member": "nami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ola",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "pia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "quinn",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "rae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "sol",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "tae",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "uri",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "nami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ola",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "pia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "quinn",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "rae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "sol",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "tae",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "uri",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "nami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ola",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "pia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "quinn",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "rae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "sol",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "tae",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "uri",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "nami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "ola",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "pia",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "quinn",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "rae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "sol",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "tae",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "uri",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Fake Season's Greetings 2026",
+          "kind": "sg",
+          "year": 2026,
+          "era_color": "bubblegum",
+          "versions": [],
+          "cards": [
+            {
+              "member": "nami",
+              "type": "season_greetings"
+            },
+            {
+              "member": "ola",
+              "type": "season_greetings"
+            },
+            {
+              "member": "pia",
+              "type": "season_greetings"
+            },
+            {
+              "member": "quinn",
+              "type": "season_greetings"
+            },
+            {
+              "member": "rae",
+              "type": "season_greetings"
+            },
+            {
+              "member": "sol",
+              "type": "season_greetings"
+            },
+            {
+              "member": "tae",
+              "type": "season_greetings"
+            },
+            {
+              "member": "uri",
+              "type": "season_greetings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fake-prism",
+      "name": "PRISM TEST",
+      "monogram": "PRT",
+      "color": "mint",
+      "members": [
+        {
+          "id": "vee",
+          "name": "Vee"
+        },
+        {
+          "id": "wren",
+          "name": "Wren"
+        },
+        {
+          "id": "xia",
+          "name": "Xia"
+        },
+        {
+          "id": "yul",
+          "name": "Yul"
+        },
+        {
+          "id": "zen",
+          "name": "Zen"
+        }
+      ],
+      "releases": [
+        {
+          "id": "r1",
+          "title": "Fake Album One",
+          "kind": "album",
+          "year": 2024,
+          "era_color": "mint",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            },
+            {
+              "id": "c",
+              "label": "Ver. C"
+            }
+          ],
+          "cards": [
+            {
+              "member": "vee",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "wren",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "xia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "yul",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "zen",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "vee",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "wren",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "xia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "yul",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "zen",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "vee",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "wren",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "xia",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "yul",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "zen",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "vee",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "wren",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "xia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "yul",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "zen",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "vee",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "wren",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "xia",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "yul",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "zen",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "vee",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "wren",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "xia",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "yul",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "zen",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Fake Mini Two",
+          "kind": "album",
+          "year": 2025,
+          "era_color": "bubblegum",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            }
+          ],
+          "cards": [
+            {
+              "member": "vee",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "wren",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "xia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "yul",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "zen",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "vee",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "wren",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "xia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "yul",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "zen",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "vee",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "wren",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "xia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "yul",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "zen",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "vee",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "wren",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "xia",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "yul",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "zen",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Fake Season's Greetings 2026",
+          "kind": "sg",
+          "year": 2026,
+          "era_color": "tomato",
+          "versions": [],
+          "cards": [
+            {
+              "member": "vee",
+              "type": "season_greetings"
+            },
+            {
+              "member": "wren",
+              "type": "season_greetings"
+            },
+            {
+              "member": "xia",
+              "type": "season_greetings"
+            },
+            {
+              "member": "yul",
+              "type": "season_greetings"
+            },
+            {
+              "member": "zen",
+              "type": "season_greetings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fake-echo",
+      "name": "ECHO TEST",
+      "monogram": "ECT",
+      "color": "bubblegum",
+      "members": [
+        {
+          "id": "ami",
+          "name": "Ami"
+        },
+        {
+          "id": "bin",
+          "name": "Bin"
+        },
+        {
+          "id": "cho",
+          "name": "Cho"
+        },
+        {
+          "id": "dew",
+          "name": "Dew"
+        },
+        {
+          "id": "eli",
+          "name": "Eli"
+        },
+        {
+          "id": "fay",
+          "name": "Fay"
+        },
+        {
+          "id": "gia",
+          "name": "Gia"
+        }
+      ],
+      "releases": [
+        {
+          "id": "r1",
+          "title": "Fake Album One",
+          "kind": "album",
+          "year": 2024,
+          "era_color": "bubblegum",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            },
+            {
+              "id": "c",
+              "label": "Ver. C"
+            }
+          ],
+          "cards": [
+            {
+              "member": "ami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "bin",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "cho",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "dew",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "eli",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "fay",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "gia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "bin",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "cho",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "dew",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "eli",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "fay",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "gia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ami",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "bin",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "cho",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "dew",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "eli",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "fay",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "gia",
+              "version": "c",
+              "type": "album"
+            },
+            {
+              "member": "ami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "bin",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "cho",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "dew",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "eli",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "fay",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "gia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ami",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "bin",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "cho",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "dew",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "eli",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "fay",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "gia",
+              "type": "pob",
+              "store": "Shop Fake"
+            },
+            {
+              "member": "ami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "bin",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "cho",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "dew",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "eli",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "fay",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "gia",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Fake Mini Two",
+          "kind": "album",
+          "year": 2025,
+          "era_color": "tomato",
+          "versions": [
+            {
+              "id": "a",
+              "label": "Ver. A"
+            },
+            {
+              "id": "b",
+              "label": "Ver. B"
+            }
+          ],
+          "cards": [
+            {
+              "member": "ami",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "bin",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "cho",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "dew",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "eli",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "fay",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "gia",
+              "version": "a",
+              "type": "album"
+            },
+            {
+              "member": "ami",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "bin",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "cho",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "dew",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "eli",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "fay",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "gia",
+              "version": "b",
+              "type": "album"
+            },
+            {
+              "member": "ami",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "bin",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "cho",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "dew",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "eli",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "fay",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "gia",
+              "type": "pob",
+              "store": "Tienda Prueba"
+            },
+            {
+              "member": "ami",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "bin",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "cho",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "dew",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "eli",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "fay",
+              "type": "lucky_draw"
+            },
+            {
+              "member": "gia",
+              "type": "lucky_draw"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Fake Season's Greetings 2026",
+          "kind": "sg",
+          "year": 2026,
+          "era_color": "cobalt",
+          "versions": [],
+          "cards": [
+            {
+              "member": "ami",
+              "type": "season_greetings"
+            },
+            {
+              "member": "bin",
+              "type": "season_greetings"
+            },
+            {
+              "member": "cho",
+              "type": "season_greetings"
+            },
+            {
+              "member": "dew",
+              "type": "season_greetings"
+            },
+            {
+              "member": "eli",
+              "type": "season_greetings"
+            },
+            {
+              "member": "fay",
+              "type": "season_greetings"
+            },
+            {
+              "member": "gia",
+              "type": "season_greetings"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
