@@ -9,10 +9,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getDb } from '@/data/db';
 import { deleteAccount, signOut } from '@/data/sync';
 import { exportCsv, exportJson } from '@/features/account/exportData';
-import { authErrorKey } from '@/features/auth/account';
+import { authErrorKey, fetchProfile } from '@/features/auth/account';
 import { useSession } from '@/features/auth/useSession';
 import { locale, t } from '@/i18n';
-import { supabase } from '@/lib/supabase';
 import { fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -120,11 +119,9 @@ export default function Settings() {
   useFocusEffect(
     useCallback(() => {
       if (!session) return;
-      supabase
-        .from('profiles')
-        .select('username')
-        .maybeSingle()
-        .then(({ data }) => setUsername(data?.username ?? null));
+      fetchProfile()
+        .then((data) => setUsername(data?.username ?? null))
+        .catch(() => {}); // offline: keep what is shown
     }, [session]),
   );
 

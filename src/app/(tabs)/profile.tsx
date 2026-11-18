@@ -3,9 +3,9 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 
 import { getDb, getKv } from '@/data/db';
+import { fetchProfile } from '@/features/auth/account';
 import { useSession } from '@/features/auth/useSession';
 import { t } from '@/i18n';
-import { supabase } from '@/lib/supabase';
 import { Button } from '@/ui/Button';
 import { RoundButton } from '@/ui/RoundButton';
 import { TabScreen } from '@/ui/TabScreen';
@@ -21,11 +21,9 @@ export default function Profile() {
   useFocusEffect(
     useCallback(() => {
       if (!session) return setUsername(undefined);
-      supabase
-        .from('profiles')
-        .select('username')
-        .maybeSingle()
-        .then(({ data, error }) => !error && setUsername(data?.username ?? null));
+      fetchProfile()
+        .then((data) => setUsername(data?.username ?? null))
+        .catch(() => {}); // offline: keep what is shown
     }, [session]),
   );
 

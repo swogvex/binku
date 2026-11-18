@@ -20,7 +20,8 @@ export function SearchField({ value, onChangeText, placeholder, accessibilityLab
   return (
     <View
       style={{
-        height: 50,
+        // minHeight, not height: the field grows with large system fonts instead of clipping.
+        minHeight: 50,
         borderRadius: radius.control,
         backgroundColor: c.surface,
         borderWidth: 1.5,
@@ -40,7 +41,13 @@ export function SearchField({ value, onChangeText, placeholder, accessibilityLab
         accessibilityLabel={accessibilityLabel ?? placeholder}
         returnKeyType="search"
         autoCorrect={false}
-        style={{ flex: 1, height: '100%', fontFamily: fonts.text400, fontSize: 15, color: c.ink }}
+        style={{
+          flex: 1,
+          paddingVertical: 12,
+          fontFamily: fonts.text400,
+          fontSize: 15,
+          color: c.ink,
+        }}
       />
       {value ? (
         <Pressable

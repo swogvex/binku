@@ -159,7 +159,12 @@ function MarkSwitch() {
             backgroundColor: s === 'want' ? c.ink : 'transparent',
           }}
         >
-          <Txt variant="label" size={12} color={s === 'want' ? c.onInk : c.ink}>
+          <Txt
+            variant="label"
+            size={12}
+            color={s === 'want' ? c.onInk : c.ink}
+            allowFontScaling={false}
+          >
             {s === 'dupe' ? t('cardSheet.dupe') : t(`card.${s}`)}
           </Txt>
         </View>
@@ -183,6 +188,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
           }}
         >
           <CardMarker
+            decorative
             member="Hana"
             album="Paper Moon"
             version="Ver. A"
@@ -203,6 +209,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
           }}
         >
           <CardMarker
+            decorative
             member="Hana"
             album="Paper Moon"
             version="Ver. A"
@@ -219,6 +226,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
           }}
         >
           <CardMarker
+            decorative
             member="Jiwan"
             album="Paper Moon"
             version="Ver. B"
@@ -230,6 +238,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
         </View>
         <View style={{ position: 'absolute', transform: [{ translateY: -26 }] }}>
           <CardMarker
+            decorative
             member="Mina"
             album="Paper Moon"
             version="POB"
@@ -248,6 +257,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
     <Circle>
       <View style={{ alignItems: 'center', gap: 6, transform: [{ rotate: '-5deg' }] }}>
         <CardMarker
+          decorative
           member="Jiwan"
           album="Paper Moon"
           version="Ver. B"
@@ -255,7 +265,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
           eraColor="mint"
           width={84}
         />
-        <Txt variant="label" size={12} muted>
+        <Txt variant="label" size={12} muted allowFontScaling={false}>
           {t('onboarding.intro.youWant')}
         </Txt>
       </View>
@@ -273,6 +283,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
       </View>
       <View style={{ alignItems: 'center', gap: 6, transform: [{ rotate: '5deg' }] }}>
         <CardMarker
+          decorative
           member="Seora"
           album="Paper Moon"
           version="LD"
@@ -280,7 +291,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
           eraColor="bubblegum"
           width={84}
         />
-        <Txt variant="label" size={12} muted>
+        <Txt variant="label" size={12} muted allowFontScaling={false}>
           {t('onboarding.intro.youHave')}
         </Txt>
       </View>
@@ -333,6 +344,7 @@ function WelcomeArt() {
           }}
         >
           <CardMarker
+            decorative
             member={f.member}
             album="Paper Moon"
             version={f.version}
@@ -459,7 +471,13 @@ function Monogram({ group, size }: { group: Group; size: number }) {
         justifyContent: 'center',
       }}
     >
-      <Txt variant="display" size={size >= 48 ? 22 : 13} color={textOn(bg)}>
+      {/* A badge graphic: it keeps its size so the letters always fit the circle. */}
+      <Txt
+        variant="display"
+        size={size >= 48 ? 22 : 13}
+        color={textOn(bg)}
+        allowFontScaling={false}
+      >
         {group.monogram}
       </Txt>
     </View>
@@ -480,8 +498,8 @@ function GroupTile(props: { group: Group; selected: boolean; onPress: () => void
       }}
       style={({ pressed }) => ({
         width: '48.5%',
-        // Fixed height keeps the grid aligned whatever the name length.
-        height: 136,
+        // Tiles in a row stretch to the tallest one, so the grid stays aligned at any font size.
+        minHeight: 136,
         padding: 14,
         gap: 10,
         alignItems: 'center',
@@ -500,6 +518,7 @@ function GroupTile(props: { group: Group; selected: boolean; onPress: () => void
         numberOfLines={2}
         adjustsFontSizeToFit
         minimumFontScale={0.8}
+        maxFontSizeMultiplier={1.5}
         style={{ textAlign: 'center', alignSelf: 'stretch' }}
       >
         {props.group.name}
