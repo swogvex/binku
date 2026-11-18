@@ -32,7 +32,7 @@ import { ageOn, fromDate, isoDate, type Dob } from '@/features/onboarding/age';
 import { locale, t, type TKey } from '@/i18n';
 import { textOn } from '@/lib/contrast';
 import { haptics } from '@/lib/haptics';
-import { era, radius, screenPadding } from '@/theme/tokens';
+import { cardRadius, cardRatio, era, radius, screenPadding, type Era } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { BinkuMark } from '@/ui/BinkuMark';
 import { RoundButton } from '@/ui/RoundButton';
@@ -40,7 +40,6 @@ import { Button } from '@/ui/Button';
 import { CardMarker } from '@/ui/CardMarker';
 import { Chip } from '@/ui/Chip';
 import { Icon } from '@/ui/icons/Icon';
-import { Pocket } from '@/ui/Pocket';
 import { SearchField } from '@/ui/SearchField';
 import { StateView } from '@/ui/StateView';
 import { StepHeader } from '@/ui/StepHeader';
@@ -83,30 +82,155 @@ function Circle({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * A binder page in the logo's motif: 3×3 pockets, some filled with era colours. The empty
+ * middle-right pocket (the logo's filled one) is outlined in ink: the card on top goes there.
+ */
+function BinderPage() {
+  const c = useTheme();
+  const fill: (Era | null)[] = [
+    'cobalt',
+    null,
+    'mint',
+    null,
+    'bubblegum',
+    null,
+    'mango',
+    null,
+    'cobalt',
+  ];
+  const pocket = { width: 40, aspectRatio: cardRatio, borderRadius: cardRadius(40) };
+  return (
+    <View
+      style={{
+        width: 158,
+        padding: 12,
+        gap: 7,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        borderRadius: 18,
+        backgroundColor: c.surface,
+        borderWidth: 1,
+        borderColor: c.line,
+      }}
+    >
+      {fill.map((e, i) =>
+        e ? (
+          <View key={i} style={[pocket, { backgroundColor: era[e] }]} />
+        ) : (
+          <View
+            key={i}
+            style={[
+              pocket,
+              {
+                borderWidth: 1.5,
+                borderStyle: 'dashed',
+                borderColor: i === 5 ? c.ink : c.muted,
+                backgroundColor: c.surface2,
+              },
+            ]}
+          />
+        ),
+      )}
+    </View>
+  );
+}
+
+/** Have / Want / Dupe as the card sheet shows them (canvas segmented control). */
+function MarkSwitch() {
+  const c = useTheme();
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        gap: 4,
+        padding: 4,
+        borderRadius: radius.control,
+        backgroundColor: c.surface,
+        borderWidth: 1,
+        borderColor: c.line,
+      }}
+    >
+      {(['have', 'want', 'dupe'] as const).map((s) => (
+        <View
+          key={s}
+          style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 10,
+            backgroundColor: s === 'want' ? c.ink : 'transparent',
+          }}
+        >
+          <Txt variant="label" size={12} color={s === 'want' ? c.onInk : c.ink}>
+            {s === 'dupe' ? t('cardSheet.dupe') : t(`card.${s}`)}
+          </Txt>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
   const c = useTheme();
   if (kind === 'collect')
     return (
       <Circle>
-        <View style={{ transform: [{ rotate: '-6deg' }] }}>
+        <View style={{ transform: [{ translateX: -26 }, { rotate: '-5deg' }] }}>
+          <BinderPage />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            transform: [{ translateX: 62 }, { translateY: 6 }, { rotate: '11deg' }],
+          }}
+        >
           <CardMarker
             member="Hana"
             album="Paper Moon"
             version="Ver. A"
             format="album"
             eraColor="tomato"
-            width={96}
+            width={88}
           />
-        </View>
-        <View style={{ transform: [{ rotate: '5deg' }] }}>
-          <Pocket member="Yuri" width={96} />
         </View>
       </Circle>
     );
   if (kind === 'mark')
     return (
       <Circle>
-        <View style={{ alignItems: 'center', gap: 12 }}>
+        <View
+          style={{
+            position: 'absolute',
+            transform: [{ translateX: -76 }, { translateY: -14 }, { rotate: '-12deg' }],
+          }}
+        >
+          <CardMarker
+            member="Hana"
+            album="Paper Moon"
+            version="Ver. A"
+            format="album"
+            eraColor="tomato"
+            state={{ kind: 'have' }}
+            width={80}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            transform: [{ translateX: 76 }, { translateY: -14 }, { rotate: '12deg' }],
+          }}
+        >
+          <CardMarker
+            member="Jiwan"
+            album="Paper Moon"
+            version="Ver. B"
+            format="album"
+            eraColor="mint"
+            state={{ kind: 'dupe', count: 2 }}
+            width={80}
+          />
+        </View>
+        <View style={{ position: 'absolute', transform: [{ translateY: -26 }] }}>
           <CardMarker
             member="Mina"
             album="Paper Moon"
@@ -114,33 +238,11 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
             format="pob"
             eraColor="cobalt"
             state={{ kind: 'want' }}
-            width={110}
+            width={96}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 4,
-              padding: 4,
-              borderRadius: radius.control,
-              backgroundColor: c.surface,
-            }}
-          >
-            {(['have', 'want', 'dupe'] as const).map((s) => (
-              <View
-                key={s}
-                style={{
-                  paddingHorizontal: 10,
-                  paddingVertical: 6,
-                  borderRadius: 10,
-                  backgroundColor: s === 'want' ? c.ink : 'transparent',
-                }}
-              >
-                <Txt variant="label" size={12} color={s === 'want' ? c.onInk : c.ink}>
-                  {s === 'dupe' ? t('cardSheet.dupe') : t(`card.${s}`)}
-                </Txt>
-              </View>
-            ))}
-          </View>
+        </View>
+        <View style={{ position: 'absolute', bottom: 30 }}>
+          <MarkSwitch />
         </View>
       </Circle>
     );
@@ -380,7 +482,8 @@ function GroupTile(props: { group: Group; selected: boolean; onPress: () => void
       }}
       style={({ pressed }) => ({
         width: '48.5%',
-        minHeight: 124,
+        // Fixed height keeps the grid aligned whatever the name length.
+        height: 136,
         padding: 14,
         gap: 10,
         alignItems: 'center',
@@ -392,7 +495,15 @@ function GroupTile(props: { group: Group; selected: boolean; onPress: () => void
       })}
     >
       <Monogram group={props.group} size={52} />
-      <Txt variant="title" size={15} numberOfLines={2} style={{ textAlign: 'center' }}>
+      {/* Long names (e.g. "TOMORROW X TOGETHER") wrap to two lines and shrink a little. */}
+      <Txt
+        variant="title"
+        size={15}
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
+        style={{ textAlign: 'center', alignSelf: 'stretch' }}
+      >
         {props.group.name}
       </Txt>
       {props.selected ? (
