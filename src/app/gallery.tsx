@@ -136,6 +136,10 @@ export default function Gallery() {
           </Txt>
         ))}
         <Txt style={{ fontFamily: fonts.hangul }}>지완 · 세오라 (Pretendard)</Txt>
+        {/* Accents and inverted marks must not be clipped (Android tight line height). */}
+        <Txt variant="display" size={40}>
+          ¿DÓNDE? CATÁLOGO ÑÜ
+        </Txt>
       </Section>
 
       <Section title="Colour tokens">

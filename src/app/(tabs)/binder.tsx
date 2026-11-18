@@ -71,13 +71,14 @@ export default function BinderScreen() {
   const { width, fontScale } = useWindowDimensions();
   const db = getDb();
   const { marks, binders, binder, items, hint } = useBinder();
-  // The page index belongs to one binder: switching binders starts at page 1.
-  const [pageState, setPageState] = useState({ id: '', page: 0 });
-  const page = pageState.id === binder?.id ? pageState.page : 0;
-  const setPage = (p: number) => setPageState({ id: binder?.id ?? '', page: p });
-
   // Large text gets 2×2 pages automatically so names stay readable.
   const layout = fontScale >= 1.3 ? '2x2' : (binder?.layout ?? '3x3');
+  // The page index belongs to one binder and layout: switching either starts at page 1
+  // (the pager is remounted with the same key, so its scroll offset resets too).
+  const pagerKey = `${binder?.id}-${layout}`;
+  const [pageState, setPageState] = useState({ key: '', page: 0 });
+  const page = pageState.key === pagerKey ? pageState.page : 0;
+  const setPage = (p: number) => setPageState({ key: pagerKey, page: p });
   const cols = layout === '2x2' ? 2 : 3;
   const perPage = cols * cols;
   const pages = toPages(items, perPage);
@@ -224,7 +225,7 @@ export default function BinderScreen() {
             keyExtractor={(_, i) => String(i)}
             showsHorizontalScrollIndicator={false}
             style={{ marginHorizontal: -screenPadding }}
-            key={binder.id}
+            key={pagerKey}
             onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
             initialNumToRender={1}
             windowSize={3}
