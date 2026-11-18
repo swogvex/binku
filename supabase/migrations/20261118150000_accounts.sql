@@ -85,8 +85,9 @@ create index on public.user_cards (card_id);
 
 -- Slots have no updated_at: any slot change bumps its binder, and the pull refetches its slots.
 -- shortcut: row-level bump (one update per slot row); switch to a statement trigger if big reorders get slow.
+-- security definer: clients have no grant on updated_at; RLS on binder_slots already proved ownership.
 create function public.touch_binder() returns trigger
-language plpgsql set search_path = '' as $$
+language plpgsql security definer set search_path = '' as $$
 begin
   update public.binders set updated_at = now() where id = coalesce(new.binder_id, old.binder_id);
   return null;
