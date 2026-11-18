@@ -63,6 +63,8 @@ function RootLayout() {
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />
           <Stack.Screen name="settings" />
+          <Stack.Screen name="scan-review" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="scan-pick" options={sheetOptions} />
         </Stack.Protected>
         <Stack.Protected guard={!onboarded}>
           <Stack.Screen name="onboarding" />

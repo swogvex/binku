@@ -77,6 +77,15 @@ const MIGRATIONS = [
     attempts integer not null default 0, next_try integer not null default 0, last_error text,
     created_at integer not null, primary key (entity, key));
   `,
+  // The user's photos (09-offline-sync `photos_local`): original + thumbnail files in the app's
+  // documents dir. state: 'local' (not uploaded yet), 'synced' (on the server), 'quota' (the
+  // server refused it: stays on this phone only). Photos pulled from another device have no
+  // original and get their thumbnail downloaded.
+  `
+  create table photos (id text primary key, card_id text not null, kind text not null,
+    original text, thumb text, bytes integer, state text not null, updated_at text not null,
+    unique (card_id, kind));
+  `,
 ];
 
 /** Oldest timestamp: bundled rows lose to anything the server sends. */

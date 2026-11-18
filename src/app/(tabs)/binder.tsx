@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { saveOrder } from '@/data/binders';
@@ -16,7 +16,9 @@ import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
 import { Chip } from '@/ui/Chip';
 import { Pocket } from '@/ui/Pocket';
+import { ScanFrame } from '@/ui/ScanFrame';
 import { StateView } from '@/ui/StateView';
+import { Tag } from '@/ui/Tag';
 import { TabScreen } from '@/ui/TabScreen';
 import { Txt } from '@/ui/Txt';
 
@@ -70,7 +72,10 @@ export default function BinderScreen() {
   const router = useRouter();
   const { width, fontScale } = useWindowDimensions();
   const db = getDb();
-  const { marks, binders, binder, items, hint } = useBinder();
+  const { marks, photos, binders, binder, items, hint } = useBinder();
+  // Card just saved from the scanner: show its page and a "¡Nueva!" tag for a moment.
+  const { new: newId } = useLocalSearchParams<{ new?: string }>();
+  const pager = useRef<FlatList<CatalogCard[]>>(null);
   // Large text gets 2×2 pages automatically so names stay readable.
   const layout = fontScale >= 1.3 ? '2x2' : (binder?.layout ?? '3x3');
   // The page index belongs to one binder and layout: switching either starts at page 1
@@ -88,6 +93,22 @@ export default function BinderScreen() {
   const pocketH = Math.round(pocketW / (55 / 85));
   const ownedCount = items.filter((card) => owned(marks.get(card.id))).length;
   const barColor = era[items[0]?.eraColor ?? 'tomato'];
+  const newIndex = newId ? items.findIndex((x) => x.id === newId) : -1;
+
+  // Jump to the new card's page once (state adjusted during render, not in an effect).
+  const [shownNew, setShownNew] = useState<string>();
+  if (newId && newIndex >= 0 && shownNew !== newId) {
+    setShownNew(newId);
+    setPageState({ key: pagerKey, page: Math.floor(newIndex / perPage) });
+  }
+
+  useEffect(() => {
+    if (newIndex < 0) return;
+    const target = Math.floor(newIndex / perPage);
+    pager.current?.scrollToOffset({ offset: target * width, animated: false });
+    const timer = setTimeout(() => router.setParams({ new: undefined }), 4000);
+    return () => clearTimeout(timer);
+  }, [newIndex, perPage, pagerKey, width, router]);
 
   const onSwap = (pageIndex: number) => (from: number, to: number) => {
     const base = pageIndex * perPage;
@@ -226,6 +247,8 @@ export default function BinderScreen() {
             showsHorizontalScrollIndicator={false}
             style={{ marginHorizontal: -screenPadding }}
             key={pagerKey}
+            ref={pager}
+            getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
             onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
             initialNumToRender={1}
             windowSize={3}
@@ -247,6 +270,7 @@ export default function BinderScreen() {
                 >
                   {pageCards.map((card, i) => {
                     const mark = marks.get(card.id);
+                    const photo = photos.get(card.id)?.scan?.thumb;
                     return (
                       <DragPocket
                         key={card.id}
@@ -261,20 +285,37 @@ export default function BinderScreen() {
                         }
                         onSwap={onSwap(pageIndex)}
                       >
-                        {owned(mark) ? (
-                          <CardMarker
-                            {...markerProps(card, mark)}
-                            // Holo only on the visible page: each one listens to the sensor.
-                            holo={card.isSpecial && pageIndex === page}
-                            width={pocketW}
-                          />
-                        ) : (
-                          <Pocket
-                            member={card.memberName}
-                            detail={markerProps(card).version}
-                            width={pocketW}
-                          />
-                        )}
+                        <View>
+                          {photo ? (
+                            <ScanFrame
+                              source={{ uri: photo }}
+                              member={card.memberName}
+                              holo={card.isSpecial && pageIndex === page}
+                              width={pocketW}
+                            />
+                          ) : owned(mark) ? (
+                            <CardMarker
+                              {...markerProps(card, mark)}
+                              // Holo only on the visible page: each one listens to the sensor.
+                              holo={card.isSpecial && pageIndex === page}
+                              width={pocketW}
+                            />
+                          ) : (
+                            <Pocket
+                              member={card.memberName}
+                              detail={markerProps(card).version}
+                              width={pocketW}
+                            />
+                          )}
+                          {card.id === newId ? (
+                            <View
+                              accessibilityLiveRegion="polite"
+                              style={{ position: 'absolute', top: -8, left: -6 }}
+                            >
+                              <Tag label={t('scan.new')} tone="strong" />
+                            </View>
+                          ) : null}
+                        </View>
                       </DragPocket>
                     );
                   })}

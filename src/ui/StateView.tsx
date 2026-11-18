@@ -5,10 +5,15 @@ import { cardRadius, cardRatio, radius } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
 import { Button } from './Button';
-import { Icon } from './icons/Icon';
+import { Icon, type IconName } from './icons/Icon';
 import { Txt } from './Txt';
 
-type Action = { label: string; onPress: () => void; variant?: 'primary' | 'ghost' };
+type Action = {
+  label: string;
+  onPress: () => void;
+  variant?: 'primary' | 'ghost';
+  icon?: IconName;
+};
 
 type Props = {
   illustration: 'pocket' | 'ups' | 'camera';
@@ -80,7 +85,13 @@ export function StateView({ illustration, title, body, actions = [], code }: Pro
       {actions.length > 0 ? (
         <View style={{ alignSelf: 'stretch', gap: 10, marginTop: 4 }}>
           {actions.map((a) => (
-            <Button key={a.label} label={a.label} variant={a.variant} onPress={a.onPress} />
+            <Button
+              key={a.label}
+              label={a.label}
+              variant={a.variant}
+              icon={a.icon}
+              onPress={a.onPress}
+            />
           ))}
         </View>
       ) : null}

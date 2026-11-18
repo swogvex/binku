@@ -9,6 +9,14 @@ import { loadOrder } from '@/data/binders';
 import { dataVersion } from '@/data/catalog';
 import { getDb, getKv, setKv } from '@/data/db';
 import { enqueue, isPermanent, setQueueListener, type Entity } from '@/data/outbox';
+import {
+  applyServerPhotos,
+  clearPhotos,
+  downloadMissingThumbs,
+  pushPhoto,
+  unsyncedPhotoIds,
+  type ServerPhoto,
+} from '@/data/photos';
 import { signOutOfGoogle } from '@/features/auth/google';
 import { supabase } from '@/lib/supabase';
 import { isUuid, uuid } from '@/lib/uuid';
@@ -49,6 +57,7 @@ async function linkedUser(db: SQLiteDatabase) {
 }
 
 async function push(db: SQLiteDatabase, r: QueueRow): Promise<PgError> {
+  if (r.entity === 'photo') return pushPhoto(db, r.key);
   if (r.entity === 'mark') {
     const m = db.getFirstSync<{ status: string; qty: number }>(
       'select status, qty from user_cards where card_id = ?',
@@ -95,7 +104,7 @@ async function doFlush(db: SQLiteDatabase) {
   if (!(await linkedUser(db))) return;
   const rows = db.getAllSync<QueueRow>(
     `select entity, key, version, attempts from outbox where next_try <= ? and attempts < ?
-     order by case entity when 'binder' then 0 when 'slots' then 1 else 2 end, created_at`,
+     order by case entity when 'binder' then 0 when 'slots' then 1 when 'mark' then 2 else 3 end, created_at`,
     Date.now(),
     MAX_ATTEMPTS,
   );
@@ -136,7 +145,7 @@ export function flush(db = getDb()) {
 /** Rows changed after the cursor, keyset-paged on (updated_at, key): bulk writes share one timestamp. */
 async function pullChanged<T extends { updated_at: string }>(
   db: SQLiteDatabase,
-  table: 'binders' | 'user_cards',
+  table: 'binders' | 'user_cards' | 'photos',
   key: 'id' | 'card_id',
   apply: (rows: T[]) => Promise<() => void>,
 ) {
@@ -242,9 +251,19 @@ async function pullMarks(db: SQLiteDatabase) {
   });
 }
 
-/** Binders and marks are independent: one failing never blocks the other. */
+async function pullPhotos(db: SQLiteDatabase) {
+  await pullChanged<ServerPhoto>(
+    db,
+    'photos',
+    'id',
+    async (rows) => () => applyServerPhotos(db, rows, (id) => pending(db, 'photo', id)),
+  );
+  await downloadMissingThumbs(db);
+}
+
+/** Binders, marks and photos are independent: one failing never blocks the others. */
 async function pull(db: SQLiteDatabase) {
-  const results = await Promise.allSettled([pullBinders(db), pullMarks(db)]);
+  const results = await Promise.allSettled([pullBinders(db), pullMarks(db), pullPhotos(db)]);
   const failed = results.find((r) => r.status === 'rejected');
   if (failed) throw failed.reason;
 }
@@ -305,6 +324,7 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
     db.execSync(UNLINK);
     if (mode === 'fresh') {
       db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+      clearPhotos(db);
     } else {
       // Binders made before M3 have local ids ("b-…"): give them server-valid uuids.
       for (const { id } of db.getAllSync<{ id: string }>('select id from binders')) {
@@ -329,6 +349,7 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
         'select card_id from user_cards',
       ))
         enqueue(db, 'mark', card_id);
+      for (const id of unsyncedPhotoIds(db)) enqueue(db, 'photo', id);
     }
   });
   dataVersion.bump();
@@ -357,8 +378,9 @@ export async function deleteAccount(db = getDb()) {
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
     db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+    clearPhotos(db);
     db.execSync(
-      "delete from kv where key in ('profile', 'onboarding:done', 'binder:current', 'binder:hint');",
+      "delete from kv where key in ('profile', 'onboarding:done', 'binder:current', 'binder:hint', 'scan:tips');",
     );
   });
   dataVersion.bump();

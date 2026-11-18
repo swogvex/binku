@@ -42,7 +42,8 @@
     "cameraDenied": {
       "title": "We can't scan without the camera",
       "settings": "Open Settings",
-      "gallery": "Choose from gallery"
+      "gallery": "Choose from gallery",
+      "body": "You can turn it on in Settings or choose a photo you already have: we'll crop it just the same."
     },
     "offline": {
       "title": "Offline · Your binder still works.",
@@ -300,5 +301,73 @@
     "preferences": "Preferences",
     "language": "Language",
     "languageName": "English"
+  },
+  "scan": {
+    "kicker": "Before your first photo",
+    "title": "Three tricks for a perfect shot",
+    "tipDark": {
+      "title": "Dark, plain background",
+      "body": "A table or a black folder: the card's edge is found by itself."
+    },
+    "tipLight": {
+      "title": "Soft light, no flash",
+      "body": "Next to a window, out of direct sun."
+    },
+    "tipShine": {
+      "title": "Shiny? Tilt it a little",
+      "body": "That keeps glare off holo and glossy cards."
+    },
+    "privacyAsk": "We'll ask for the camera. The photo is processed on your phone and only uploaded when you save it.",
+    "privacy": "The photo is processed on your phone and only uploaded when you save it.",
+    "camera": "Open camera",
+    "gallery": "Choose from gallery",
+    "unavailable": {
+      "title": "This phone has no scanner",
+      "body": "Google's document scanner is missing. Choose a photo from your gallery: we'll crop it just the same."
+    },
+    "review": {
+      "close": "Close",
+      "kickerCamera": "Cropped and straightened",
+      "kickerGallery": "Cropped to card size",
+      "title": "Check the crop",
+      "titleCondition": "Check the photo",
+      "rotate": "Rotate",
+      "retake": "Retake",
+      "which": "Which card is it?",
+      "suggested": "Suggested by your binder",
+      "change": "Change",
+      "choose": "Choose card",
+      "none": "Choose which card it is to save it.",
+      "save": "Save to binder",
+      "saveCard": "Save photo",
+      "saving": "Saving…",
+      "error": "We couldn't save the photo. Please try again.",
+      "preview": "Crop preview"
+    },
+    "pick": {
+      "search": "Search member, group or album",
+      "empty": "No card matches."
+    },
+    "new": "New!"
+  },
+  "photo": {
+    "title": "Your photo",
+    "scan": "Scan",
+    "gallery": "Gallery",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "removeTitle": "Remove this photo?",
+    "removeBody": "It's deleted from this phone and your account. The card stays marked.",
+    "cancel": "Cancel",
+    "quota": "This photo is only on your phone: you already have 1,000 cards with a photo in the cloud.",
+    "noAccount": "Only on this phone. It will upload when you create your account.",
+    "conditionTitle": "Condition photos",
+    "conditionBody": "As is, no filters or edits. Shown when you offer this card.",
+    "front": "Front",
+    "back": "Back",
+    "optional": "Optional",
+    "add": "Add {side} photo",
+    "redo": "Retake",
+    "from": "Where should the photo come from?"
   }
 }

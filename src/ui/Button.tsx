@@ -1,8 +1,9 @@
-import { Pressable, type PressableProps, type ViewStyle } from 'react-native';
+import { Pressable, View, type PressableProps, type ViewStyle } from 'react-native';
 
 import { colors, radius } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
+import { Icon, type IconName } from './icons/Icon';
 import { Txt } from './Txt';
 
 type Props = Omit<PressableProps, 'children' | 'style'> & {
@@ -10,10 +11,20 @@ type Props = Omit<PressableProps, 'children' | 'style'> & {
   /** `accent` is reserved for scanning. */
   variant?: 'primary' | 'accent' | 'ghost' | 'danger';
   compact?: boolean;
+  /** Leading icon (18 px), decorative. */
+  icon?: IconName;
   style?: ViewStyle;
 };
 
-export function Button({ label, variant = 'primary', compact, style, disabled, ...rest }: Props) {
+export function Button({
+  label,
+  variant = 'primary',
+  compact,
+  icon,
+  style,
+  disabled,
+  ...rest
+}: Props) {
   const c = useTheme();
   const look = {
     primary: { bg: c.ink, fg: c.onInk, border: c.ink },
@@ -45,9 +56,17 @@ export function Button({ label, variant = 'primary', compact, style, disabled, .
       ]}
       {...rest}
     >
-      <Txt variant="label" size={compact ? 13 : 15} color={look.fg} style={{ textAlign: 'center' }}>
-        {label}
-      </Txt>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        {icon ? <Icon name={icon} size={18} color={look.fg} strokeWidth={2} /> : null}
+        <Txt
+          variant="label"
+          size={compact ? 13 : 15}
+          color={look.fg}
+          style={{ textAlign: 'center', flexShrink: 1 }}
+        >
+          {label}
+        </Txt>
+      </View>
     </Pressable>
   );
 }
