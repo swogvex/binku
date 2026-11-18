@@ -145,7 +145,12 @@ async function pullChanged<T extends { updated_at: string }>(
     const { data, error } = await supabase
       .from(table)
       .select('*')
-      .or(`updated_at.gt."${cur.t}",and(updated_at.eq."${cur.t}",${key}.gt."${cur.k}")`)
+      // First pull has no key yet: `id.gt.""` would be an invalid uuid (22P02) and fail the pull.
+      .or(
+        cur.k
+          ? `updated_at.gt."${cur.t}",and(updated_at.eq."${cur.t}",${key}.gt."${cur.k}")`
+          : `updated_at.gt."${cur.t}"`,
+      )
       .order('updated_at')
       .order(key)
       .limit(PAGE);
