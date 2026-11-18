@@ -16,7 +16,9 @@
       "album": "album",
       "pob": "POB",
       "luckyDraw": "lucky draw",
-      "event": "event"
+      "event": "event",
+      "seasonGreetings": "season's greetings",
+      "other": "other"
     }
   },
   "pocket": {
@@ -48,6 +50,154 @@
         "one": "{count} photo waiting to upload.",
         "other": "{count} photos waiting to upload."
       }
+    }
+  },
+  "catalog": {
+    "search": "Search group, member or album",
+    "searchA11y": "Search the catalog",
+    "clearSearch": "Clear search",
+    "filters": "+ Filters",
+    "filtersActive": "Filters · {count}",
+    "root": "All",
+    "crumbA11y": "Back to {name}",
+    "type": {
+      "all": "All",
+      "album": "Album",
+      "pob": "POB",
+      "lucky_draw": "Lucky draw",
+      "event": "Event",
+      "season_greetings": "Season's greetings",
+      "other": "Other"
+    },
+    "sheet": {
+      "title": "Filters",
+      "type": "Type",
+      "state": "Status",
+      "missing": "Missing",
+      "have": "Have",
+      "dupe": "Dupes",
+      "clear": "Clear",
+      "show": {
+        "one": "Show {count} card",
+        "other": "Show {count} cards"
+      }
+    }
+  },
+  "cardSheet": {
+    "title": "Card",
+    "back": "Back",
+    "dupe": "Dupe",
+    "markA11y": "Mark as",
+    "dupeQty": "Spare copies",
+    "less": "One copy less",
+    "more": "One copy more",
+    "group": "Group",
+    "album": "Album",
+    "version": "Version",
+    "type": "Type",
+    "store": "Store",
+    "korean": "Korean",
+    "notFound": "This card is no longer in the catalog",
+    "turnHint": "Drag to turn it. Tap to flip it."
+  },
+  "binder": {
+    "new": "+ New",
+    "more": "More binder options",
+    "progress": "{owned} of {total} cards",
+    "page": "Page {page} of {pages}",
+    "moveBack": "Move back",
+    "moveForward": "Move forward",
+    "pocketA11y": "{member}, {album}, {version}, {state}",
+    "empty": {
+      "title": "Your binder is empty",
+      "body": "Create one by group, member or era and start filling pockets.",
+      "action": "Create binder"
+    },
+    "create": {
+      "title": "New binder",
+      "group": "Group",
+      "what": "What to keep",
+      "all": "Whole group",
+      "member": "By member",
+      "era": "By album or era",
+      "submit": "Create binder"
+    },
+    "options": {
+      "title": "Binder options",
+      "name": "Name",
+      "save": "Save name",
+      "layout": "Pages",
+      "delete": "Delete binder",
+      "confirmTitle": "Delete this binder?",
+      "confirmBody": "Your Have and Want marks are kept.",
+      "cancel": "Cancel"
+    }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "continue": "Continue",
+    "back": "Back",
+    "intro": {
+      "collect": {
+        "title": "Collect",
+        "body": "Your digital binder, with your own photos inside every pocket."
+      },
+      "mark": {
+        "title": "Mark Have",
+        "body": "One tap. No market prices or rankings."
+      },
+      "match": {
+        "title": "We'll tell you",
+        "body": "When someone has what you want and wants what you have."
+      },
+      "youWant": "You want",
+      "youHave": "You have"
+    },
+    "place": {
+      "title": "Where do you live?",
+      "body": "Just country and {term}, so we can find trades near you. We never use your exact location.",
+      "country": "Country",
+      "search": "Search",
+      "term": {
+        "province": "province",
+        "state": "state",
+        "department": "department",
+        "region": "region"
+      },
+      "countries": {
+        "ES": "Spain",
+        "MX": "Mexico",
+        "AR": "Argentina",
+        "CO": "Colombia",
+        "CL": "Chile",
+        "PE": "Peru"
+      }
+    },
+    "dob": {
+      "title": "When were you born?",
+      "body": "We use it to protect minors: under 18 means a private profile, limited chat and quiet hours. Nobody else sees it.",
+      "min": "You need to be at least {age}.",
+      "pick": "Pick your date"
+    },
+    "blocked": {
+      "title": "You can't use Binku yet",
+      "body": "Binku is for people aged {age} or over. We haven't saved any data. See you soon!",
+      "back": "Change the date"
+    },
+    "groups": {
+      "title": "Your groups",
+      "body": "Pick one or more. Then your bias.",
+      "search": "Search group",
+      "bias": "{group} bias",
+      "all": "All",
+      "create": "Create my binder",
+      "explore": "Explore without an account"
+    },
+    "ready": {
+      "time": "Ready in {seconds} seconds",
+      "body": "Tap a pocket or press Scan to add your first card.",
+      "dismiss": "Got it"
     }
   }
 }

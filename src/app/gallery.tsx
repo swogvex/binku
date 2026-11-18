@@ -4,6 +4,7 @@ import { useState, type ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { getDb, getKv } from '@/data/db';
 import { t } from '@/i18n';
 import { era, fonts, fontSize, screenPadding, type Era } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -31,7 +32,7 @@ const icons: IconName[] = [
   'chevronRight',
   'close',
 ];
-const formats: CardFormat[] = ['album', 'pob', 'luckyDraw', 'event'];
+const formats: CardFormat[] = ['album', 'pob', 'luckyDraw', 'event', 'seasonGreetings', 'other'];
 const states: (CardState | undefined)[] = [
   { kind: 'have' },
   { kind: 'want' },
@@ -77,6 +78,24 @@ function Swatch({ name, value }: { name: string; value: string }) {
   );
 }
 
+function CatalogStatus() {
+  const db = getDb();
+  const count = (table: string) =>
+    db.getFirstSync<{ n: number }>(`select count(*) n from ${table}`)!.n;
+  const synced = getKv(db, 'sync:cards');
+  return (
+    <Txt size={13}>
+      {['groups', 'members', 'releases', 'versions', 'cards']
+        .map((tb) => `${tb} ${count(tb)}`)
+        .join(' · ')}
+      {'\n'}
+      {synced
+        ? `Last server pull (cards): ${synced}`
+        : 'Bundled snapshot only (no server pull yet)'}
+    </Txt>
+  );
+}
+
 export default function Gallery() {
   const router = useRouter();
   const c = useTheme();
@@ -101,6 +120,10 @@ export default function Gallery() {
         Gallery
       </Txt>
 
+      <Section title="Local catalog (SQLite)">
+        <CatalogStatus />
+      </Section>
+
       <Section title="Type scale">
         {fontSize.slice(0, 5).map((s) => (
           <Txt key={s} variant="display" size={s}>
@@ -113,6 +136,10 @@ export default function Gallery() {
           </Txt>
         ))}
         <Txt style={{ fontFamily: fonts.hangul }}>지완 · 세오라 (Pretendard)</Txt>
+        {/* Accents and inverted marks must not be clipped (Android tight line height). */}
+        <Txt variant="display" size={40}>
+          ¿DÓNDE? CATÁLOGO ÑÜ
+        </Txt>
       </Section>
 
       <Section title="Colour tokens">
@@ -167,11 +194,11 @@ export default function Gallery() {
           {formats.map((f, i) => (
             <CardMarker
               key={f}
-              member={['Jiwan', 'Seora', 'Hana', 'Yuri'][i]}
+              member={['Jiwan', 'Seora', 'Hana', 'Yuri', 'Mina', 'Dami'][i]}
               album="Paper Moon"
-              version={['Ver. A', 'Ver. B', 'LD', 'Fanmeet'][i]}
+              version={['Ver. A', 'Ver. B', 'LD', 'Fanmeet', 'SG 2026', 'Otro'][i]}
               format={f}
-              eraColor={Object.keys(era)[i] as Era}
+              eraColor={Object.keys(era)[i % 5] as Era}
               state={states[i]}
               holo={f !== 'album'}
               width={100}

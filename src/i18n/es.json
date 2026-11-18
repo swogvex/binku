@@ -16,7 +16,9 @@
       "album": "álbum",
       "pob": "POB",
       "luckyDraw": "lucky draw",
-      "event": "evento"
+      "event": "evento",
+      "seasonGreetings": "season's greetings",
+      "other": "otro"
     }
   },
   "pocket": {
@@ -48,6 +50,154 @@
         "one": "{count} foto espera para subirse.",
         "other": "{count} fotos esperan para subirse."
       }
+    }
+  },
+  "catalog": {
+    "search": "Busca grupo, miembro o álbum",
+    "searchA11y": "Buscar en el catálogo",
+    "clearSearch": "Borrar búsqueda",
+    "filters": "+ Filtros",
+    "filtersActive": "Filtros · {count}",
+    "root": "Todo",
+    "crumbA11y": "Volver a {name}",
+    "type": {
+      "all": "Todas",
+      "album": "Álbum",
+      "pob": "POB",
+      "lucky_draw": "Lucky draw",
+      "event": "Evento",
+      "season_greetings": "Season's greetings",
+      "other": "Otros"
+    },
+    "sheet": {
+      "title": "Filtros",
+      "type": "Tipo",
+      "state": "Estado",
+      "missing": "Me falta",
+      "have": "Tengo",
+      "dupe": "Repetidas",
+      "clear": "Limpiar",
+      "show": {
+        "one": "Ver {count} carta",
+        "other": "Ver {count} cartas"
+      }
+    }
+  },
+  "cardSheet": {
+    "title": "Ficha de carta",
+    "back": "Atrás",
+    "dupe": "Repetida",
+    "markA11y": "Marcar como",
+    "dupeQty": "Copias repetidas",
+    "less": "Una copia menos",
+    "more": "Una copia más",
+    "group": "Grupo",
+    "album": "Álbum",
+    "version": "Versión",
+    "type": "Tipo",
+    "store": "Tienda",
+    "korean": "Coreano",
+    "notFound": "Esta carta ya no está en el catálogo",
+    "turnHint": "Arrastra para girarla. Toca para darle la vuelta."
+  },
+  "binder": {
+    "new": "+ Nuevo",
+    "more": "Más opciones del binder",
+    "progress": "{owned} de {total} cartas",
+    "page": "Página {page} de {pages}",
+    "moveBack": "Mover antes",
+    "moveForward": "Mover después",
+    "pocketA11y": "{member}, {album}, {version}, {state}",
+    "empty": {
+      "title": "Tu binder está vacío",
+      "body": "Crea uno por grupo, miembro o era y ve rellenando huecos.",
+      "action": "Crear binder"
+    },
+    "create": {
+      "title": "Nuevo binder",
+      "group": "Grupo",
+      "what": "Qué guardar",
+      "all": "Todo el grupo",
+      "member": "Por miembro",
+      "era": "Por álbum o era",
+      "submit": "Crear binder"
+    },
+    "options": {
+      "title": "Opciones del binder",
+      "name": "Nombre",
+      "save": "Guardar nombre",
+      "layout": "Páginas",
+      "delete": "Eliminar binder",
+      "confirmTitle": "¿Eliminar este binder?",
+      "confirmBody": "Tus marcas de Tengo y Busco no se borran.",
+      "cancel": "Cancelar"
+    }
+  },
+  "onboarding": {
+    "skip": "Saltar",
+    "next": "Siguiente",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "intro": {
+      "collect": {
+        "title": "Colecciona",
+        "body": "Tu binder digital, con tus propias fotos dentro de cada bolsillo."
+      },
+      "mark": {
+        "title": "Marca Tengo",
+        "body": "Con un toque. Sin precios de mercado ni rankings."
+      },
+      "match": {
+        "title": "Te avisamos",
+        "body": "Cuando alguien tiene lo que buscas y busca lo que tienes."
+      },
+      "youWant": "Tú buscas",
+      "youHave": "Tú tienes"
+    },
+    "place": {
+      "title": "¿Dónde vives?",
+      "body": "Solo país y {term}: así encontramos cambios cerca de ti. Nunca usamos tu ubicación exacta.",
+      "country": "País",
+      "search": "Buscar",
+      "term": {
+        "province": "provincia",
+        "state": "estado",
+        "department": "departamento",
+        "region": "región"
+      },
+      "countries": {
+        "ES": "España",
+        "MX": "México",
+        "AR": "Argentina",
+        "CO": "Colombia",
+        "CL": "Chile",
+        "PE": "Perú"
+      }
+    },
+    "dob": {
+      "title": "¿Cuándo naciste?",
+      "body": "Lo usamos para proteger a los menores: por debajo de 18, perfil privado, chat limitado y horas de silencio. Nadie más lo ve.",
+      "min": "Necesitas tener al menos {age} años.",
+      "pick": "Elige tu fecha"
+    },
+    "blocked": {
+      "title": "Aún no puedes usar Binku",
+      "body": "Binku es para personas de {age} años o más. No hemos guardado ningún dato. ¡Te esperamos!",
+      "back": "Cambiar la fecha"
+    },
+    "groups": {
+      "title": "Tus grupos",
+      "body": "Elige uno o varios. Luego, tu bias.",
+      "search": "Buscar grupo",
+      "bias": "Bias de {group}",
+      "all": "Todos",
+      "create": "Crear mi binder",
+      "explore": "Explorar sin cuenta"
+    },
+    "ready": {
+      "time": "Listo en {seconds} segundos",
+      "body": "Toca un hueco o pulsa Escanear para meter tu primera carta.",
+      "dismiss": "Entendido"
     }
   }
 }

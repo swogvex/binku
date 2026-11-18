@@ -36,6 +36,12 @@ export function Txt({ variant = 'body', size, color, muted, style, ...rest }: Pr
     color: color ?? (muted ? c.muted : c.ink),
     // Android adds extra top padding to custom fonts; removing it keeps display type tight.
     ...(Platform.OS === 'android' && { includeFontPadding: false }),
+    // Tight display lines (0.95) would clip accents on capitals (Á, Ó) and the tail of "¿":
+    // a little padding keeps every glyph inside the text box on both platforms.
+    ...(variant === 'display' && {
+      paddingTop: Math.ceil(fontSize * 0.16),
+      paddingBottom: Math.ceil(fontSize * 0.12),
+    }),
   };
   return <Text style={[base, style]} {...rest} />;
 }
