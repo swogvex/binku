@@ -110,7 +110,8 @@ async function purge() {
           url: objectUrl(p.r2_key),
           expires: 60,
         });
-        const res = await fetch(url, { method: 'DELETE' });
+        const res = await fetch(url, { method: 'DELETE' }).catch(() => null); // R2 unreachable
+        if (!res) return;
         // 404: never uploaded (or already gone) — nothing left to delete either way.
         if (res.ok || res.status === 404) done.push(p.id);
       }),
