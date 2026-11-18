@@ -16,7 +16,9 @@
       "album": "álbum",
       "pob": "POB",
       "luckyDraw": "lucky draw",
-      "event": "evento"
+      "event": "evento",
+      "seasonGreetings": "season's greetings",
+      "other": "otro"
     }
   },
   "pocket": {
@@ -47,6 +49,37 @@
       "pending": {
         "one": "{count} foto espera para subirse.",
         "other": "{count} fotos esperan para subirse."
+      }
+    }
+  },
+  "catalog": {
+    "search": "Busca grupo, miembro o álbum",
+    "searchA11y": "Buscar en el catálogo",
+    "clearSearch": "Borrar búsqueda",
+    "filters": "+ Filtros",
+    "filtersActive": "Filtros · {count}",
+    "root": "Todo",
+    "crumbA11y": "Volver a {name}",
+    "type": {
+      "all": "Todas",
+      "album": "Álbum",
+      "pob": "POB",
+      "lucky_draw": "Lucky draw",
+      "event": "Evento",
+      "season_greetings": "Season's greetings",
+      "other": "Otros"
+    },
+    "sheet": {
+      "title": "Filtros",
+      "type": "Tipo",
+      "state": "Estado",
+      "missing": "Me falta",
+      "have": "Tengo",
+      "dupe": "Repetidas",
+      "clear": "Limpiar",
+      "show": {
+        "one": "Ver {count} carta",
+        "other": "Ver {count} cartas"
       }
     }
   }

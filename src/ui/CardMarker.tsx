@@ -8,7 +8,7 @@ import { cardRadius, cardRatio, colors, era, type Era } from '@/theme/tokens';
 import { Holo } from './Holo';
 import { Txt } from './Txt';
 
-export type CardFormat = 'album' | 'pob' | 'luckyDraw' | 'event';
+export type CardFormat = 'album' | 'pob' | 'luckyDraw' | 'event' | 'seasonGreetings' | 'other';
 export type CardState = { kind: 'have' } | { kind: 'want' } | { kind: 'dupe'; count: number };
 
 type Props = {
@@ -29,6 +29,20 @@ function FormatMark({ format, color }: { format: CardFormat; color: string }) {
     pob: <Path d="M6 0.5 11.5 6 6 11.5 0.5 6z" fill={color} />,
     luckyDraw: <Circle cx={6} cy={6} r={5.2} fill={color} />,
     event: <Path d="M6 1 11.5 11H0.5z" fill={color} />,
+    // outlined variants of album/lucky draw: less common formats, same visual family
+    seasonGreetings: (
+      <Rect
+        x={1.8}
+        y={1.8}
+        width={8.4}
+        height={8.4}
+        rx={1.2}
+        fill="none"
+        stroke={color}
+        strokeWidth={1.6}
+      />
+    ),
+    other: <Circle cx={6} cy={6} r={4.4} fill="none" stroke={color} strokeWidth={1.6} />,
   }[format];
   return (
     <Svg width={12} height={12} viewBox="0 0 12 12">
