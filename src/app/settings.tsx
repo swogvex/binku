@@ -1,9 +1,9 @@
-// Settings (canvas "iPhone · Ajustes"), M3 subset: account card, TUS DATOS (export, delete),
-// sign out. Preferences, privacy and "Sobre la app" rows arrive with their features (M5–M8).
+// Settings (canvas "iPhone · Ajustes"), M3 subset: account card, PREFERENCIAS (language),
+// TUS DATOS (export, delete), sign out. Preferences, privacy and "Sobre la app" rows arrive with their features (M5–M8).
 import Constants from 'expo-constants';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Linking, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getDb } from '@/data/db';
@@ -227,6 +227,17 @@ export default function Settings() {
           <Button label={t('auth.profile.signIn')} onPress={() => router.push('/sign-in')} />
         </View>
       )}
+
+      <Section title={t('settings.preferences')}>
+        {/* Per-app language lives in the OS (iOS app settings, Android 13+ App info). */}
+        <Row
+          first
+          icon="language"
+          label={t('settings.language')}
+          value={t('settings.languageName')}
+          onPress={() => Linking.openSettings()}
+        />
+      </Section>
 
       {session ? (
         <Section title={t('settings.data')}>

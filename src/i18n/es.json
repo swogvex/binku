@@ -293,6 +293,9 @@
       "doneBody": "Se borrará el {date}. Si cambias de idea, entra con tu email antes de esa fecha.",
       "cancelledTitle": "Borrado cancelado",
       "cancelledBody": "Habías pedido borrar tu cuenta. Como has vuelto a entrar, la mantenemos."
-    }
+    },
+    "preferences": "Preferencias",
+    "language": "Idioma",
+    "languageName": "Español"
   }
 }

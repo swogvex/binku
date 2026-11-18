@@ -293,6 +293,9 @@
       "doneBody": "It will be deleted on {date}. If you change your mind, sign in with your email before then.",
       "cancelledTitle": "Deletion cancelled",
       "cancelledBody": "You had asked to delete your account. Since you signed in again, we're keeping it."
-    }
+    },
+    "preferences": "Preferences",
+    "language": "Language",
+    "languageName": "English"
   }
 }
