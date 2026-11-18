@@ -17,7 +17,8 @@ const pockets = [
   [63, 65],
 ];
 
-export function BinkuMark({ size = 28 }: { size?: number }) {
+/** Symbol + wordmark; `wordmark={false}` for the symbol alone (large brand art). */
+export function BinkuMark({ size = 28, wordmark = true }: { size?: number; wordmark?: boolean }) {
   const c = useTheme();
   return (
     <View
@@ -41,9 +42,11 @@ export function BinkuMark({ size = 28 }: { size?: number }) {
         ))}
         <Rect x={62} y={40} width={16} height={21} rx={3} fill={c.ink} />
       </Svg>
-      <Txt variant="display" size={22} importantForAccessibility="no">
-        Binku
-      </Txt>
+      {wordmark ? (
+        <Txt variant="display" size={22} importantForAccessibility="no">
+          Binku
+        </Txt>
+      ) : null}
     </View>
   );
 }

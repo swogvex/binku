@@ -1,6 +1,11 @@
-// First launch, < 1 min: 3 skippable intros → country + region → date of birth (age gate)
-// → groups + bias → binder ready. Nothing is stored until the last step, so a blocked
-// under-age user leaves no data. No OS permission is asked here.
+// First launch, < 1 min: 3 skippable intros → welcome (Crear cuenta / Iniciar sesión, small
+// "Explorar sin cuenta"), then:
+//   sign-up: country + region → date of birth (age gate) → account → groups + bias → binder ready
+//   sign-in: account → done (the account's binders come down). An email with no profile yet
+//            goes through country → date of birth first, like a sign-up.
+//   explore: country + region → date of birth → groups + bias → binder ready (local only)
+// The DOB comes before the account, so an under-age user never creates one; nothing is stored
+// before that step. No OS permission is asked here.
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { getLocales } from 'expo-localization';
 import { useRouter } from 'expo-router';
@@ -18,8 +23,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { createBinder } from '@/data/binders';
 import { getDb, setKv } from '@/data/db';
-import { countryRules, saveOnboarding } from '@/data/profile';
+import { countryRules, saveLocalProfile, saveOnboarding } from '@/data/profile';
 import geo from '@/content/geo/subdivisions.json';
+import { useAccountFlow, type AccountResult } from '@/features/auth/useAccountFlow';
 import { selectBinder } from '@/features/binder/useBinder';
 import { useCatalogData } from '@/features/catalog/useCatalog';
 import { fold } from '@/features/catalog/filter';
@@ -29,6 +35,7 @@ import { textOn } from '@/lib/contrast';
 import { era, fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { BinkuMark } from '@/ui/BinkuMark';
+import { RoundButton } from '@/ui/RoundButton';
 import { Button } from '@/ui/Button';
 import { CardMarker } from '@/ui/CardMarker';
 import { Chip } from '@/ui/Chip';
@@ -38,8 +45,9 @@ import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
 
 type Country = keyof typeof geo;
-type Step = 'intro0' | 'intro1' | 'intro2' | 'place' | 'dob' | 'blocked' | 'groups';
-const ORDER: Step[] = ['intro0', 'intro1', 'intro2', 'place', 'dob', 'groups'];
+type Step =
+  'intro0' | 'intro1' | 'intro2' | 'welcome' | 'place' | 'dob' | 'blocked' | 'account' | 'groups';
+type Mode = 'signup' | 'login' | 'explore';
 const INTROS = ['collect', 'mark', 'match'] as const;
 const COUNTRIES = Object.keys(geo) as Country[];
 const formatDate = (d: Date) =>
@@ -182,14 +190,58 @@ export default function Onboarding() {
   const [groupQuery, setGroupQuery] = useState('');
   const [groups, setGroups] = useState<string[]>([]);
   const [bias, setBias] = useState<Record<string, string>>({});
+  const [mode, setMode] = useState<Mode>('signup');
+  // Set once the account exists: from then on there is no way back to the account steps.
+  const [account, setAccount] = useState<AccountResult>();
 
   const rules = countryRules(getDb(), country);
+
+  /** Returning user: their profile and binders are on the account, the onboarding is done. */
+  const completeLogin = ({ profile }: AccountResult) => {
+    saveOnboarding(getDb(), {
+      country: profile.country,
+      subdivision: profile.subdivision ?? '',
+      isMinor: profile.is_minor,
+      groups: [],
+      bias: {},
+    });
+    router.replace('/binder');
+  };
+
+  const flow = useAccountFlow({
+    start: 'email',
+    intent: mode === 'login' ? 'signIn' : 'signUp',
+    onDone: (r) => {
+      setAccount(r);
+      if (r.existing) completeLogin(r);
+      else setStep('groups');
+    },
+    // "Iniciar sesión" with an email that has no account yet: ask country + DOB, then resume.
+    onNeedsProfile: () => setStep('place'),
+  });
+
+  const prevStep: Partial<Record<Step, Step>> = {
+    intro1: 'intro0',
+    intro2: 'intro1',
+    welcome: 'intro2',
+    place: 'welcome',
+    dob: 'place',
+    blocked: 'dob',
+    account: mode === 'login' ? 'welcome' : 'dob',
+    groups: account ? undefined : 'dob',
+  };
   const back = () => {
-    const prev = step === 'blocked' ? 'dob' : ORDER[ORDER.indexOf(step) - 1];
+    if (step === 'account' && flow.back()) return true;
+    const prev = prevStep[step];
     if (prev) setStep(prev);
     return !!prev;
   };
-  const next = () => setStep(ORDER[ORDER.indexOf(step) + 1]);
+  const next = () =>
+    setStep(step === 'intro0' ? 'intro1' : step === 'intro1' ? 'intro2' : 'welcome');
+  const start = (m: Mode) => {
+    setMode(m);
+    setStep(m === 'login' ? 'account' : 'place');
+  };
 
   // Android back walks the steps instead of leaving the app.
   useEffect(() => {
@@ -211,7 +263,8 @@ export default function Onboarding() {
     saveOnboarding(db, {
       country,
       subdivision: subdivision!,
-      dob: isoDate(dob!),
+      // With an account the DOB lives only on the server (already uploaded and deleted here).
+      dob: account ? undefined : isoDate(dob!),
       isMinor: ageOn(dob!) < rules.minorLimit,
       groups,
       bias,
@@ -332,7 +385,13 @@ export default function Onboarding() {
         </View>
       </View>
     );
-    action = <Button label={t('onboarding.continue')} disabled={!subdivision} onPress={next} />;
+    action = (
+      <Button
+        label={t('onboarding.continue')}
+        disabled={!subdivision}
+        onPress={() => setStep('dob')}
+      />
+    );
   } else if (step === 'dob') {
     const value = dobDate ?? new Date(new Date().getFullYear() - 16, 0, 1);
     const pick = (_: unknown, d?: Date) => d && setDobDate(d);
@@ -394,10 +453,59 @@ export default function Onboarding() {
         onPress={() => {
           const parsed = fromDate(value);
           setDob(parsed);
-          setStep(ageOn(parsed) < rules.minAge ? 'blocked' : 'groups');
+          if (ageOn(parsed) < rules.minAge) return setStep('blocked');
+          if (mode === 'explore') return setStep('groups');
+          // The account step creates the profile from these answers (DOB deleted right after).
+          saveLocalProfile(getDb(), {
+            country,
+            subdivision: subdivision!,
+            dob: isoDate(parsed),
+            isMinor: ageOn(parsed) < rules.minorLimit,
+            groups: [],
+            bias: {},
+          });
+          setStep('account');
+          // Already signed in ("Iniciar sesión" with a new email): carry on creating the profile.
+          if (mode === 'login') flow.resume();
         }}
       />
     );
+  } else if (step === 'welcome') {
+    body = (
+      <View style={{ gap: 24, paddingTop: 12 }}>
+        <Circle>
+          <BinkuMark size={120} wordmark={false} />
+        </Circle>
+        <Txt variant="display" size={46} accessibilityRole="header">
+          {t('onboarding.welcome.title')}
+        </Txt>
+        <Txt size={17} muted>
+          {t('onboarding.welcome.body')}
+        </Txt>
+      </View>
+    );
+    action = (
+      <View style={{ gap: 6 }}>
+        <Button label={t('onboarding.welcome.signUp')} onPress={() => start('signup')} />
+        <Button
+          variant="ghost"
+          label={t('onboarding.welcome.signIn')}
+          onPress={() => start('login')}
+        />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => start('explore')}
+          style={{ minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Txt variant="label" size={15} muted>
+            {t('onboarding.welcome.explore')}
+          </Txt>
+        </Pressable>
+      </View>
+    );
+  } else if (step === 'account') {
+    body = flow.body;
+    action = flow.action;
   } else if (step === 'blocked') {
     body = (
       <StateView
@@ -519,11 +627,7 @@ export default function Onboarding() {
           disabled={!groups.length}
           onPress={() => finish(true)}
         />
-        <Button
-          variant="ghost"
-          label={t('onboarding.groups.explore')}
-          onPress={() => finish(false)}
-        />
+        <Button variant="ghost" label={t('onboarding.groups.skip')} onPress={() => finish(false)} />
       </View>
     );
   }
@@ -543,11 +647,17 @@ export default function Onboarding() {
           minHeight: 48,
         }}
       >
-        <BinkuMark />
+        {/* iOS has no system back: every step after the intros gets one on screen. */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          {!isIntro && prevStep[step] ? (
+            <RoundButton icon="chevronLeft" label={t('onboarding.back')} onPress={back} />
+          ) : null}
+          <BinkuMark />
+        </View>
         {isIntro ? (
           <Pressable
             accessibilityRole="button"
-            onPress={() => setStep('place')}
+            onPress={() => setStep('welcome')}
             hitSlop={12}
             style={{ minHeight: 44, justifyContent: 'center' }}
           >

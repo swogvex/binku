@@ -10,27 +10,43 @@ import { supabase } from '@/lib/supabase';
 /** Same rule as the `profiles.username` check in the database. */
 export const USERNAME = /^[a-z0-9_.]{3,20}$/;
 
-/**
- * Creates the profile on first sign-in (the server re-checks the age gate) and then deletes the
- * DOB from the device. Returns the @username, or null when the user still has to pick one.
- */
-export async function ensureProfile(db: SQLiteDatabase): Promise<string | null> {
-  const { data, error } = await supabase.from('profiles').select('username').maybeSingle();
+export type ServerProfile = {
+  username: string | null;
+  country: string;
+  subdivision: string | null;
+  is_minor: boolean;
+};
+const PROFILE_COLS = 'username,country,subdivision,is_minor';
+
+/** The signed-in user's profile, or null for a new account. */
+export async function fetchProfile() {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select(PROFILE_COLS)
+    .maybeSingle<ServerProfile>();
   if (error) throw error;
-  if (!data) {
-    const local = getLocalProfile(db);
-    // shortcut: a second new account on a phone whose DOB was already uploaded fails here; ask the DOB again if that shows up in Sentry.
-    if (!local?.dob) throw new Error('No local date of birth to create the profile');
-    // shortcut: currency stays the EUR default; set it per country when LatAm launches (M10b).
-    const { error: insertError } = await supabase.from('profiles').insert({
+  return data;
+}
+
+/**
+ * Creates the profile from the local onboarding answers (the server re-checks the age gate),
+ * then deletes the DOB from the device. Callers check `getLocalProfile(db)?.dob` first.
+ */
+export async function createProfile(db: SQLiteDatabase) {
+  const local = getLocalProfile(db)!;
+  // shortcut: currency stays the EUR default; set it per country when LatAm launches (M10b).
+  const { data, error } = await supabase
+    .from('profiles')
+    .insert({
       birth_date: local.dob,
       country: local.country,
       subdivision: local.subdivision || null,
-    });
-    if (insertError) throw insertError;
-  }
+    })
+    .select(PROFILE_COLS)
+    .single<ServerProfile>();
+  if (error) throw error;
   forgetDob(db);
-  return data?.username ?? null;
+  return data;
 }
 
 /** bias member + 4 digits (never the email: it may hold a real name, and many users are minors). */

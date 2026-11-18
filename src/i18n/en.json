@@ -154,6 +154,13 @@
       "youWant": "You want",
       "youHave": "You have"
     },
+    "welcome": {
+      "title": "Welcome",
+      "body": "Your photocard collection, sorted in your binder and ready to trade.",
+      "signUp": "Create account",
+      "signIn": "Sign in",
+      "explore": "Explore without an account"
+    },
     "place": {
       "title": "Where do you live?",
       "body": "Just country and {term}, so we can find trades near you. We never use your exact location.",
@@ -192,7 +199,7 @@
       "bias": "{group} bias",
       "all": "All",
       "create": "Create my binder",
-      "explore": "Explore without an account"
+      "skip": "Go to the catalog"
     },
     "ready": {
       "time": "Ready in {seconds} seconds",
@@ -208,7 +215,9 @@
       "label": "Your email",
       "placeholder": "you@email.com",
       "send": "Send me a code",
-      "legal": "By continuing you accept the community rules and the privacy policy."
+      "legal": "By continuing you accept the community rules and the privacy policy.",
+      "signInTitle": "Back to your collection",
+      "signInBody": "Enter your account's email and we'll send you a code to sign in."
     },
     "code": {
       "title": "Check your email",

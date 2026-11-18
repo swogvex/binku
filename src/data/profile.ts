@@ -40,9 +40,13 @@ export function forgetDob(db: SQLiteDatabase) {
   setKv(db, 'profile', JSON.stringify(p));
 }
 
+/** Answers so far (sign-up reads country + DOB before the onboarding is finished). */
+export const saveLocalProfile = (db: SQLiteDatabase, p: LocalProfile) =>
+  setKv(db, 'profile', JSON.stringify(p));
+
 export function saveOnboarding(db: SQLiteDatabase, p: LocalProfile) {
   db.withTransactionSync(() => {
-    setKv(db, 'profile', JSON.stringify(p));
+    saveLocalProfile(db, p);
     setKv(db, 'onboarding:done', '1');
   });
   dataVersion.bump();

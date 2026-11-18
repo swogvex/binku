@@ -154,6 +154,13 @@
       "youWant": "Tú buscas",
       "youHave": "Tú tienes"
     },
+    "welcome": {
+      "title": "Te damos la bienvenida",
+      "body": "Tu colección de photocards, ordenada en tu binder y lista para cambiar.",
+      "signUp": "Crear cuenta",
+      "signIn": "Iniciar sesión",
+      "explore": "Explorar sin cuenta"
+    },
     "place": {
       "title": "¿Dónde vives?",
       "body": "Solo país y {term}: así encontramos cambios cerca de ti. Nunca usamos tu ubicación exacta.",
@@ -192,7 +199,7 @@
       "bias": "Bias de {group}",
       "all": "Todos",
       "create": "Crear mi binder",
-      "explore": "Explorar sin cuenta"
+      "skip": "Ir al catálogo"
     },
     "ready": {
       "time": "Listo en {seconds} segundos",
@@ -208,7 +215,9 @@
       "label": "Tu email",
       "placeholder": "tu@email.com",
       "send": "Enviarme un código",
-      "legal": "Al continuar aceptas las normas de la comunidad y la política de privacidad."
+      "legal": "Al continuar aceptas las normas de la comunidad y la política de privacidad.",
+      "signInTitle": "Vuelve a tu colección",
+      "signInBody": "Escribe el email de tu cuenta y te mandamos un código para entrar."
     },
     "code": {
       "title": "Revisa tu correo",
