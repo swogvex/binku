@@ -185,7 +185,7 @@ async function slotsOf(binderId: string) {
   }
 }
 
-async function pull(db: SQLiteDatabase) {
+async function pullBinders(db: SQLiteDatabase) {
   await pullChanged<ServerBinder>(db, 'binders', 'id', async (rows) => {
     const fresh = rows.filter((b) => !pending(db, 'binder', b.id) && !pending(db, 'slots', b.id));
     const slots = new Map<string, string[]>();
@@ -221,6 +221,9 @@ async function pull(db: SQLiteDatabase) {
       }
     };
   });
+}
+
+async function pullMarks(db: SQLiteDatabase) {
   await pullChanged<ServerMark>(db, 'user_cards', 'card_id', async (rows) => () => {
     for (const m of rows) {
       if (pending(db, 'mark', m.card_id)) continue;
@@ -238,16 +241,29 @@ async function pull(db: SQLiteDatabase) {
   });
 }
 
-/** Upload pending changes, then download the others. Safe to call any time. */
-export async function sync(db = getDb()) {
-  await flush(db);
-  if (await linkedUser(db)) await pull(db);
+/** Binders and marks are independent: one failing never blocks the other. */
+async function pull(db: SQLiteDatabase) {
+  const results = await Promise.allSettled([pullBinders(db), pullMarks(db)]);
+  const failed = results.find((r) => r.status === 'rejected');
+  if (failed) throw failed.reason;
 }
 
+let syncing: Promise<void> | undefined;
+/** Upload pending changes, then download the others. One run at a time; safe to call any time. */
+export function sync(db = getDb()) {
+  return (syncing ??= (async () => {
+    await flush(db);
+    if (await linkedUser(db)) await pull(db);
+  })().finally(() => (syncing = undefined)));
+}
+
+const OFFLINE = /network request failed|fetch failed|timed? ?out|aborted/i;
 const report = (e: unknown) => {
-  // Offline is normal; only server-side failures are worth a report.
-  if (e instanceof TypeError || !(e as { code?: string })?.code) return;
-  Sentry.captureMessage(`sync failed (${(e as { code: string }).code})`);
+  const err = e as { code?: string; message?: string } | null;
+  if (__DEV__) console.warn('[sync]', err?.code, err?.message ?? e);
+  // Offline is normal. Anything else (server error or a bug here) is reported, code/name only.
+  if (OFFLINE.test(err?.message ?? String(e))) return;
+  Sentry.captureMessage(`sync failed (${err?.code || (e instanceof Error ? e.name : 'unknown')})`);
 };
 
 let started = false;
