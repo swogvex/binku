@@ -98,5 +98,38 @@
     "store": "Tienda",
     "korean": "Coreano",
     "notFound": "Esta carta ya no está en el catálogo"
+  },
+  "binder": {
+    "new": "+ Nuevo",
+    "more": "Más opciones del binder",
+    "progress": "{owned} de {total} cartas",
+    "page": "Página {page} de {pages}",
+    "moveBack": "Mover antes",
+    "moveForward": "Mover después",
+    "pocketA11y": "{member}, {album}, {version}, {state}",
+    "empty": {
+      "title": "Tu binder está vacío",
+      "body": "Crea uno por grupo, miembro o era y ve rellenando huecos.",
+      "action": "Crear binder"
+    },
+    "create": {
+      "title": "Nuevo binder",
+      "group": "Grupo",
+      "what": "Qué guardar",
+      "all": "Todo el grupo",
+      "member": "Por miembro",
+      "era": "Por álbum o era",
+      "submit": "Crear binder"
+    },
+    "options": {
+      "title": "Opciones del binder",
+      "name": "Nombre",
+      "save": "Guardar nombre",
+      "layout": "Páginas",
+      "delete": "Eliminar binder",
+      "confirmTitle": "¿Eliminar este binder?",
+      "confirmBody": "Tus marcas de Tengo y Busco no se borran.",
+      "cancel": "Cancelar"
+    }
   }
 }

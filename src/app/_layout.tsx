@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { dataVersion } from '@/data/catalog';
 import { pullCatalogIfConfigured } from '@/data/catalogSync';
@@ -41,16 +42,18 @@ function RootLayout() {
   if (!loaded && !error) return null;
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="gallery" />
         <Stack.Screen name="sheet-demo" options={sheetOptions} />
         <Stack.Screen name="catalog-filters" options={sheetOptions} />
         <Stack.Screen name="card/[id]" />
+        <Stack.Screen name="binder-new" options={sheetOptions} />
+        <Stack.Screen name="binder-options" options={sheetOptions} />
       </Stack>
       <StatusBar style="auto" />
-    </>
+    </GestureHandlerRootView>
   );
 }
 

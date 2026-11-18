@@ -98,5 +98,38 @@
     "store": "Store",
     "korean": "Korean",
     "notFound": "This card is no longer in the catalog"
+  },
+  "binder": {
+    "new": "+ New",
+    "more": "More binder options",
+    "progress": "{owned} of {total} cards",
+    "page": "Page {page} of {pages}",
+    "moveBack": "Move back",
+    "moveForward": "Move forward",
+    "pocketA11y": "{member}, {album}, {version}, {state}",
+    "empty": {
+      "title": "Your binder is empty",
+      "body": "Create one by group, member or era and start filling pockets.",
+      "action": "Create binder"
+    },
+    "create": {
+      "title": "New binder",
+      "group": "Group",
+      "what": "What to keep",
+      "all": "Whole group",
+      "member": "By member",
+      "era": "By album or era",
+      "submit": "Create binder"
+    },
+    "options": {
+      "title": "Binder options",
+      "name": "Name",
+      "save": "Save name",
+      "layout": "Pages",
+      "delete": "Delete binder",
+      "confirmTitle": "Delete this binder?",
+      "confirmBody": "Your Have and Want marks are kept.",
+      "cancel": "Cancel"
+    }
   }
 }
