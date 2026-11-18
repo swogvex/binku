@@ -199,5 +199,48 @@
       "body": "Toca un hueco o pulsa Escanear para meter tu primera carta.",
       "dismiss": "Entendido"
     }
+  },
+  "auth": {
+    "close": "Volver",
+    "email": {
+      "title": "Guarda tu colección",
+      "body": "Crea una cuenta para sincronizar tu binder entre móviles y encontrar coincidencias.",
+      "label": "Tu email",
+      "placeholder": "tu@email.com",
+      "send": "Enviarme un código",
+      "legal": "Al continuar aceptas las normas de la comunidad y la política de privacidad."
+    },
+    "code": {
+      "title": "Revisa tu correo",
+      "body": "Te hemos enviado un código de 6 cifras a {email}",
+      "label": "Código de 6 cifras",
+      "resendIn": "Reenviar en {time}",
+      "resend": "Reenviar código",
+      "change": "Cambiar email",
+      "help": "Sin contraseñas que recordar. ¿No llega? Mira en spam o promociones."
+    },
+    "finish": {
+      "title": "Preparando tu cuenta…",
+      "retry": "Reintentar"
+    },
+    "username": {
+      "title": "Elige tu @usuario",
+      "body": "Así te verán otros coleccionistas cuando hagáis match. Puedes cambiarlo más adelante.",
+      "label": "Nombre de usuario",
+      "rules": "De 3 a 20 caracteres: letras minúsculas, números, punto o guion bajo.",
+      "save": "Guardar"
+    },
+    "profile": {
+      "signIn": "Crear cuenta o entrar",
+      "signOut": "Cerrar sesión"
+    },
+    "errors": {
+      "offline": "Sin conexión. Vuelve a intentarlo cuando tengas internet.",
+      "rateLimit": "Has pedido demasiados códigos. Espera un poco y vuelve a probar.",
+      "badCode": "Código incorrecto o caducado. Revisa el último correo o pide otro.",
+      "badEmail": "Ese email no parece válido.",
+      "taken": "Ese @usuario ya está cogido. Prueba con otro.",
+      "generic": "Algo ha fallado. Vuelve a intentarlo."
+    }
   }
 }

@@ -7,3 +7,5 @@ claude-project-instructions.md
 assets/
 package-lock.json
 supabase/.temp/
+# Email HTML with Go template tags, kept as written
+supabase/templates/

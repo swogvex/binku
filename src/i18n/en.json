@@ -199,5 +199,48 @@
       "body": "Tap a pocket or press Scan to add your first card.",
       "dismiss": "Got it"
     }
+  },
+  "auth": {
+    "close": "Back",
+    "email": {
+      "title": "Keep your collection safe",
+      "body": "Create an account to sync your binder across phones and find matches.",
+      "label": "Your email",
+      "placeholder": "you@email.com",
+      "send": "Send me a code",
+      "legal": "By continuing you accept the community rules and the privacy policy."
+    },
+    "code": {
+      "title": "Check your email",
+      "body": "We sent a 6-digit code to {email}",
+      "label": "6-digit code",
+      "resendIn": "Resend in {time}",
+      "resend": "Resend code",
+      "change": "Change email",
+      "help": "No passwords to remember. Not there? Check spam or promotions."
+    },
+    "finish": {
+      "title": "Setting up your account…",
+      "retry": "Try again"
+    },
+    "username": {
+      "title": "Pick your @username",
+      "body": "This is how other collectors see you when you match. You can change it later.",
+      "label": "Username",
+      "rules": "3 to 20 characters: lowercase letters, numbers, dot or underscore.",
+      "save": "Save"
+    },
+    "profile": {
+      "signIn": "Create account or sign in",
+      "signOut": "Sign out"
+    },
+    "errors": {
+      "offline": "No connection. Try again when you're online.",
+      "rateLimit": "Too many codes requested. Wait a bit and try again.",
+      "badCode": "Wrong or expired code. Check the latest email or ask for a new one.",
+      "badEmail": "That email doesn't look right.",
+      "taken": "That @username is taken. Try another one.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }
