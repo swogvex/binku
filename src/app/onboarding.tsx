@@ -88,50 +88,48 @@ function Circle({ children }: { children: ReactNode }) {
  */
 function BinderPage() {
   const c = useTheme();
-  const fill: (Era | null)[] = [
-    'cobalt',
-    null,
-    'mint',
-    null,
-    'bubblegum',
-    null,
-    'mango',
-    null,
-    'cobalt',
+  const fill: (Era | null)[][] = [
+    ['cobalt', null, 'mint'],
+    [null, 'bubblegum', null],
+    ['mango', null, 'cobalt'],
   ];
-  const pocket = { width: 40, aspectRatio: cardRatio, borderRadius: cardRadius(40) };
+  // Explicit size (no aspectRatio): RN mis-measures aspectRatio children in wrapped rows.
+  const W = 40;
+  const pocket = { width: W, height: Math.round(W / cardRatio), borderRadius: cardRadius(W) };
   return (
     <View
       style={{
-        width: 158,
         padding: 12,
         gap: 7,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
         borderRadius: 18,
         backgroundColor: c.surface,
         borderWidth: 1,
         borderColor: c.line,
       }}
     >
-      {fill.map((e, i) =>
-        e ? (
-          <View key={i} style={[pocket, { backgroundColor: era[e] }]} />
-        ) : (
-          <View
-            key={i}
-            style={[
-              pocket,
-              {
-                borderWidth: 1.5,
-                borderStyle: 'dashed',
-                borderColor: i === 5 ? c.ink : c.muted,
-                backgroundColor: c.surface2,
-              },
-            ]}
-          />
-        ),
-      )}
+      {fill.map((row, r) => (
+        <View key={r} style={{ flexDirection: 'row', gap: 7 }}>
+          {row.map((e, col) =>
+            e ? (
+              <View key={col} style={[pocket, { backgroundColor: era[e] }]} />
+            ) : (
+              <View
+                key={col}
+                style={[
+                  pocket,
+                  {
+                    borderWidth: 1.5,
+                    borderStyle: 'dashed',
+                    // Middle-right: the logo's filled pocket, where the loose card goes.
+                    borderColor: r === 1 && col === 2 ? c.ink : c.muted,
+                    backgroundColor: c.surface2,
+                  },
+                ]}
+              />
+            ),
+          )}
+        </View>
+      ))}
     </View>
   );
 }
@@ -181,7 +179,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
         <View
           style={{
             position: 'absolute',
-            transform: [{ translateX: 62 }, { translateY: 6 }, { rotate: '11deg' }],
+            transform: [{ translateX: 84 }, { translateY: 52 }, { rotate: '13deg' }],
           }}
         >
           <CardMarker
@@ -190,7 +188,7 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
             version="Ver. A"
             format="album"
             eraColor="tomato"
-            width={88}
+            width={80}
           />
         </View>
       </Circle>

@@ -38,6 +38,12 @@ callback:function(t){post({token:t})},'expired-callback':function(){post({token:
           }
         }}
         scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        // The challenge runs in a challenges.cloudflare.com iframe: it needs storage and its cookies.
+        domStorageEnabled
+        thirdPartyCookiesEnabled
+        setSupportMultipleWindows={false}
         // Transparent so it sits on the screen background in light and dark.
         style={{ backgroundColor: 'transparent' }}
         containerStyle={{ backgroundColor: 'transparent' }}
