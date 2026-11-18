@@ -1,7 +1,7 @@
 -- RLS and age rules for profiles, binders, binder slots and card marks.
 -- Run: npx supabase test db (local, needs Docker) — CI runs it on every PR.
 begin;
-select plan(22);
+select plan(25);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-00000000000a', 'adult@test.local'),
@@ -43,6 +43,11 @@ select lives_ok(
   $$insert into public.binder_slots (binder_id, position, card_id) values ('00000000-0000-0000-0000-0000000000b1', 0, 't-c')$$,
   'fills a slot in own binder');
 select lives_ok(
+  $$select public.set_binder_slots('00000000-0000-0000-0000-0000000000b1', array['t-c', 't-c'])$$,
+  'replaces the whole order of own binder');
+select is((select array_agg(position order by position) from public.binder_slots), array[0, 1],
+  'order saved as flat positions');
+select lives_ok(
   $$insert into public.user_cards (card_id, status) values ('t-c', 'have')
     on conflict (user_id, card_id) do update set card_id = excluded.card_id, status = excluded.status$$,
   'upserts own mark');
@@ -67,6 +72,9 @@ select is((select count(*) from public.binders) + (select count(*) from public.b
 select throws_ok(
   $$insert into public.binder_slots (binder_id, position, card_id) values ('00000000-0000-0000-0000-0000000000b1', 1, 't-c')$$,
   '42501', null, 'cannot add slots to someone else''s binder');
+select throws_ok(
+  $$select public.set_binder_slots('00000000-0000-0000-0000-0000000000b1', array['t-c'])$$,
+  '42501', null, 'cannot rewrite someone else''s binder order');
 
 -- Account deletion cascades through binders and slots without errors.
 reset role;

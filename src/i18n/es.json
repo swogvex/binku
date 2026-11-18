@@ -232,7 +232,8 @@
     },
     "profile": {
       "signIn": "Crear cuenta o entrar",
-      "signOut": "Cerrar sesión"
+      "signOut": "Cerrar sesión",
+      "finish": "Terminar de crear tu cuenta"
     },
     "errors": {
       "offline": "Sin conexión. Vuelve a intentarlo cuando tengas internet.",
@@ -241,6 +242,20 @@
       "badEmail": "Ese email no parece válido.",
       "taken": "Ese @usuario ya está cogido. Prueba con otro.",
       "generic": "Algo ha fallado. Vuelve a intentarlo."
+    },
+    "upload": {
+      "title": "¡Hola, @{username}!",
+      "body": "Tenías un binder guardado en este móvil sin cuenta. ¿Lo subimos?",
+      "binders": {
+        "one": "{count} binder",
+        "other": "{count} binders"
+      },
+      "cards": {
+        "one": "{count} carta marcada",
+        "other": "{count} cartas marcadas"
+      },
+      "keep": "Subir a mi cuenta",
+      "fresh": "Empezar de cero"
     }
   }
 }

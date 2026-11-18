@@ -1,6 +1,8 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
+import { getDb, getKv } from '@/data/db';
+import { signOut } from '@/data/sync';
 import { useSession } from '@/features/auth/useSession';
 import { t } from '@/i18n';
 import { supabase } from '@/lib/supabase';
@@ -42,17 +44,14 @@ export default function Profile() {
           <Txt variant="title" size={22}>
             {username ? `@${username}` : session.user.email}
           </Txt>
-          {username === null ? (
+          {/* Set-up interrupted (offline, app closed): no @username yet or data not linked. */}
+          {username === null || (username && getKv(getDb(), 'sync:user') !== session.user.id) ? (
             <Button
-              label={t('auth.username.title')}
+              label={t('auth.profile.finish')}
               onPress={() => router.push({ pathname: '/sign-in', params: { resume: '1' } })}
             />
           ) : null}
-          <Button
-            variant="ghost"
-            label={t('auth.profile.signOut')}
-            onPress={() => supabase.auth.signOut()}
-          />
+          <Button variant="ghost" label={t('auth.profile.signOut')} onPress={() => signOut()} />
         </>
       ) : null}
       {__DEV__ ? (

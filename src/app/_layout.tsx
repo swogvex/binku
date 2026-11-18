@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { dataVersion } from '@/data/catalog';
 import { pullCatalogIfConfigured } from '@/data/catalogSync';
 import { getDb } from '@/data/db';
+import { startSync } from '@/data/sync';
 import { useOnboarded } from '@/features/onboarding/useOnboarded';
 import { fontFiles } from '@/theme/fonts';
 import { useTheme } from '@/theme/useTheme';
@@ -38,6 +39,7 @@ function RootLayout() {
       .catch((e) => {
         if (!(e instanceof TypeError)) Sentry.captureException(e);
       });
+    startSync();
   }, []);
 
   // If fonts fail we still render with system fonts rather than block the app.

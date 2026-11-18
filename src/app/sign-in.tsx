@@ -1,5 +1,6 @@
 // Account (canvas "Flujo · Cuenta"): email → 6-digit code (no passwords) → first time: profile
-// from the local onboarding (DOB uploaded, then deleted on the device) → pick @username.
+// from the local onboarding (DOB uploaded, then deleted on the device) → pick @username →
+// "Subir a mi cuenta" / "Empezar de cero" when this phone has a binder made without account.
 // `?resume=1` finishes an account whose set-up was interrupted (offline, app closed).
 // Apple / Google buttons and the Turnstile check come later in this milestone.
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -7,7 +8,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { getDb } from '@/data/db';
+import { getDb, getKv } from '@/data/db';
+import { linkAccount, localSummary } from '@/data/sync';
 import {
   authErrorKey,
   ensureProfile,
@@ -24,7 +26,7 @@ import { Button } from '@/ui/Button';
 import { RoundButton } from '@/ui/RoundButton';
 import { Txt } from '@/ui/Txt';
 
-type Step = 'email' | 'code' | 'finish' | 'username';
+type Step = 'email' | 'code' | 'finish' | 'username' | 'upload';
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 60; // matches auth.email.max_frequency in supabase/config.toml
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -99,6 +101,7 @@ export default function SignIn() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<TKey>();
   const [wait, setWait] = useState(0);
+  const [summary, setSummary] = useState({ binders: 0, cards: 0 });
 
   useEffect(() => {
     if (wait <= 0) return;
@@ -118,10 +121,32 @@ export default function SignIn() {
     }
   };
 
+  const userId = async () => (await supabase.auth.getSession()).data.session!.user.id;
+
+  /** Links this phone's data to the account, asking first if there is a local binder. */
+  const linkOrAsk = async () => {
+    const db = getDb();
+    const uid = await userId();
+    if (getKv(db, 'sync:user') === uid) return router.back();
+    const s = localSummary(db);
+    if (s.binders || s.cards) {
+      setSummary(s);
+      setStep('upload');
+      return;
+    }
+    await linkAccount(db, uid, 'fresh');
+    router.back();
+  };
+
   const finishProfile = async () => {
-    if (await ensureProfile(getDb())) return router.back();
-    setUsername(suggestUsername(getDb()));
-    setStep('username');
+    const name = await ensureProfile(getDb());
+    if (!name) {
+      setUsername(suggestUsername(getDb()));
+      setStep('username');
+      return;
+    }
+    setUsername(name);
+    await linkOrAsk();
   };
   const finish = () => run(finishProfile);
 
@@ -247,6 +272,34 @@ export default function SignIn() {
     action = error ? (
       <Button label={t('auth.finish.retry')} disabled={busy} onPress={finish} />
     ) : null;
+  } else if (step === 'upload') {
+    const link = (mode: 'upload' | 'fresh') =>
+      run(async () => {
+        await linkAccount(getDb(), await userId(), mode);
+        router.back();
+      });
+    body = (
+      <View style={{ gap: 16 }}>
+        <Txt variant="display" size={40} accessibilityRole="header">
+          {t('auth.upload.title', { username })}
+        </Txt>
+        <Txt muted>{t('auth.upload.body')}</Txt>
+        <Txt variant="title">
+          {`${t('auth.upload.binders', { count: summary.binders })} · ${t('auth.upload.cards', { count: summary.cards })}`}
+        </Txt>
+      </View>
+    );
+    action = (
+      <View style={{ gap: 6 }}>
+        <Button label={t('auth.upload.keep')} disabled={busy} onPress={() => link('upload')} />
+        <Button
+          variant="ghost"
+          label={t('auth.upload.fresh')}
+          disabled={busy}
+          onPress={() => link('fresh')}
+        />
+      </View>
+    );
   } else {
     const valid = USERNAME.test(username);
     body = (
@@ -287,7 +340,7 @@ export default function SignIn() {
         onPress={() =>
           run(async () => {
             await saveUsername(username);
-            router.back();
+            await linkOrAsk();
           })
         }
       />

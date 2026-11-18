@@ -69,6 +69,14 @@ const MIGRATIONS = [
   -- small settings: sync cursors, onboarding answers (DOB stays on device until sign-up)
   create table kv (key text primary key, value text not null);
   `,
+  // Pending uploads, one row per changed thing (repeated edits collapse into one); the payload is
+  // read from the local tables at upload time. `version` stops a finished upload from removing a
+  // newer edit made meanwhile.
+  `
+  create table outbox (entity text not null, key text not null, version integer not null default 1,
+    attempts integer not null default 0, next_try integer not null default 0, last_error text,
+    created_at integer not null, primary key (entity, key));
+  `,
 ];
 
 /** Oldest timestamp: bundled rows lose to anything the server sends. */

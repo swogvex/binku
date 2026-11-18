@@ -232,7 +232,8 @@
     },
     "profile": {
       "signIn": "Create account or sign in",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "finish": "Finish creating your account"
     },
     "errors": {
       "offline": "No connection. Try again when you're online.",
@@ -241,6 +242,20 @@
       "badEmail": "That email doesn't look right.",
       "taken": "That @username is taken. Try another one.",
       "generic": "Something went wrong. Please try again."
+    },
+    "upload": {
+      "title": "Hi, @{username}!",
+      "body": "You had a binder saved on this phone without an account. Shall we upload it?",
+      "binders": {
+        "one": "{count} binder",
+        "other": "{count} binders"
+      },
+      "cards": {
+        "one": "{count} marked card",
+        "other": "{count} marked cards"
+      },
+      "keep": "Upload to my account",
+      "fresh": "Start from scratch"
     }
   }
 }

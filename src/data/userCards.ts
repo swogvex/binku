@@ -2,13 +2,14 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { dataVersion, type UserMark } from '@/data/catalog';
+import { enqueue } from '@/data/outbox';
 
 /** Sets or clears (null) the user's mark for a card. */
 export function setMark(db: SQLiteDatabase, cardId: string, mark: UserMark | null) {
   if (!mark) {
     db.runSync('delete from user_cards where card_id = ?', cardId);
   } else {
-    // shortcut: local id = card id (one row per card); the server assigns its own ids at sign-up (M3).
+    // Local id = card id: one row per card, like the server's (user_id, card_id) key.
     db.runSync(
       `insert into user_cards (id, card_id, status, qty, updated_at) values (?1, ?1, ?2, ?3, ?4)
        on conflict (card_id) do update set status = ?2, qty = ?3, updated_at = ?4`,
@@ -18,5 +19,6 @@ export function setMark(db: SQLiteDatabase, cardId: string, mark: UserMark | nul
       new Date().toISOString(),
     );
   }
+  enqueue(db, 'mark', cardId);
   dataVersion.bump();
 }
