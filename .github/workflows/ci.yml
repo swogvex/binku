@@ -27,3 +27,17 @@ jobs:
       - run: npm run typecheck
       - run: npm run format:check
       - run: npm test -- --ci
+
+  # RLS / SQL tests (pgTAP) on a throwaway local Postgres; the owner's PC has no Docker.
+  db:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx supabase db start
+      - run: npx supabase test db
