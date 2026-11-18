@@ -175,6 +175,79 @@ function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
   );
 }
 
+/** Welcome art: the app-icon tile over a fan of tilted photocards (fictional members). */
+function WelcomeArt() {
+  const c = useTheme();
+  const fan = [
+    {
+      member: 'Seora',
+      version: 'POB',
+      format: 'pob',
+      eraColor: 'cobalt',
+      x: -92,
+      rotate: '-14deg',
+    },
+    {
+      member: 'Jiwan',
+      version: 'Ver. B',
+      format: 'album',
+      eraColor: 'mint',
+      x: 92,
+      rotate: '12deg',
+    },
+  ] as const;
+  return (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ width: 300, height: 230, alignItems: 'center', justifyContent: 'center' }}
+    >
+      <View
+        style={{
+          position: 'absolute',
+          width: 230,
+          height: 230,
+          borderRadius: 115,
+          backgroundColor: c.surface2,
+        }}
+      />
+      {fan.map((f) => (
+        <View
+          key={f.member}
+          style={{
+            position: 'absolute',
+            transform: [{ translateX: f.x }, { translateY: 12 }, { rotate: f.rotate }],
+          }}
+        >
+          <CardMarker
+            member={f.member}
+            album="Paper Moon"
+            version={f.version}
+            format={f.format}
+            eraColor={f.eraColor}
+            width={92}
+          />
+        </View>
+      ))}
+      {/* Same look as the app icon: tomato tile, ink pockets. */}
+      <View
+        style={{
+          width: 108,
+          height: 108,
+          borderRadius: 28,
+          backgroundColor: era.tomato,
+          borderWidth: 4,
+          borderColor: c.bg,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <BinkuMark size={80} wordmark={false} />
+      </View>
+    </View>
+  );
+}
+
 export default function Onboarding() {
   const c = useTheme();
   const router = useRouter();
@@ -472,16 +545,16 @@ export default function Onboarding() {
     );
   } else if (step === 'welcome') {
     body = (
-      <View style={{ gap: 24, paddingTop: 12 }}>
-        <Circle>
-          <BinkuMark size={120} wordmark={false} />
-        </Circle>
-        <Txt variant="display" size={46} accessibilityRole="header">
-          {t('onboarding.welcome.title')}
-        </Txt>
-        <Txt size={17} muted>
-          {t('onboarding.welcome.body')}
-        </Txt>
+      <View style={{ alignItems: 'center', gap: 28 }}>
+        <WelcomeArt />
+        <View style={{ alignItems: 'center', gap: 8 }}>
+          <Txt variant="display" size={46} accessibilityRole="header" style={{ letterSpacing: 2 }}>
+            Binku
+          </Txt>
+          <Txt size={17} muted style={{ textAlign: 'center', maxWidth: 320 }}>
+            {t('onboarding.welcome.body')}
+          </Txt>
+        </View>
       </View>
     );
     action = (
@@ -501,6 +574,9 @@ export default function Onboarding() {
             {t('onboarding.welcome.explore')}
           </Txt>
         </Pressable>
+        <Txt size={12} muted style={{ textAlign: 'center' }}>
+          {t('onboarding.welcome.unofficial')}
+        </Txt>
       </View>
     );
   } else if (step === 'account') {
@@ -638,39 +714,45 @@ export default function Onboarding() {
       behavior="padding"
       style={{ flex: 1, backgroundColor: c.bg, paddingTop: insets.top + 8 }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: screenPadding,
-          minHeight: 48,
-        }}
-      >
-        {/* iOS has no system back: every step after the intros gets one on screen. */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          {!isIntro && prevStep[step] ? (
-            <RoundButton icon="chevronLeft" label={t('onboarding.back')} onPress={back} />
+      {step === 'welcome' ? null : (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: screenPadding,
+            minHeight: 48,
+          }}
+        >
+          {/* iOS has no system back: every step after the intros gets one on screen. */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            {!isIntro && prevStep[step] ? (
+              <RoundButton icon="chevronLeft" label={t('onboarding.back')} onPress={back} />
+            ) : null}
+            <BinkuMark />
+          </View>
+          {isIntro ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setStep('welcome')}
+              hitSlop={12}
+              style={{ minHeight: 44, justifyContent: 'center' }}
+            >
+              <Txt variant="label" size={15} muted>
+                {t('onboarding.skip')}
+              </Txt>
+            </Pressable>
           ) : null}
-          <BinkuMark />
         </View>
-        {isIntro ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setStep('welcome')}
-            hitSlop={12}
-            style={{ minHeight: 44, justifyContent: 'center' }}
-          >
-            <Txt variant="label" size={15} muted>
-              {t('onboarding.skip')}
-            </Txt>
-          </Pressable>
-        ) : null}
-      </View>
+      )}
       <ScrollView
         style={{ flex: 1 }}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ padding: screenPadding, paddingBottom: 24 }}
+        contentContainerStyle={[
+          { padding: screenPadding, paddingBottom: 24 },
+          // The welcome is the app's cover: centred, no header.
+          step === 'welcome' && { flexGrow: 1, justifyContent: 'center' },
+        ]}
       >
         {body}
       </ScrollView>

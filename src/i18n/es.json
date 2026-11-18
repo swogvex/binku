@@ -155,11 +155,11 @@
       "youHave": "Tú tienes"
     },
     "welcome": {
-      "title": "Te damos la bienvenida",
       "body": "Tu colección de photocards, ordenada en tu binder y lista para cambiar.",
       "signUp": "Crear cuenta",
       "signIn": "Iniciar sesión",
-      "explore": "Explorar sin cuenta"
+      "explore": "Explorar sin cuenta",
+      "unofficial": "App no oficial creada por fans."
     },
     "place": {
       "title": "¿Dónde vives?",

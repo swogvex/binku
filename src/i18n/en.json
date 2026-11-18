@@ -155,11 +155,11 @@
       "youHave": "You have"
     },
     "welcome": {
-      "title": "Welcome",
       "body": "Your photocard collection, sorted in your binder and ready to trade.",
       "signUp": "Create account",
       "signIn": "Sign in",
-      "explore": "Explore without an account"
+      "explore": "Explore without an account",
+      "unofficial": "Unofficial app made by fans."
     },
     "place": {
       "title": "Where do you live?",
