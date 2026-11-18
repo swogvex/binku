@@ -253,7 +253,8 @@
       "badCode": "Wrong or expired code. Check the latest email or ask for a new one.",
       "badEmail": "That email doesn't look right.",
       "taken": "That @username is taken. Try another one.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "captcha": "We couldn't confirm you're not a robot. Wait for the green tick and try again."
     },
     "upload": {
       "title": "Hi, @{username}!",
@@ -268,7 +269,9 @@
       },
       "keep": "Upload to my account",
       "fresh": "Start from scratch"
-    }
+    },
+    "google": "Continue with Google",
+    "or": "or with your email"
   },
   "settings": {
     "title": "Settings",

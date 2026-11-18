@@ -90,6 +90,8 @@ export function authErrorKey(e: unknown): TKey {
       return 'auth.errors.rateLimit';
     case 'otp_expired':
       return 'auth.errors.badCode';
+    case 'captcha_failed':
+      return 'auth.errors.captcha';
     case 'email_address_invalid':
     case 'validation_failed':
       return 'auth.errors.badEmail';

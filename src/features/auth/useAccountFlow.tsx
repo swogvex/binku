@@ -5,6 +5,7 @@
 // Apple / Google buttons and the Turnstile check come later in M3.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Alert, Pressable, TextInput, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 import { getDb, getKv } from '@/data/db';
 import { getLocalProfile, forgetDob } from '@/data/profile';
@@ -19,6 +20,8 @@ import {
   USERNAME,
   type ServerProfile,
 } from '@/features/auth/account';
+import { googleAvailable, signInWithGoogle } from '@/features/auth/google';
+import { Turnstile } from '@/features/auth/Turnstile';
 import { locale, t, type TKey } from '@/i18n';
 import { supabase } from '@/lib/supabase';
 import { fonts, radius } from '@/theme/tokens';
@@ -106,6 +109,74 @@ function CodeInput(props: { value: string; onChange: (v: string) => void }) {
   );
 }
 
+/** Google's "G" mark: their sign-in branding rules require it on the button. */
+function GoogleMark() {
+  return (
+    <Svg width={20} height={20} viewBox="0 0 48 48">
+      <Path
+        fill="#EA4335"
+        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+      />
+      <Path
+        fill="#4285F4"
+        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+      />
+      <Path
+        fill="#FBBC05"
+        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+      />
+      <Path
+        fill="#34A853"
+        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+      />
+    </Svg>
+  );
+}
+
+function GoogleButton(props: { disabled: boolean; onPress: () => void }) {
+  const c = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ disabled: props.disabled }}
+      disabled={props.disabled}
+      onPress={props.onPress}
+      style={({ pressed }) => ({
+        minHeight: 52,
+        borderRadius: radius.control,
+        borderWidth: 1.5,
+        borderColor: c.line,
+        backgroundColor: pressed ? c.surface2 : c.surface,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        opacity: props.disabled ? 0.5 : 1,
+      })}
+    >
+      <GoogleMark />
+      <Txt variant="label" size={15}>
+        {t('auth.google')}
+      </Txt>
+    </Pressable>
+  );
+}
+
+/** "──── o con tu email ────" */
+function OrDivider() {
+  const c = useTheme();
+  const line = <View style={{ flex: 1, height: 1, backgroundColor: c.line }} />;
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+      {line}
+      <Txt size={13} muted>
+        {t('auth.or')}
+      </Txt>
+      {line}
+    </View>
+  );
+}
+
 export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfile }: Options) {
   const c = useTheme();
   const inputStyle = useInputStyle();
@@ -117,6 +188,14 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
   const [error, setError] = useState<TKey>();
   const [wait, setWait] = useState(0);
   const [summary, setSummary] = useState({ binders: 0, cards: 0 });
+  // Turnstile token for the next request; each one is single-use, so the widget is remounted.
+  const [captcha, setCaptcha] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const freshCaptcha = () => {
+    setCaptcha(null);
+    setCaptchaKey((k) => k + 1);
+  };
+  const turnstile = <Turnstile key={captchaKey} onToken={setCaptcha} />;
   const result = useRef<AccountResult>(undefined);
 
   useEffect(() => {
@@ -191,8 +270,9 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
       const { error: e } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         // `locale` picks the language of the code email (template in supabase/templates).
-        options: { shouldCreateUser: true, data: { locale } },
+        options: { shouldCreateUser: true, data: { locale }, captchaToken: captcha ?? undefined },
       });
+      freshCaptcha();
       if (e) throw e;
       setCode('');
       setWait(RESEND_SECONDS);
@@ -211,6 +291,14 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
         throw e;
       }
       // Signed in from here: a failure below leaves the "finish" step with a retry.
+      setStep('finish');
+      await finishProfile();
+    });
+
+  const google = () =>
+    run(async () => {
+      const signedIn = await signInWithGoogle(captcha ?? undefined).finally(freshCaptcha);
+      if (!signedIn) return; // closed the Google sheet
       setStep('finish');
       await finishProfile();
     });
@@ -247,7 +335,13 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
           title={t(intent === 'signIn' ? 'auth.email.signInTitle' : 'auth.email.title')}
           body={t(intent === 'signIn' ? 'auth.email.signInBody' : 'auth.email.body')}
         />
-        <Txt variant="label" style={{ marginTop: 8 }}>
+        {googleAvailable ? (
+          <>
+            <GoogleButton disabled={!captcha || busy} onPress={google} />
+            <OrDivider />
+          </>
+        ) : null}
+        <Txt variant="label" style={{ marginTop: googleAvailable ? 0 : 8 }}>
           {t('auth.email.label')}
         </Txt>
         <TextInput
@@ -261,17 +355,23 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
           autoComplete="email"
           autoCapitalize="none"
           autoCorrect={false}
-          autoFocus
           returnKeyType="send"
-          onSubmitEditing={() => valid && !busy && sendCode()}
+          onSubmitEditing={() => valid && captcha && !busy && sendCode()}
           style={inputStyle}
         />
+        {turnstile}
         <Txt size={13} muted style={{ textAlign: 'center' }}>
           {t('auth.email.legal')}
         </Txt>
       </View>
     );
-    action = <Button label={t('auth.email.send')} disabled={!valid || busy} onPress={sendCode} />;
+    action = (
+      <Button
+        label={t('auth.email.send')}
+        disabled={!valid || !captcha || busy}
+        onPress={sendCode}
+      />
+    );
   } else if (step === 'code') {
     body = (
       <View style={{ gap: 16 }}>
@@ -285,6 +385,8 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
         <Txt size={13} muted style={{ textAlign: 'center' }}>
           {t('auth.code.help')}
         </Txt>
+        {/* Only needed to ask for another code. */}
+        {wait > 0 ? null : turnstile}
       </View>
     );
     action = (
@@ -296,7 +398,7 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
               ? t('auth.code.resendIn', { time: `0:${String(wait).padStart(2, '0')}` })
               : t('auth.code.resend')
           }
-          disabled={wait > 0 || busy}
+          disabled={wait > 0 || !captcha || busy}
           onPress={sendCode}
         />
         <Pressable

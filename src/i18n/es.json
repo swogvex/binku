@@ -253,7 +253,8 @@
       "badCode": "Código incorrecto o caducado. Revisa el último correo o pide otro.",
       "badEmail": "Ese email no parece válido.",
       "taken": "Ese @usuario ya está cogido. Prueba con otro.",
-      "generic": "Algo ha fallado. Vuelve a intentarlo."
+      "generic": "Algo ha fallado. Vuelve a intentarlo.",
+      "captcha": "No hemos podido comprobar que no eres un robot. Espera a que aparezca el visto verde y vuelve a probar."
     },
     "upload": {
       "title": "¡Hola, @{username}!",
@@ -268,7 +269,9 @@
       },
       "keep": "Subir a mi cuenta",
       "fresh": "Empezar de cero"
-    }
+    },
+    "google": "Continuar con Google",
+    "or": "o con tu email"
   },
   "settings": {
     "title": "Ajustes",

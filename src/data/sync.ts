@@ -9,6 +9,7 @@ import { loadOrder } from '@/data/binders';
 import { dataVersion } from '@/data/catalog';
 import { getDb, getKv, setKv } from '@/data/db';
 import { enqueue, isPermanent, setQueueListener, type Entity } from '@/data/outbox';
+import { signOutOfGoogle } from '@/features/auth/google';
 import { supabase } from '@/lib/supabase';
 import { isUuid, uuid } from '@/lib/uuid';
 
@@ -340,6 +341,7 @@ export async function signOut(db = getDb()) {
   await flush(db).catch(report);
   db.execSync(UNLINK);
   await supabase.auth.signOut();
+  await signOutOfGoogle();
 }
 
 /**
@@ -351,6 +353,7 @@ export async function deleteAccount(db = getDb()) {
   const { data, error } = await supabase.rpc('request_account_deletion');
   if (error) throw error;
   await supabase.auth.signOut();
+  await signOutOfGoogle();
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
     db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
