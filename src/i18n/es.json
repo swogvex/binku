@@ -82,5 +82,21 @@
         "other": "Ver {count} cartas"
       }
     }
+  },
+  "cardSheet": {
+    "title": "Ficha de carta",
+    "back": "Atrás",
+    "dupe": "Repetida",
+    "markA11y": "Marcar como",
+    "dupeQty": "Copias repetidas",
+    "less": "Una copia menos",
+    "more": "Una copia más",
+    "group": "Grupo",
+    "album": "Álbum",
+    "version": "Versión",
+    "type": "Tipo",
+    "store": "Tienda",
+    "korean": "Coreano",
+    "notFound": "Esta carta ya no está en el catálogo"
   }
 }

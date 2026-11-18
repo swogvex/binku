@@ -25,7 +25,8 @@ export type CatalogCard = {
 
 export type UserMark = { status: 'have' | 'want' | 'dupe'; qty: number };
 
-export function loadCatalog(db: SQLiteDatabase): CatalogCard[] {
+/** All approved cards, or just `cardId` when given. */
+export function loadCatalog(db: SQLiteDatabase, cardId?: string): CatalogCard[] {
   return db
     .getAllSync<Omit<CatalogCard, 'isSpecial'> & { isSpecial: number }>(
       `select c.id, c.group_id groupId, g.name groupName, c.member_id memberId, m.name memberName,
@@ -37,8 +38,9 @@ export function loadCatalog(db: SQLiteDatabase): CatalogCard[] {
          join members m on m.id = c.member_id and m.status = 'approved'
          join releases r on r.id = c.release_id and r.status = 'approved'
          left join versions v on v.id = c.version_id
-        where c.status = 'approved'
+        where c.status = 'approved' and (?1 is null or c.id = ?1)
         order by g.name, r.year desc, r.title, v.label, m.name, c.type, c.store`,
+      cardId ?? null,
     )
     .map((r) => ({ ...r, isSpecial: r.isSpecial === 1 }));
 }

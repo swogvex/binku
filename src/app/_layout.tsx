@@ -47,6 +47,7 @@ function RootLayout() {
         <Stack.Screen name="gallery" />
         <Stack.Screen name="sheet-demo" options={sheetOptions} />
         <Stack.Screen name="catalog-filters" options={sheetOptions} />
+        <Stack.Screen name="card/[id]" />
       </Stack>
       <StatusBar style="auto" />
     </>

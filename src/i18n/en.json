@@ -82,5 +82,21 @@
         "other": "Show {count} cards"
       }
     }
+  },
+  "cardSheet": {
+    "title": "Card",
+    "back": "Back",
+    "dupe": "Dupe",
+    "markA11y": "Mark as",
+    "dupeQty": "Spare copies",
+    "less": "One copy less",
+    "more": "One copy more",
+    "group": "Group",
+    "album": "Album",
+    "version": "Version",
+    "type": "Type",
+    "store": "Store",
+    "korean": "Korean",
+    "notFound": "This card is no longer in the catalog"
   }
 }

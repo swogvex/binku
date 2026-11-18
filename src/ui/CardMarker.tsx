@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import { t } from '@/i18n';
@@ -21,6 +21,8 @@ type Props = {
   width?: number;
   /** Iridescent shine for special cards (lucky draw, POB, event, user-marked). */
   holo?: boolean;
+  /** Makes the whole card a button that keeps the card's accessibility label. */
+  onPress?: () => void;
 };
 
 function FormatMark({ format, color }: { format: CardFormat; color: string }) {
@@ -61,6 +63,7 @@ export function CardMarker({
   state,
   width = 110,
   holo = false,
+  onPress,
 }: Props) {
   const bg = era[eraColor];
   const fg = textOn(bg);
@@ -74,9 +77,12 @@ export function CardMarker({
     .filter(Boolean)
     .join(', ');
 
+  const Container = onPress ? Pressable : View;
   return (
-    <View
+    <Container
       accessible
+      accessibilityRole={onPress ? 'button' : undefined}
+      onPress={onPress}
       accessibilityLabel={a11y}
       style={{
         width,
@@ -125,6 +131,6 @@ export function CardMarker({
         </Txt>
       </View>
       {holo ? <Holo width={width} /> : null}
-    </View>
+    </Container>
   );
 }

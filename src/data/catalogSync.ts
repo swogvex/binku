@@ -1,7 +1,7 @@
 // Incremental catalog pull from Supabase (read-only REST, public key) into SQLite.
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import { CATALOG_COLS, getKv, setKv, upsertRows, type CatalogTable } from './db';
+import { CATALOG_COLS, getKv, setKv, upsertRows, type CatalogTable } from '@/data/db';
 
 const PAGE = 1000;
 const ORDER: CatalogTable[] = [

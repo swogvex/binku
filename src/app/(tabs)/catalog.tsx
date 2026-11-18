@@ -159,6 +159,7 @@ function Header() {
 
 export default function Catalog() {
   const c = useTheme();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const onScroll = useDockScrollHandler();
@@ -199,7 +200,11 @@ export default function Catalog() {
       }
       renderItem={({ item }) => (
         <View style={{ paddingHorizontal: GAP / 2, paddingBottom: GAP, alignItems: 'center' }}>
-          <CardMarker {...markerProps(item, marks.get(item.id))} width={cardW} />
+          <CardMarker
+            {...markerProps(item, marks.get(item.id))}
+            width={cardW}
+            onPress={() => router.push({ pathname: '/card/[id]', params: { id: item.id } })}
+          />
         </View>
       )}
     />
