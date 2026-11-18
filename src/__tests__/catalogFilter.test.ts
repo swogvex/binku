@@ -12,6 +12,8 @@ const card = (id: string, o: Partial<CatalogCard>): CatalogCard => ({
   id,
   groupId: 'g1',
   groupName: 'Nova',
+  groupMonogram: 'G',
+  groupColor: 'mint',
   memberId: 'm1',
   memberName: 'Ari',
   memberNameKo: null,

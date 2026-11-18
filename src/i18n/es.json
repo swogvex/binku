@@ -131,5 +131,75 @@
       "confirmBody": "Tus marcas de Tengo y Busco no se borran.",
       "cancel": "Cancelar"
     }
+  },
+  "onboarding": {
+    "skip": "Saltar",
+    "next": "Siguiente",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "intro": {
+      "collect": {
+        "title": "Colecciona",
+        "body": "Tu binder digital, con tus propias fotos dentro de cada bolsillo."
+      },
+      "mark": {
+        "title": "Marca Tengo",
+        "body": "Con un toque. Sin precios de mercado ni rankings."
+      },
+      "match": {
+        "title": "Te avisamos",
+        "body": "Cuando alguien tiene lo que buscas y busca lo que tienes."
+      },
+      "youWant": "Tú buscas",
+      "youHave": "Tú tienes"
+    },
+    "place": {
+      "title": "¿Dónde vives?",
+      "body": "Solo país y {term}: así encontramos cambios cerca de ti. Nunca usamos tu ubicación exacta.",
+      "country": "País",
+      "search": "Buscar",
+      "term": {
+        "province": "provincia",
+        "state": "estado",
+        "department": "departamento",
+        "region": "región"
+      },
+      "countries": {
+        "ES": "España",
+        "MX": "México",
+        "AR": "Argentina",
+        "CO": "Colombia",
+        "CL": "Chile",
+        "PE": "Perú"
+      }
+    },
+    "dob": {
+      "title": "¿Cuándo naciste?",
+      "body": "Lo usamos para proteger a los menores: por debajo de 18, perfil privado, chat limitado y horas de silencio. Nadie más lo ve.",
+      "day": "Día",
+      "month": "Mes",
+      "year": "Año",
+      "invalid": "Revisa la fecha.",
+      "min": "Necesitas tener al menos {age} años."
+    },
+    "blocked": {
+      "title": "Aún no puedes usar Binku",
+      "body": "Binku es para personas de {age} años o más. No hemos guardado ningún dato. ¡Te esperamos!",
+      "back": "Cambiar la fecha"
+    },
+    "groups": {
+      "title": "Tus grupos",
+      "body": "Elige uno o varios. Luego, tu bias.",
+      "search": "Buscar grupo",
+      "bias": "Bias de {group}",
+      "all": "Todos",
+      "create": "Crear mi binder",
+      "explore": "Explorar sin cuenta"
+    },
+    "ready": {
+      "time": "Listo en {seconds} segundos",
+      "body": "Toca un hueco o pulsa Escanear para meter tu primera carta.",
+      "dismiss": "Entendido"
+    }
   }
 }

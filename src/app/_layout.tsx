@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { dataVersion } from '@/data/catalog';
 import { pullCatalogIfConfigured } from '@/data/catalogSync';
 import { getDb } from '@/data/db';
+import { useOnboarded } from '@/features/onboarding/useOnboarded';
 import { fontFiles } from '@/theme/fonts';
 import { useTheme } from '@/theme/useTheme';
 import { sheetOptions } from '@/ui/sheet';
@@ -24,6 +25,7 @@ SplashScreen.preventAutoHideAsync();
 function RootLayout() {
   const c = useTheme();
   const [loaded, error] = useFonts(fontFiles);
+  const onboarded = useOnboarded();
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
@@ -44,13 +46,19 @@ function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.bg } }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="gallery" />
-        <Stack.Screen name="sheet-demo" options={sheetOptions} />
-        <Stack.Screen name="catalog-filters" options={sheetOptions} />
-        <Stack.Screen name="card/[id]" />
-        <Stack.Screen name="binder-new" options={sheetOptions} />
-        <Stack.Screen name="binder-options" options={sheetOptions} />
+        {/* Browsing never needs an account, only the one-time onboarding. */}
+        <Stack.Protected guard={onboarded}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="gallery" />
+          <Stack.Screen name="sheet-demo" options={sheetOptions} />
+          <Stack.Screen name="catalog-filters" options={sheetOptions} />
+          <Stack.Screen name="card/[id]" />
+          <Stack.Screen name="binder-new" options={sheetOptions} />
+          <Stack.Screen name="binder-options" options={sheetOptions} />
+        </Stack.Protected>
+        <Stack.Protected guard={!onboarded}>
+          <Stack.Screen name="onboarding" />
+        </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
     </GestureHandlerRootView>

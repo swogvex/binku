@@ -9,6 +9,8 @@ export type CatalogCard = {
   id: string;
   groupId: string;
   groupName: string;
+  groupMonogram: string;
+  groupColor: Era;
   memberId: string;
   memberName: string;
   memberNameKo: string | null;
@@ -29,7 +31,7 @@ export type UserMark = { status: 'have' | 'want' | 'dupe'; qty: number };
 export function loadCatalog(db: SQLiteDatabase, cardId?: string): CatalogCard[] {
   return db
     .getAllSync<Omit<CatalogCard, 'isSpecial'> & { isSpecial: number }>(
-      `select c.id, c.group_id groupId, g.name groupName, c.member_id memberId, m.name memberName,
+      `select c.id, c.group_id groupId, g.name groupName, g.monogram groupMonogram, g.color groupColor, c.member_id memberId, m.name memberName,
               m.name_ko memberNameKo, c.release_id releaseId, r.title releaseTitle,
               c.version_id versionId, v.label versionLabel, c.type, c.store, c.year,
               c.is_special isSpecial, r.era_color eraColor

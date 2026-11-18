@@ -18,6 +18,8 @@ const paths = {
   chevronLeft: 'M15 5l-7 7 7 7',
   plus: 'M12 5v14M5 12h14',
   minus: 'M5 12h14',
+  check: 'M5 12.5l4.5 4.5L19 7',
+  swap: 'M7 7h11l-3-3M17 17H6l3 3',
   close: 'M6 6l12 12M18 6 6 18',
 } as const;
 

@@ -5,6 +5,8 @@ const card = (id: string, groupId = 'g1', memberId = 'm1'): CatalogCard => ({
   id,
   groupId,
   groupName: groupId,
+  groupMonogram: 'G',
+  groupColor: 'mint',
   memberId,
   memberName: memberId,
   memberNameKo: null,

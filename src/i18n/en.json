@@ -131,5 +131,75 @@
       "confirmBody": "Your Have and Want marks are kept.",
       "cancel": "Cancel"
     }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "continue": "Continue",
+    "back": "Back",
+    "intro": {
+      "collect": {
+        "title": "Collect",
+        "body": "Your digital binder, with your own photos inside every pocket."
+      },
+      "mark": {
+        "title": "Mark Have",
+        "body": "One tap. No market prices or rankings."
+      },
+      "match": {
+        "title": "We'll tell you",
+        "body": "When someone has what you want and wants what you have."
+      },
+      "youWant": "You want",
+      "youHave": "You have"
+    },
+    "place": {
+      "title": "Where do you live?",
+      "body": "Just country and {term}, so we can find trades near you. We never use your exact location.",
+      "country": "Country",
+      "search": "Search",
+      "term": {
+        "province": "province",
+        "state": "state",
+        "department": "department",
+        "region": "region"
+      },
+      "countries": {
+        "ES": "Spain",
+        "MX": "Mexico",
+        "AR": "Argentina",
+        "CO": "Colombia",
+        "CL": "Chile",
+        "PE": "Peru"
+      }
+    },
+    "dob": {
+      "title": "When were you born?",
+      "body": "We use it to protect minors: under 18 means a private profile, limited chat and quiet hours. Nobody else sees it.",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "invalid": "Check the date.",
+      "min": "You need to be at least {age}."
+    },
+    "blocked": {
+      "title": "You can't use Binku yet",
+      "body": "Binku is for people aged {age} or over. We haven't saved any data. See you soon!",
+      "back": "Change the date"
+    },
+    "groups": {
+      "title": "Your groups",
+      "body": "Pick one or more. Then your bias.",
+      "search": "Search group",
+      "bias": "{group} bias",
+      "all": "All",
+      "create": "Create my binder",
+      "explore": "Explore without an account"
+    },
+    "ready": {
+      "time": "Ready in {seconds} seconds",
+      "body": "Tap a pocket or press Scan to add your first card.",
+      "dismiss": "Got it"
+    }
   }
 }

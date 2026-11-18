@@ -7,7 +7,7 @@ import type { CatalogCard } from '@/data/catalog';
 import { getDb } from '@/data/db';
 import { DragPocket } from '@/features/binder/DragPocket';
 import { owned, swap, toPages } from '@/features/binder/pages';
-import { selectBinder, useBinder } from '@/features/binder/useBinder';
+import { dismissHint, selectBinder, useBinder } from '@/features/binder/useBinder';
 import { markerProps } from '@/features/catalog/cardView';
 import { t } from '@/i18n';
 import { haptics } from '@/lib/haptics';
@@ -70,7 +70,7 @@ export default function BinderScreen() {
   const router = useRouter();
   const { width, fontScale } = useWindowDimensions();
   const db = getDb();
-  const { marks, binders, binder, items } = useBinder();
+  const { marks, binders, binder, items, hint } = useBinder();
   // The page index belongs to one binder: switching binders starts at page 1.
   const [pageState, setPageState] = useState({ id: '', page: 0 });
   const page = pageState.id === binder?.id ? pageState.page : 0;
@@ -162,6 +162,33 @@ export default function BinderScreen() {
           <Txt variant="display" size={40} accessibilityRole="header" numberOfLines={3}>
             {binder.title}
           </Txt>
+
+          {hint ? (
+            <View
+              accessibilityLiveRegion="polite"
+              style={{
+                padding: 14,
+                gap: 8,
+                borderRadius: radius.card,
+                backgroundColor: c.surface2,
+              }}
+            >
+              <Txt variant="label" size={13} muted>
+                {t('onboarding.ready.time', { seconds: hint })}
+              </Txt>
+              <Txt>{t('onboarding.ready.body')}</Txt>
+              <Pressable
+                accessibilityRole="button"
+                onPress={dismissHint}
+                hitSlop={8}
+                style={{ alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center' }}
+              >
+                <Txt variant="title" size={15} color={c.accentText}>
+                  {t('onboarding.ready.dismiss')}
+                </Txt>
+              </Pressable>
+            </View>
+          ) : null}
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <View

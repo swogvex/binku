@@ -19,6 +19,12 @@ export function selectBinder(id: string) {
   dataVersion.bump();
 }
 
+/** Hides the post-onboarding hint for good. */
+export function dismissHint() {
+  getDb().runSync("delete from kv where key = 'binder:hint'");
+  dataVersion.bump();
+}
+
 export function useBinder() {
   const data = useCatalogData();
   return useMemo(() => {
@@ -27,6 +33,8 @@ export function useBinder() {
     const selectedId = getKv(db, CURRENT_KEY);
     const binder = binders.find((b) => b.id === selectedId) ?? binders[0];
     const items = binder ? binderCards(data.cards, binder.filter, loadOrder(db, binder.id)) : [];
-    return { ...data, binders, binder, items };
+    // Seconds the onboarding took; shown once on the first binder.
+    const hint = getKv(db, 'binder:hint');
+    return { ...data, binders, binder, items, hint };
   }, [data]);
 }
