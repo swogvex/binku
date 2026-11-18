@@ -7,6 +7,9 @@ import { emptyFilter, filterCards, type Filter } from './filter';
 
 /** All approved cards + the user's marks, re-read when sync or edits bump the data version. */
 export function useCatalogData() {
+  // The compiler would cache the DB reads by their (never-changing) arguments and miss edits;
+  // this hook already memoizes on the data version itself.
+  'use no memo';
   const v = useSyncExternalStore(dataVersion.subscribe, dataVersion.get);
   return useMemo(() => {
     const db = getDb();

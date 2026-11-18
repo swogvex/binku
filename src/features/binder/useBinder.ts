@@ -26,6 +26,9 @@ export function dismissHint() {
 }
 
 export function useBinder() {
+  // The compiler would cache the DB reads by their (never-changing) arguments and miss edits;
+  // this hook already memoizes on the data version itself.
+  'use no memo';
   const data = useCatalogData();
   return useMemo(() => {
     const db = getDb();
