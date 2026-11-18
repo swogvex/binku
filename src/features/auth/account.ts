@@ -15,8 +15,9 @@ export type ServerProfile = {
   country: string;
   subdivision: string | null;
   is_minor: boolean;
+  deletion_requested_at: string | null;
 };
-const PROFILE_COLS = 'username,country,subdivision,is_minor';
+const PROFILE_COLS = 'username,country,subdivision,is_minor,deletion_requested_at';
 
 /** The signed-in user's profile, or null for a new account. */
 export async function fetchProfile() {
@@ -60,6 +61,12 @@ export function suggestUsername(db: SQLiteDatabase) {
       .replace(/[^a-z0-9]/g, '')
       .slice(0, 14) || 'binku';
   return `${base}${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+/** Signing in again within the 14 days cancels a requested deletion (08-spec-profile-settings). */
+export async function cancelDeletion() {
+  const { error } = await supabase.rpc('cancel_account_deletion');
+  if (error) throw error;
 }
 
 export async function saveUsername(username: string) {

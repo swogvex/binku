@@ -4,13 +4,14 @@
 // this phone has a binder made without account. Returns body + action for the host's layout.
 // Apple / Google buttons and the Turnstile check come later in M3.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { Alert, Pressable, TextInput, View } from 'react-native';
 
 import { getDb, getKv } from '@/data/db';
 import { getLocalProfile, forgetDob } from '@/data/profile';
 import { linkAccount, localSummary } from '@/data/sync';
 import {
   authErrorKey,
+  cancelDeletion,
   createProfile,
   fetchProfile,
   saveUsername,
@@ -163,6 +164,11 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
         throw new Error('No local date of birth to create the profile');
       }
       profile = await createProfile(db);
+    }
+    if (profile.deletion_requested_at) {
+      await cancelDeletion();
+      profile.deletion_requested_at = null;
+      Alert.alert(t('settings.delete.cancelledTitle'), t('settings.delete.cancelledBody'));
     }
     forgetDob(db); // returning users too: the account already holds it
     result.current = { existing, profile };

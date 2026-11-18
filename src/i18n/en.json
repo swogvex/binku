@@ -266,5 +266,30 @@
       "keep": "Upload to my account",
       "fresh": "Start from scratch"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Your account",
+    "provider": {
+      "email": "Email"
+    },
+    "data": "Your data",
+    "cancel": "Cancel",
+    "export": {
+      "title": "Export my data",
+      "body": "Choose a format. The share menu will open so you can save or send it.",
+      "json": "All my data (JSON)",
+      "csv": "My collection (CSV)"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "confirmTitle": "Delete your account?",
+      "confirmBody": "Your account is hidden now and fully deleted in 14 days, with your binders and marks. Signing in again before then cancels it.",
+      "confirm": "Delete",
+      "doneTitle": "Account scheduled for deletion",
+      "doneBody": "It will be deleted on {date}. If you change your mind, sign in with your email before then.",
+      "cancelledTitle": "Deletion cancelled",
+      "cancelledBody": "You had asked to delete your account. Since you signed in again, we're keeping it."
+    }
   }
 }

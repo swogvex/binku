@@ -58,6 +58,7 @@ function RootLayout() {
           <Stack.Screen name="binder-new" options={sheetOptions} />
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />
+          <Stack.Screen name="settings" />
         </Stack.Protected>
         <Stack.Protected guard={!onboarded}>
           <Stack.Screen name="onboarding" />

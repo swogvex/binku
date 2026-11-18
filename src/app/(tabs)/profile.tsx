@@ -1,12 +1,13 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
+import { View } from 'react-native';
 
 import { getDb, getKv } from '@/data/db';
-import { signOut } from '@/data/sync';
 import { useSession } from '@/features/auth/useSession';
 import { t } from '@/i18n';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/ui/Button';
+import { RoundButton } from '@/ui/RoundButton';
 import { TabScreen } from '@/ui/TabScreen';
 import { Txt } from '@/ui/Txt';
 
@@ -30,9 +31,17 @@ export default function Profile() {
 
   return (
     <TabScreen>
-      <Txt variant="display" size={40} accessibilityRole="header">
-        {t('dock.profile')}
-      </Txt>
+      {/* Gear top-right, as in the canvas profile; sign-out and account data live in Settings. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Txt variant="display" size={40} accessibilityRole="header">
+          {t('dock.profile')}
+        </Txt>
+        <RoundButton
+          icon="settings"
+          label={t('settings.title')}
+          onPress={() => router.push('/settings')}
+        />
+      </View>
       {session === null ? (
         <>
           <Txt muted>{t('auth.email.body')}</Txt>
@@ -51,7 +60,6 @@ export default function Profile() {
               onPress={() => router.push({ pathname: '/sign-in', params: { resume: '1' } })}
             />
           ) : null}
-          <Button variant="ghost" label={t('auth.profile.signOut')} onPress={() => signOut()} />
         </>
       ) : null}
       {__DEV__ ? (

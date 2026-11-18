@@ -21,6 +21,13 @@ const paths = {
   check: 'M5 12.5l4.5 4.5L19 7',
   swap: 'M7 7h11l-3-3M17 17H6l3 3',
   close: 'M6 6l12 12M18 6 6 18',
+  // Settings gear and export arrow copied from the canvas (ios-perfil, ios-ajustes).
+  settings:
+    'M10.3 3h3.4l.5 2.4 1.6.9 2.3-.8 1.7 2.9-1.8 1.6v1.9l1.8 1.6-1.7 2.9-2.3-.8-1.6.9-.5 2.4h-3.4l-.5-2.4-1.6-.9-2.3.8-1.7-2.9 1.8-1.6v-1.9L4.2 8.4l1.7-2.9 2.3.8 1.6-.9zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  export: 'M12 4v11M8 8l4-4 4 4M5 13v6h14v-6',
+  // Canvas used an eye for "Idioma"; a globe says language.
+  language:
+    'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9M12 3c-2.5 2.5-3.5 5.5-3.5 9s1 6.5 3.5 9',
 } as const;
 
 export type IconName = keyof typeof paths;

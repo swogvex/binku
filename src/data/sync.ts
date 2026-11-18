@@ -291,13 +291,17 @@ export function localSummary(db: SQLiteDatabase) {
   };
 }
 
+// Account link + its pull cursors (`sync:<table>` keys are the catalog's: kept).
+const UNLINK =
+  "delete from outbox; delete from kv where key = 'sync:user' or key like 'sync:cursor:%';";
+
 /**
  * Links this device to the account (idempotent). `upload` keeps the local binders and marks and
  * queues them all; `fresh` deletes them and takes the account's data.
  */
 export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upload' | 'fresh') {
   db.withTransactionSync(() => {
-    db.execSync("delete from outbox; delete from kv where key like 'sync:%';");
+    db.execSync(UNLINK);
     if (mode === 'fresh') {
       db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
     } else {
@@ -334,6 +338,26 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
 /** Tries to upload what is pending, then unlinks. Local data stays on the device. */
 export async function signOut(db = getDb()) {
   await flush(db).catch(report);
-  db.execSync("delete from outbox; delete from kv where key like 'sync:%';");
+  db.execSync(UNLINK);
   await supabase.auth.signOut();
+}
+
+/**
+ * "Borrar mi cuenta": the server hides the account now and deletes it after 14 days. This phone
+ * forgets everything personal (binders, marks, onboarding answers) and goes back to the welcome.
+ * Returns the date the account will be deleted.
+ */
+export async function deleteAccount(db = getDb()) {
+  const { data, error } = await supabase.rpc('request_account_deletion');
+  if (error) throw error;
+  await supabase.auth.signOut();
+  db.withTransactionSync(() => {
+    db.execSync(UNLINK);
+    db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+    db.execSync(
+      "delete from kv where key in ('profile', 'onboarding:done', 'binder:current', 'binder:hint');",
+    );
+  });
+  dataVersion.bump();
+  return data as string;
 }

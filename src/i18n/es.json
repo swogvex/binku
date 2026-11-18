@@ -266,5 +266,30 @@
       "keep": "Subir a mi cuenta",
       "fresh": "Empezar de cero"
     }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "account": "Tu cuenta",
+    "provider": {
+      "email": "Email"
+    },
+    "data": "Tus datos",
+    "cancel": "Cancelar",
+    "export": {
+      "title": "Exportar mis datos",
+      "body": "Elige el formato. Se abrirá el menú de compartir para guardarlo o enviarlo.",
+      "json": "Todos mis datos (JSON)",
+      "csv": "Mi colección (CSV)"
+    },
+    "delete": {
+      "title": "Borrar mi cuenta",
+      "confirmTitle": "¿Borrar tu cuenta?",
+      "confirmBody": "Tu cuenta deja de verse ahora y se borra del todo en 14 días, con tus binders y marcas. Si vuelves a entrar antes, se cancela.",
+      "confirm": "Borrar",
+      "doneTitle": "Cuenta programada para borrarse",
+      "doneBody": "Se borrará el {date}. Si cambias de idea, entra con tu email antes de esa fecha.",
+      "cancelledTitle": "Borrado cancelado",
+      "cancelledBody": "Habías pedido borrar tu cuenta. Como has vuelto a entrar, la mantenemos."
+    }
   }
 }
