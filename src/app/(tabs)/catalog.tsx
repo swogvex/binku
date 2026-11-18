@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,11 +10,12 @@ import { markerProps } from '@/features/catalog/cardView';
 import { crumbs, keepThrough, nextLevel } from '@/features/catalog/filter';
 import { setFilter, useFilteredCards } from '@/features/catalog/useCatalog';
 import { t } from '@/i18n';
-import { fonts, radius, screenPadding } from '@/theme/tokens';
+import { screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
 import { Chip } from '@/ui/Chip';
 import { useDockScrollHandler, useDockSpace } from '@/ui/dockVisibility';
+import { SearchField } from '@/ui/SearchField';
 import { Icon } from '@/ui/icons/Icon';
 import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
@@ -59,41 +60,12 @@ function Header() {
         {t('dock.catalog')}
       </Txt>
 
-      <View
-        style={{
-          height: 50,
-          borderRadius: radius.control,
-          backgroundColor: c.surface,
-          borderWidth: 1.5,
-          borderColor: c.line,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 8,
-          paddingLeft: 14,
-        }}
-      >
-        <Icon name="search" size={20} color={c.muted} />
-        <TextInput
-          value={filter.query}
-          onChangeText={(query) => setFilter({ query })}
-          placeholder={t('catalog.search')}
-          placeholderTextColor={c.muted}
-          accessibilityLabel={t('catalog.searchA11y')}
-          returnKeyType="search"
-          autoCorrect={false}
-          style={{ flex: 1, height: '100%', fontFamily: fonts.text400, fontSize: 15, color: c.ink }}
-        />
-        {filter.query ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('catalog.clearSearch')}
-            onPress={() => setFilter({ query: '' })}
-            style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Icon name="close" size={18} color={c.muted} />
-          </Pressable>
-        ) : null}
-      </View>
+      <SearchField
+        value={filter.query}
+        onChangeText={(query) => setFilter({ query })}
+        placeholder={t('catalog.search')}
+        accessibilityLabel={t('catalog.searchA11y')}
+      />
 
       <View style={{ gap: 4 }}>
         <ChipRow>

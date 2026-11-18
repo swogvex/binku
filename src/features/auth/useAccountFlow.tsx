@@ -24,6 +24,7 @@ import { supabase } from '@/lib/supabase';
 import { fonts, radius } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
+import { StepHeader } from '@/ui/StepHeader';
 import { Txt } from '@/ui/Txt';
 
 type Step = 'email' | 'code' | 'finish' | 'username' | 'upload';
@@ -240,11 +241,15 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
     const valid = EMAIL.test(email.trim());
     body = (
       <View style={{ gap: 16 }}>
-        <Txt variant="display" size={40} accessibilityRole="header">
-          {t(intent === 'signIn' ? 'auth.email.signInTitle' : 'auth.email.title')}
+        <StepHeader
+          icon="mail"
+          tint="mint"
+          title={t(intent === 'signIn' ? 'auth.email.signInTitle' : 'auth.email.title')}
+          body={t(intent === 'signIn' ? 'auth.email.signInBody' : 'auth.email.body')}
+        />
+        <Txt variant="label" style={{ marginTop: 8 }}>
+          {t('auth.email.label')}
         </Txt>
-        <Txt muted>{t(intent === 'signIn' ? 'auth.email.signInBody' : 'auth.email.body')}</Txt>
-        <Txt variant="label">{t('auth.email.label')}</Txt>
         <TextInput
           value={email}
           onChangeText={setEmail}
@@ -261,7 +266,7 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
           onSubmitEditing={() => valid && !busy && sendCode()}
           style={inputStyle}
         />
-        <Txt size={13} muted>
+        <Txt size={13} muted style={{ textAlign: 'center' }}>
           {t('auth.email.legal')}
         </Txt>
       </View>
@@ -270,12 +275,14 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
   } else if (step === 'code') {
     body = (
       <View style={{ gap: 16 }}>
-        <Txt variant="display" size={40} accessibilityRole="header">
-          {t('auth.code.title')}
-        </Txt>
-        <Txt muted>{t('auth.code.body', { email: email.trim() })}</Txt>
+        <StepHeader
+          icon="mail"
+          tint="mint"
+          title={t('auth.code.title')}
+          body={t('auth.code.body', { email: email.trim() })}
+        />
         <CodeInput value={code} onChange={onCode} />
-        <Txt size={13} muted>
+        <Txt size={13} muted style={{ textAlign: 'center' }}>
           {t('auth.code.help')}
         </Txt>
       </View>
@@ -305,7 +312,7 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
     );
   } else if (step === 'finish') {
     body = (
-      <Txt variant="display" size={40} accessibilityRole="header">
+      <Txt variant="display" size={40} accessibilityRole="header" style={{ textAlign: 'center' }}>
         {t('auth.finish.title')}
       </Txt>
     );
@@ -320,11 +327,13 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
       });
     body = (
       <View style={{ gap: 16 }}>
-        <Txt variant="display" size={40} accessibilityRole="header">
-          {t('auth.upload.title', { username })}
-        </Txt>
-        <Txt muted>{t('auth.upload.body')}</Txt>
-        <Txt variant="title">
+        <StepHeader
+          icon="binder"
+          tint="cobalt"
+          title={t('auth.upload.title', { username })}
+          body={t('auth.upload.body')}
+        />
+        <Txt variant="title" style={{ textAlign: 'center' }}>
           {`${t('auth.upload.binders', { count: summary.binders })} · ${t('auth.upload.cards', { count: summary.cards })}`}
         </Txt>
       </View>
@@ -344,10 +353,12 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
     const valid = USERNAME.test(username);
     body = (
       <View style={{ gap: 16 }}>
-        <Txt variant="display" size={40} accessibilityRole="header">
-          {t('auth.username.title')}
-        </Txt>
-        <Txt muted>{t('auth.username.body')}</Txt>
+        <StepHeader
+          icon="profile"
+          tint="tomato"
+          title={t('auth.username.title')}
+          body={t('auth.username.body')}
+        />
         <View style={{ justifyContent: 'center' }}>
           <TextInput
             value={username}
@@ -368,7 +379,7 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
             @
           </Txt>
         </View>
-        <Txt size={13} muted>
+        <Txt size={13} muted style={{ textAlign: 'center' }}>
           {t('auth.username.rules')}
         </Txt>
       </View>

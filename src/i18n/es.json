@@ -144,11 +144,11 @@
         "body": "Tu binder digital, con tus propias fotos dentro de cada bolsillo."
       },
       "mark": {
-        "title": "Marca Tengo",
+        "title": "Marca Tengo y Busco",
         "body": "Con un toque. Sin precios de mercado ni rankings."
       },
       "match": {
-        "title": "Te avisamos",
+        "title": "Te avisamos del match",
         "body": "Cuando alguien tiene lo que buscas y busca lo que tienes."
       },
       "youWant": "Tú buscas",
@@ -179,7 +179,8 @@
         "CO": "Colombia",
         "CL": "Chile",
         "PE": "Perú"
-      }
+      },
+      "none": "No hay resultados"
     },
     "dob": {
       "title": "¿Cuándo naciste?",
@@ -205,7 +206,9 @@
       "time": "Listo en {seconds} segundos",
       "body": "Toca un hueco o pulsa Escanear para meter tu primera carta.",
       "dismiss": "Entendido"
-    }
+    },
+    "page": "Página {n} de {total}",
+    "step": "Paso {n} de {total}"
   },
   "auth": {
     "close": "Volver",

@@ -144,11 +144,11 @@
         "body": "Your digital binder, with your own photos inside every pocket."
       },
       "mark": {
-        "title": "Mark Have",
+        "title": "Mark Have and Want",
         "body": "One tap. No market prices or rankings."
       },
       "match": {
-        "title": "We'll tell you",
+        "title": "We'll find your match",
         "body": "When someone has what you want and wants what you have."
       },
       "youWant": "You want",
@@ -179,7 +179,8 @@
         "CO": "Colombia",
         "CL": "Chile",
         "PE": "Peru"
-      }
+      },
+      "none": "No results"
     },
     "dob": {
       "title": "When were you born?",
@@ -205,7 +206,9 @@
       "time": "Ready in {seconds} seconds",
       "body": "Tap a pocket or press Scan to add your first card.",
       "dismiss": "Got it"
-    }
+    },
+    "page": "Page {n} of {total}",
+    "step": "Step {n} of {total}"
   },
   "auth": {
     "close": "Back",
