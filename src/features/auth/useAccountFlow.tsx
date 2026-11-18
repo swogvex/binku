@@ -328,41 +328,44 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
   if (step === 'email') {
     const valid = EMAIL.test(email.trim());
     body = (
-      <View style={{ gap: 16 }}>
+      // Header, then the form in its own block: clear air between "what" and "how".
+      <View style={{ gap: 36 }}>
         <StepHeader
           icon="mail"
           tint="mint"
           title={t(intent === 'signIn' ? 'auth.email.signInTitle' : 'auth.email.title')}
           body={t(intent === 'signIn' ? 'auth.email.signInBody' : 'auth.email.body')}
         />
-        {googleAvailable ? (
-          <>
-            <GoogleButton disabled={!captcha || busy} onPress={google} />
-            <OrDivider />
-          </>
-        ) : null}
-        <Txt variant="label" style={{ marginTop: googleAvailable ? 0 : 8 }}>
-          {t('auth.email.label')}
-        </Txt>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder={t('auth.email.placeholder')}
-          placeholderTextColor={c.muted}
-          accessibilityLabel={t('auth.email.label')}
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoComplete="email"
-          autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="send"
-          onSubmitEditing={() => valid && captcha && !busy && sendCode()}
-          style={inputStyle}
-        />
-        {turnstile}
-        <Txt size={13} muted style={{ textAlign: 'center' }}>
-          {t('auth.email.legal')}
-        </Txt>
+        <View style={{ gap: 20 }}>
+          {googleAvailable ? (
+            <>
+              <GoogleButton disabled={!captcha || busy} onPress={google} />
+              <OrDivider />
+            </>
+          ) : null}
+          <View style={{ gap: 8 }}>
+            <Txt variant="label">{t('auth.email.label')}</Txt>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder={t('auth.email.placeholder')}
+              placeholderTextColor={c.muted}
+              accessibilityLabel={t('auth.email.label')}
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="send"
+              onSubmitEditing={() => valid && captcha && !busy && sendCode()}
+              style={inputStyle}
+            />
+          </View>
+          {turnstile}
+          <Txt size={13} muted style={{ textAlign: 'center' }}>
+            {t('auth.email.legal')}
+          </Txt>
+        </View>
       </View>
     );
     action = (
@@ -374,7 +377,7 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
     );
   } else if (step === 'code') {
     body = (
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: 32 }}>
         <StepHeader
           icon="mail"
           tint="mint"
