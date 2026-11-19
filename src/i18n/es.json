@@ -366,6 +366,7 @@
       "saveCard": "Guardar foto",
       "saving": "Guardando…",
       "error": "No hemos podido guardar la foto. Inténtalo otra vez.",
+      "blocked": "Esta imagen no cumple las normas de Binku. Usa una foto de tu photocard.",
       "preview": "Vista previa del recorte",
       "galleryRule": "Solo fotos de tus propias photocards. Cualquier otra imagen se borra y puede suspender tu cuenta."
     },

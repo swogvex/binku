@@ -8,6 +8,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 import { dataVersion, type UserMark } from '@/data/catalog';
 import { enqueue } from '@/data/outbox';
 import { setMark } from '@/data/userCards';
+import { checkImage } from '@/lib/imageFilter';
 import { supabase } from '@/lib/supabase';
 import { uuid } from '@/lib/uuid';
 
@@ -92,6 +93,7 @@ async function process(source: string, rotation: number, kind: PhotoKind) {
   const card = ImageManipulator.manipulate(rotated).crop(crop);
   if (crop.height > ORIGINAL_MAX_H) card.resize({ height: ORIGINAL_MAX_H });
   const original = await card.renderAsync();
+  await checkImage(original); // before anything is written to disk
   const savedOriginal = await original.saveAsync({ format: SaveFormat.JPEG, compress: 0.9 });
 
   const spec = kind === 'scan' ? THUMB.scan : THUMB.condition;
