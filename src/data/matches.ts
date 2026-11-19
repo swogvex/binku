@@ -25,6 +25,7 @@ export async function fetchMatches() {
 export async function updateMyProfile(values: {
   match_scope?: Scope;
   notify_matches?: boolean;
+  notify_messages?: boolean;
   quiet_hours?: Quiet;
 }) {
   const { data } = await supabase.auth.getSession();
@@ -35,8 +36,13 @@ export async function updateMyProfile(values: {
 export async function fetchAlertSettings() {
   const { data, error } = await supabase
     .from('profiles')
-    .select('notify_matches,quiet_hours,is_minor')
-    .maybeSingle<{ notify_matches: boolean; quiet_hours: Quiet; is_minor: boolean }>();
+    .select('notify_matches,notify_messages,quiet_hours,is_minor')
+    .maybeSingle<{
+      notify_matches: boolean;
+      notify_messages: boolean;
+      quiet_hours: Quiet;
+      is_minor: boolean;
+    }>();
   if (error) throw error;
   return data;
 }

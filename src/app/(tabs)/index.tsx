@@ -1,5 +1,5 @@
 // Inicio (08-spec-matches-home): double matches first, then binder progress. No social feed.
-// Messages and notifications icons arrive with chat (M6).
+// The Messages button (with the unread count) sits next to the greeting.
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -12,9 +12,11 @@ import { useSession } from '@/features/auth/useSession';
 import { binderCards, owned } from '@/features/binder/pages';
 import { selectBinder } from '@/features/binder/useBinder';
 import { useCatalogData } from '@/features/catalog/useCatalog';
+import { unreadTotal, useChats } from '@/features/chat/useChats';
 import { Avatar, MatchTags, placeName, SwapRow } from '@/features/matches/MatchParts';
 import { useMatches } from '@/features/matches/useMatches';
 import { t } from '@/i18n';
+import { textOn } from '@/lib/contrast';
 import { era, radius } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -247,6 +249,60 @@ function Matches() {
   );
 }
 
+/** Messages button with the unread count (canvas Inicio header). */
+function Inbox() {
+  const c = useTheme();
+  const router = useRouter();
+  const res = useChats();
+  if (!res) return null;
+  const n = unreadTotal(res.chats);
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={
+        n ? `${t('chat.open')}, ${t('chat.unread', { count: n })}` : t('chat.open')
+      }
+      onPress={() => router.push('/messages')}
+      hitSlop={6}
+      style={({ pressed }) => ({
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: c.surface,
+        borderWidth: 1,
+        borderColor: c.line,
+        opacity: pressed ? 0.7 : 1,
+      })}
+    >
+      <Icon name="mail" size={21} />
+      {n ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            minWidth: 20,
+            height: 20,
+            paddingHorizontal: 5,
+            borderRadius: 10,
+            backgroundColor: c.accent,
+            borderWidth: 2,
+            borderColor: c.bg,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Txt size={12} variant="title" color={textOn(c.accent)} allowFontScaling={false}>
+            {n > 9 ? '9+' : n}
+          </Txt>
+        </View>
+      ) : null}
+    </Pressable>
+  );
+}
+
 export default function Home() {
   const session = useSession();
   // undefined = not loaded (or offline), null = account without @username yet.
@@ -262,9 +318,12 @@ export default function Home() {
 
   return (
     <TabScreen>
-      <Txt size={15} muted>
-        {username ? t('home.hello', { username }) : t('home.helloAnon')}
-      </Txt>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 44 }}>
+        <Txt size={15} muted style={{ flex: 1 }} numberOfLines={1}>
+          {username ? t('home.hello', { username }) : t('home.helloAnon')}
+        </Txt>
+        {session ? <Inbox /> : null}
+      </View>
       {session === null ? (
         <>
           <Txt variant="display" size={46} accessibilityRole="header">

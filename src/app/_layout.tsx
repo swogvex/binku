@@ -45,12 +45,16 @@ function RootLayout() {
     if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
-  // Tapping a match push opens it. Only our two routes are accepted, whatever the payload says.
+  // Tapping a push opens its match or chat. Only these routes are accepted, whatever the payload says.
   const router = useRouter();
   const tapped = Notifications.useLastNotificationResponse();
   useEffect(() => {
     const url = tapped?.notification.request.content.data?.url;
-    if (onboarded && typeof url === 'string' && /^\/(matches|match\/[0-9a-f-]{36})$/.test(url))
+    if (
+      onboarded &&
+      typeof url === 'string' &&
+      /^\/(matches|(match|chat)\/[0-9a-f-]{36})$/.test(url)
+    )
       router.push(url as '/matches');
   }, [tapped, onboarded, router]);
 
@@ -80,6 +84,11 @@ function RootLayout() {
           <Stack.Screen name="matches" />
           <Stack.Screen name="match/[id]" />
           <Stack.Screen name="notifications" options={sheetOptions} />
+          <Stack.Screen name="messages" />
+          <Stack.Screen name="chat/[id]" />
+          <Stack.Screen name="chat-options" options={sheetOptions} />
+          <Stack.Screen name="chat-attach" options={sheetOptions} />
+          <Stack.Screen name="report" options={sheetOptions} />
           <Stack.Screen name="binder-new" options={sheetOptions} />
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />

@@ -1,5 +1,5 @@
 // Match detail: who, where (subdivision only), the swap at a glance and every card both ways.
-// Proposing the trade needs chat (M6); their condition photos come with it.
+// "Proponer este cambio" opens the chat with the trade ready to send.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -240,7 +240,7 @@ export default function MatchScreen() {
       </ScrollView>
 
       {m ? (
-        // The next step stays visible; it switches on when chat arrives (M6).
+        // The next step stays visible at the bottom.
         <View
           style={{
             gap: 8,
@@ -252,10 +252,16 @@ export default function MatchScreen() {
             backgroundColor: c.bg,
           }}
         >
-          <Button label={t('matches.propose')} icon="swap" variant="ghost" disabled />
-          <Txt size={12} muted style={{ textAlign: 'center' }}>
-            {t('matches.chatSoon')}
-          </Txt>
+          <Button
+            label={t('matches.propose')}
+            icon="swap"
+            onPress={() =>
+              router.push({
+                pathname: '/chat/[id]',
+                params: { id: 'new', to: m.user_id, propose: '1' },
+              })
+            }
+          />
         </View>
       ) : null}
     </View>
