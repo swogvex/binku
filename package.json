@@ -81,5 +81,14 @@
   "allowScripts": {
     "@sentry/cli@2.58.6": true,
     "@sentry/cli@3.8.0": true
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-fast-tflite"
+        ]
+      }
+    }
   }
 }
