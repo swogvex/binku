@@ -366,6 +366,7 @@
       "saveCard": "Save photo",
       "saving": "Saving…",
       "error": "We couldn't save the photo. Please try again.",
+      "blocked": "This image doesn't follow Binku's rules. Use a photo of your photocard.",
       "preview": "Crop preview",
       "galleryRule": "Only photos of your own photocards. Any other image is removed and may get your account suspended."
     },

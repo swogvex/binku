@@ -15,6 +15,7 @@ import { markerProps } from '@/features/catalog/cardView';
 import { capture, setPickedCard, usePickedCard, type Source } from '@/features/scan/scan';
 import { t } from '@/i18n';
 import { haptics } from '@/lib/haptics';
+import { InappropriateImageError } from '@/lib/imageFilter';
 import { cardRadius, cardRatio, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -109,7 +110,7 @@ export default function ScanReview() {
   const [uri, setUri] = useState(params.uri);
   const [rotation, setRotation] = useState(0);
   const [saving, setSaving] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<'error' | 'blocked' | null>(null);
 
   // A fresh review never inherits the card picked in a previous one.
   useEffect(() => () => setPickedCard(null), []);
@@ -131,7 +132,7 @@ export default function ScanReview() {
   const save = async () => {
     if (!card || saving) return;
     setSaving(true);
-    setFailed(false);
+    setFailed(null);
     try {
       await savePhoto(getDb(), {
         source: uri,
@@ -146,8 +147,8 @@ export default function ScanReview() {
         router.back();
         router.navigate({ pathname: '/binder', params: { new: card.id } });
       } else router.replace({ pathname: '/card/[id]', params: { id: card.id } });
-    } catch {
-      setFailed(true);
+    } catch (e) {
+      setFailed(e instanceof InappropriateImageError ? 'blocked' : 'error');
       setSaving(false);
     }
   };
@@ -257,7 +258,7 @@ export default function ScanReview() {
 
         {failed ? (
           <Txt accessibilityLiveRegion="polite" color={c.accentText}>
-            {t('scan.review.error')}
+            {t(failed === 'blocked' ? 'scan.review.blocked' : 'scan.review.error')}
           </Txt>
         ) : null}
       </ScrollView>

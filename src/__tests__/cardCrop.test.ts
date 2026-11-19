@@ -4,6 +4,7 @@ import { cardCrop } from '@/data/photos';
 jest.mock('expo-file-system', () => ({}));
 jest.mock('expo-image-manipulator', () => ({}));
 jest.mock('@/lib/supabase', () => ({}));
+jest.mock('@/lib/imageFilter', () => ({}));
 
 test('a wide scan keeps its full height and loses the sides', () => {
   expect(cardCrop(1000, 1000)).toEqual({ originX: 177, originY: 0, width: 647, height: 1000 });
