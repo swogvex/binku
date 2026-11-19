@@ -17,7 +17,7 @@ import { useLinkedUser } from '@/features/auth/useLinked';
 import { openScan } from '@/features/scan/scan';
 import { t } from '@/i18n';
 import { haptics } from '@/lib/haptics';
-import { cardRadius, cardRatio, fonts, radius, screenPadding } from '@/theme/tokens';
+import { cardRadius, cardRatio, era, fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
 import { Button } from '@/ui/Button';
@@ -25,13 +25,24 @@ import { Icon } from '@/ui/icons/Icon';
 import { RoundButton } from '@/ui/RoundButton';
 import { ScanFrame } from '@/ui/ScanFrame';
 import { StateView } from '@/ui/StateView';
+import { Tag } from '@/ui/Tag';
 import { Txt } from '@/ui/Txt';
 
 // Larger than the canvas (150) so the 3D turn reads well.
 const CARD_W = 180;
 const STATUSES: UserMark['status'][] = ['have', 'want', 'dupe'];
 
-function Row({ label, value, hangul }: { label: string; value: string; hangul?: boolean }) {
+function Row({
+  label,
+  value,
+  hangul,
+  first,
+}: {
+  label: string;
+  value: string;
+  hangul?: boolean;
+  first?: boolean;
+}) {
   const c = useTheme();
   return (
     <View
@@ -39,9 +50,9 @@ function Row({ label, value, hangul }: { label: string; value: string; hangul?: 
       style={{
         flexDirection: 'row',
         gap: 8,
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: c.line,
+        paddingVertical: 12,
+        borderTopWidth: first ? 0 : 1,
+        borderTopColor: c.line,
       }}
     >
       <Txt muted size={13} style={{ width: 96 }}>
@@ -128,6 +139,12 @@ export default function CardScreen() {
   const mark = card ? marks.get(card.id) : undefined;
   const cardPhotos = card ? photos.get(card.id) : undefined;
   const scan = cardPhotos?.scan;
+  // "Fake Season's Greetings 2026" already says the year: never "2026 · 2026".
+  const album = !card
+    ? ''
+    : card.releaseTitle.includes(String(card.year))
+      ? card.releaseTitle
+      : `${card.releaseTitle} · ${card.year}`;
   const linked = !!useLinkedUser();
 
   const shoot = (source: 'camera' | 'gallery', kind: PhotoKind) =>
@@ -195,7 +212,16 @@ export default function CardScreen() {
         <StateView illustration="ups" title={t('cardSheet.notFound')} />
       ) : (
         <>
-          <View style={{ alignItems: 'center', paddingVertical: 6 }}>
+          {/* The card on a stage tinted with its era colour */}
+          <View
+            style={{
+              alignItems: 'center',
+              paddingVertical: 22,
+              borderRadius: radius.card + 6,
+              backgroundColor: `${era[card.eraColor]}1F`,
+              overflow: 'hidden',
+            }}
+          >
             <Card3D
               width={CARD_W}
               label={`${card.memberName}, ${card.releaseTitle}, ${markerProps(card).version}`}
@@ -226,6 +252,20 @@ export default function CardScreen() {
                 />
               }
             />
+          </View>
+
+          <View accessible style={{ gap: 6 }}>
+            <Txt variant="display" size={34} accessibilityRole="header">
+              {card.memberName}
+            </Txt>
+            <Txt size={15} muted>
+              {`${card.groupName} · ${album}`}
+            </Txt>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+              <Tag label={t(`catalog.type.${card.type}`)} />
+              {card.versionLabel ? <Tag label={card.versionLabel} tone="outline" /> : null}
+              {card.isSpecial ? <Tag label={t('cardSheet.special')} tone="strong" /> : null}
+            </View>
           </View>
 
           <View
@@ -264,6 +304,9 @@ export default function CardScreen() {
               );
             })}
           </View>
+          <Txt size={13} muted accessibilityLiveRegion="polite" style={{ marginTop: -6 }}>
+            {t(`cardSheet.hint.${mark?.status ?? 'none'}`)}
+          </Txt>
 
           {mark?.status === 'dupe' ? (
             <View
@@ -387,9 +430,20 @@ export default function CardScreen() {
             />
           ) : null}
 
-          <View>
-            <Row label={t('cardSheet.group')} value={card.groupName} />
-            <Row label={t('cardSheet.album')} value={`${card.releaseTitle} · ${card.year}`} />
+          <View
+            style={{
+              paddingHorizontal: 14,
+              borderRadius: radius.card,
+              backgroundColor: c.surface,
+              borderWidth: 1,
+              borderColor: c.line,
+            }}
+          >
+            <Txt variant="label" size={12} muted style={{ paddingTop: 14, letterSpacing: 1 }}>
+              {t('cardSheet.details').toUpperCase()}
+            </Txt>
+            <Row first label={t('cardSheet.group')} value={card.groupName} />
+            <Row label={t('cardSheet.album')} value={album} />
             {card.versionLabel ? (
               <Row label={t('cardSheet.version')} value={card.versionLabel} />
             ) : null}

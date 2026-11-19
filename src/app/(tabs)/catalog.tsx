@@ -6,11 +6,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { CatalogCard } from '@/data/catalog';
 import type { CardType } from '@/data/catalogFile';
+import { owned } from '@/features/binder/pages';
 import { markerProps } from '@/features/catalog/cardView';
 import { crumbs, keepThrough, nextLevel } from '@/features/catalog/filter';
 import { setFilter, useFilteredCards } from '@/features/catalog/useCatalog';
 import { t } from '@/i18n';
-import { screenPadding } from '@/theme/tokens';
+import { era, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
 import { Chip } from '@/ui/Chip';
@@ -18,6 +19,7 @@ import { useDockScrollHandler, useDockSpace } from '@/ui/dockVisibility';
 import { SearchField } from '@/ui/SearchField';
 import { Icon } from '@/ui/icons/Icon';
 import { StateView } from '@/ui/StateView';
+import { StatusBarScrim } from '@/ui/StatusBarScrim';
 import { Txt } from '@/ui/Txt';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<CatalogCard>);
@@ -49,16 +51,29 @@ function ChipRow({ children }: { children: React.ReactNode }) {
 function Header() {
   const c = useTheme();
   const router = useRouter();
-  const { cards, filter } = useFilteredCards();
+  const { cards, filter, results, marks } = useFilteredCards();
   const next = nextLevel(cards, filter);
+  const have = results.filter((x) => owned(marks.get(x.id))).length;
+  // A group chip carries the group's colour, so the row reads like the shelf of a shop.
+  const groupColor = (id: string) => {
+    const card = next?.level === 'group' ? cards.find((x) => x.groupId === id) : undefined;
+    return card ? era[card.groupColor] : undefined;
+  };
+  const typeCount = (type: CardType | null) =>
+    type ? cards.filter((x) => x.type === type).length : cards.length;
   const trail = crumbs(cards, filter.path);
   const activeFilters = Number(!!filter.state);
 
   return (
     <View style={{ gap: 14, paddingBottom: 14 }}>
-      <Txt variant="display" size={40} accessibilityRole="header">
-        {t('dock.catalog')}
-      </Txt>
+      <View style={{ gap: 2 }}>
+        <Txt variant="display" size={40} accessibilityRole="header">
+          {t('dock.catalog')}
+        </Txt>
+        <Txt size={13} muted accessibilityLiveRegion="polite">
+          {t('catalog.summary', { count: results.length, have })}
+        </Txt>
+      </View>
 
       <SearchField
         value={filter.query}
@@ -73,6 +88,7 @@ function Header() {
             <Chip
               key={o.id}
               label={o.name}
+              dot={groupColor(o.id)}
               onPress={() => setFilter({ path: { ...filter.path, [next.level]: o.id } })}
             />
           ))}
@@ -119,7 +135,7 @@ function Header() {
         {TYPES.map((type) => (
           <Chip
             key={type ?? 'all'}
-            label={t(`catalog.type.${type ?? 'all'}`)}
+            label={`${t(`catalog.type.${type ?? 'all'}`)} · ${typeCount(type)}`}
             selected={filter.type === type}
             onPress={() => setFilter({ type })}
           />
@@ -140,45 +156,48 @@ export default function Catalog() {
   const cardW = Math.floor((width - screenPadding * 2 - GAP * 2) / 3);
 
   return (
-    <AnimatedFlashList
-      data={results}
-      numColumns={3}
-      keyExtractor={(card) => card.id}
-      extraData={marks}
-      // On by default in FlashList v2: it would jump to the previously visible cards when a
-      // filter is removed. The catalog should stay where the user is (usually the top).
-      maintainVisibleContentPosition={{ disabled: true }}
-      onScroll={onScroll}
-      scrollEventThrottle={16}
-      keyboardDismissMode="on-drag"
-      keyboardShouldPersistTaps="handled"
-      style={{ flex: 1, backgroundColor: c.bg }}
-      contentContainerStyle={{
-        paddingTop: insets.top + 12,
-        paddingBottom: bottom,
-        paddingHorizontal: screenPadding - GAP / 2,
-      }}
-      ListHeaderComponent={
-        <View style={{ paddingHorizontal: GAP / 2 }}>
-          <Header />
-        </View>
-      }
-      ListEmptyComponent={
-        <StateView
-          illustration="pocket"
-          title={t('states.noResults.title')}
-          body={t('states.noResults.body')}
-        />
-      }
-      renderItem={({ item }) => (
-        <View style={{ paddingHorizontal: GAP / 2, paddingBottom: GAP, alignItems: 'center' }}>
-          <CardMarker
-            {...markerProps(item, marks.get(item.id))}
-            width={cardW}
-            onPress={() => router.push({ pathname: '/card/[id]', params: { id: item.id } })}
+    <>
+      <AnimatedFlashList
+        data={results}
+        numColumns={3}
+        keyExtractor={(card) => card.id}
+        extraData={marks}
+        // On by default in FlashList v2: it would jump to the previously visible cards when a
+        // filter is removed. The catalog should stay where the user is (usually the top).
+        maintainVisibleContentPosition={{ disabled: true }}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        style={{ flex: 1, backgroundColor: c.bg }}
+        contentContainerStyle={{
+          paddingTop: insets.top + 12,
+          paddingBottom: bottom,
+          paddingHorizontal: screenPadding - GAP / 2,
+        }}
+        ListHeaderComponent={
+          <View style={{ paddingHorizontal: GAP / 2 }}>
+            <Header />
+          </View>
+        }
+        ListEmptyComponent={
+          <StateView
+            illustration="pocket"
+            title={t('states.noResults.title')}
+            body={t('states.noResults.body')}
           />
-        </View>
-      )}
-    />
+        }
+        renderItem={({ item }) => (
+          <View style={{ paddingHorizontal: GAP / 2, paddingBottom: GAP, alignItems: 'center' }}>
+            <CardMarker
+              {...markerProps(item, marks.get(item.id))}
+              width={cardW}
+              onPress={() => router.push({ pathname: '/card/[id]', params: { id: item.id } })}
+            />
+          </View>
+        )}
+      />
+      <StatusBarScrim />
+    </>
   );
 }

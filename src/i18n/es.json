@@ -87,6 +87,18 @@
         "one": "Ver {count} carta",
         "other": "Ver {count} cartas"
       }
+    },
+    "summary": {
+      "one": "{count} carta · tienes {have}",
+      "other": "{count} cartas · tienes {have}"
+    },
+    "typeShort": {
+      "album": "Álbum",
+      "pob": "POB",
+      "lucky_draw": "LD",
+      "event": "Evento",
+      "season_greetings": "SG",
+      "other": "Otra"
     }
   },
   "cardSheet": {
@@ -104,7 +116,15 @@
     "store": "Tienda",
     "korean": "Coreano",
     "notFound": "Esta carta ya no está en el catálogo",
-    "turnHint": "Arrastra para girarla. Toca para darle la vuelta."
+    "turnHint": "Arrastra para girarla. Toca para darle la vuelta.",
+    "special": "Holo",
+    "details": "Datos de la carta",
+    "hint": {
+      "none": "Márcala para llevar la cuenta de tu colección.",
+      "have": "La tienes. Si te sobra alguna, márcala como Repetida.",
+      "want": "Te avisamos cuando alguien la tenga repetida.",
+      "dupe": "Quien la busque podrá verla en sus coincidencias."
+    }
   },
   "binder": {
     "new": "+ Nuevo",
@@ -137,7 +157,16 @@
       "confirmTitle": "¿Eliminar este binder?",
       "confirmBody": "Tus marcas de Tengo y Busco no se borran.",
       "cancel": "Cancelar"
-    }
+    },
+    "kicker": "Binder",
+    "kind": {
+      "group": "Grupo",
+      "member": "Miembro",
+      "era": "Era",
+      "custom": "Personal"
+    },
+    "moveHint": "Mantén pulsada una carta y arrástrala para cambiarla de bolsillo.",
+    "summary": "{owned} de {total} cartas · {dupes} repetidas"
   },
   "onboarding": {
     "skip": "Saltar",

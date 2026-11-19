@@ -87,6 +87,18 @@
         "one": "Show {count} card",
         "other": "Show {count} cards"
       }
+    },
+    "summary": {
+      "one": "{count} card · you have {have}",
+      "other": "{count} cards · you have {have}"
+    },
+    "typeShort": {
+      "album": "Album",
+      "pob": "POB",
+      "lucky_draw": "LD",
+      "event": "Event",
+      "season_greetings": "SG",
+      "other": "Other"
     }
   },
   "cardSheet": {
@@ -104,7 +116,15 @@
     "store": "Store",
     "korean": "Korean",
     "notFound": "This card is no longer in the catalog",
-    "turnHint": "Drag to turn it. Tap to flip it."
+    "turnHint": "Drag to turn it. Tap to flip it.",
+    "special": "Holo",
+    "details": "Card details",
+    "hint": {
+      "none": "Mark it to keep track of your collection.",
+      "have": "You have it. If you have a spare, mark it as Dupe.",
+      "want": "We'll let you know when someone has a spare.",
+      "dupe": "People looking for it will see it in their matches."
+    }
   },
   "binder": {
     "new": "+ New",
@@ -137,7 +157,16 @@
       "confirmTitle": "Delete this binder?",
       "confirmBody": "Your Have and Want marks are kept.",
       "cancel": "Cancel"
-    }
+    },
+    "kicker": "Binder",
+    "kind": {
+      "group": "Group",
+      "member": "Member",
+      "era": "Era",
+      "custom": "Custom"
+    },
+    "moveHint": "Press and hold a card, then drag it to another pocket.",
+    "summary": "{owned} of {total} cards · {dupes} dupes"
   },
   "onboarding": {
     "skip": "Skip",

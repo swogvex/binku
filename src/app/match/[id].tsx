@@ -30,30 +30,36 @@ function Half({ label, ids, width }: { label: string; ids: string[]; width: numb
       <Txt variant="label" size={13} muted accessibilityRole="header">
         {`${label} · ${ids.length}`}
       </Txt>
-      {ids.map((id) => {
-        const card = cards.find((x) => x.id === id);
-        if (!card) return null;
-        const p = markerProps(card, marks.get(id));
-        return (
-          <Pressable
-            key={id}
-            accessibilityRole="button"
-            accessibilityLabel={`${card.memberName}, ${card.releaseTitle}, ${p.version}`}
-            onPress={() => router.push({ pathname: '/card/[id]', params: { id } })}
-            style={({ pressed }) => ({ width, gap: 6, opacity: pressed ? 0.8 : 1 })}
-          >
-            <CardMarker {...p} width={width} decorative />
-            <View importantForAccessibility="no-hide-descendants" style={{ alignItems: 'center' }}>
-              <Txt variant="label" size={13} numberOfLines={1}>
-                {card.memberName}
-              </Txt>
-              <Txt size={12} muted numberOfLines={1}>
-                {p.version}
-              </Txt>
-            </View>
-          </Pressable>
-        );
-      })}
+      {/* The shorter side centres itself: one card sits between the other side's two. */}
+      <View style={{ flex: 1, justifyContent: 'center', gap: 16 }}>
+        {ids.map((id) => {
+          const card = cards.find((x) => x.id === id);
+          if (!card) return null;
+          const p = markerProps(card, marks.get(id));
+          return (
+            <Pressable
+              key={id}
+              accessibilityRole="button"
+              accessibilityLabel={`${card.memberName}, ${card.releaseTitle}, ${p.version}`}
+              onPress={() => router.push({ pathname: '/card/[id]', params: { id } })}
+              style={({ pressed }) => ({ width, gap: 6, opacity: pressed ? 0.8 : 1 })}
+            >
+              <CardMarker {...p} width={width} decorative />
+              <View
+                importantForAccessibility="no-hide-descendants"
+                style={{ alignItems: 'center' }}
+              >
+                <Txt variant="label" size={13} numberOfLines={1}>
+                  {card.memberName}
+                </Txt>
+                <Txt size={12} muted numberOfLines={1}>
+                  {p.version}
+                </Txt>
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }

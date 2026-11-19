@@ -24,6 +24,7 @@ import { Txt } from '@/ui/Txt';
 
 const GAP = 10;
 const PAGE_PAD = 12;
+const RINGS = 18; // binder rings strip on the page's left edge
 
 function MoreIcon({ color }: { color: string }) {
   return (
@@ -72,7 +73,7 @@ export default function BinderScreen() {
   const router = useRouter();
   const { width, fontScale } = useWindowDimensions();
   const db = getDb();
-  const { marks, photos, binders, binder, items, hint } = useBinder();
+  const { marks, photos, binders, binder, items, hint, cards } = useBinder();
   // Card just saved from the scanner: show its page and a "¡Nueva!" tag for a moment.
   const { new: newId } = useLocalSearchParams<{ new?: string }>();
   const pager = useRef<FlatList<CatalogCard[]>>(null);
@@ -88,11 +89,18 @@ export default function BinderScreen() {
   const perPage = cols * cols;
   const pages = toPages(items, perPage);
   // Inner page width: screen − padding − page padding − 1 px border on each side.
-  const inner = width - screenPadding * 2 - PAGE_PAD * 2 - 2;
+  const inner = width - screenPadding * 2 - PAGE_PAD * 2 - RINGS - 2;
   const pocketW = Math.floor((inner - GAP * (cols - 1)) / cols);
   const pocketH = Math.round(pocketW / (55 / 85));
   const ownedCount = items.filter((card) => owned(marks.get(card.id))).length;
-  const barColor = era[items[0]?.eraColor ?? 'tomato'];
+  const dupeCount = items.filter((card) => marks.get(card.id)?.status === 'dupe').length;
+  const pct = items.length ? Math.round((ownedCount / items.length) * 100) : 0;
+  // One colour per binder: its group's, also used for the binder's chip dot.
+  const binderColor = (filter?: { group?: string }) =>
+    era[
+      cards.find((x) => x.groupId === filter?.group)?.groupColor ?? items[0]?.eraColor ?? 'tomato'
+    ];
+  const barColor = binderColor(binder?.filter);
   const newIndex = newId ? items.findIndex((x) => x.id === newId) : -1;
   const near = (pageIndex: number) => Math.abs(pageIndex - page) <= 1;
 
@@ -154,6 +162,7 @@ export default function BinderScreen() {
             <Chip
               key={b.id}
               label={b.title}
+              dot={binderColor(b.filter)}
               selected={b.id === binder?.id}
               onPress={() => selectBinder(b.id)}
             />
@@ -182,9 +191,14 @@ export default function BinderScreen() {
         />
       ) : (
         <>
-          <Txt variant="display" size={40} accessibilityRole="header" numberOfLines={3}>
-            {binder.title}
-          </Txt>
+          <View style={{ gap: 2 }}>
+            <Txt variant="label" size={12} muted style={{ letterSpacing: 1 }}>
+              {`${t('binder.kicker')} · ${t(`binder.kind.${binder.kind}`)} · ${layout === '2x2' ? '2×2' : '3×3'}`.toUpperCase()}
+            </Txt>
+            <Txt variant="display" size={40} accessibilityRole="header" numberOfLines={3}>
+              {binder.title}
+            </Txt>
+          </View>
 
           {hint ? (
             <View
@@ -213,31 +227,53 @@ export default function BinderScreen() {
             </View>
           ) : null}
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <View
-              accessible
-              accessibilityRole="progressbar"
-              accessibilityLabel={t('binder.progress', { owned: ownedCount, total: items.length })}
-              accessibilityValue={{ min: 0, max: items.length, now: ownedCount }}
-              style={{
-                flex: 1,
-                height: 8,
-                borderRadius: 8,
-                backgroundColor: c.surface2,
-                overflow: 'hidden',
-              }}
-            >
-              <View
-                style={{
-                  width: `${items.length ? (ownedCount / items.length) * 100 : 0}%`,
-                  height: '100%',
-                  backgroundColor: barColor,
-                }}
-              />
-            </View>
-            <Txt variant="title" size={15} importantForAccessibility="no">
-              {ownedCount}/{items.length}
+          {/* Progress in one strip: the percentage in the era colour, then the bar */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 14,
+              paddingVertical: 12,
+              paddingHorizontal: 16,
+              borderRadius: radius.card,
+              backgroundColor: c.surface,
+              borderWidth: 1,
+              borderColor: c.line,
+            }}
+          >
+            <Txt variant="display" size={34} color={barColor} importantForAccessibility="no">
+              {`${pct}%`}
             </Txt>
+            <View style={{ flex: 1, gap: 8 }}>
+              <Txt size={13} muted importantForAccessibility="no">
+                {t('binder.summary', { owned: ownedCount, total: items.length, dupes: dupeCount })}
+              </Txt>
+              <View
+                accessible
+                accessibilityRole="progressbar"
+                accessibilityLabel={t('binder.progress', {
+                  owned: ownedCount,
+                  total: items.length,
+                })}
+                accessibilityValue={{ min: 0, max: items.length, now: ownedCount }}
+                style={{
+                  height: 8,
+                  borderRadius: 8,
+                  backgroundColor: c.surface2,
+                  overflow: 'hidden',
+                }}
+              >
+                <View
+                  style={{
+                    width: `${pct}%`,
+                    minWidth: ownedCount ? 8 : 0,
+                    height: '100%',
+                    borderRadius: 8,
+                    backgroundColor: barColor,
+                  }}
+                />
+              </View>
+            </View>
           </View>
 
           <FlatList
@@ -263,6 +299,7 @@ export default function BinderScreen() {
                 <View
                   style={{
                     padding: PAGE_PAD,
+                    paddingLeft: PAGE_PAD + RINGS,
                     borderRadius: radius.card + 4,
                     backgroundColor: c.surface,
                     borderWidth: 1,
@@ -274,6 +311,31 @@ export default function BinderScreen() {
                     minHeight: PAGE_PAD * 2 + cols * pocketH + (cols - 1) * GAP,
                   }}
                 >
+                  {/* binder rings: three punched holes down the left edge */}
+                  <View
+                    importantForAccessibility="no-hide-descendants"
+                    style={{
+                      position: 'absolute',
+                      left: 8,
+                      top: 0,
+                      bottom: 0,
+                      justifyContent: 'space-evenly',
+                    }}
+                  >
+                    {[0, 1, 2].map((r) => (
+                      <View
+                        key={r}
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: 6,
+                          backgroundColor: c.bg,
+                          borderWidth: 1.5,
+                          borderColor: c.line,
+                        }}
+                      />
+                    ))}
+                  </View>
                   {pageCards.map((card, i) => {
                     const mark = marks.get(card.id);
                     const photo = photos.get(card.id)?.scan?.thumb;
@@ -311,7 +373,7 @@ export default function BinderScreen() {
                           ) : (
                             <Pocket
                               member={card.memberName}
-                              detail={markerProps(card).version}
+                              detail={markerProps(card).short}
                               width={pocketW}
                             />
                           )}
@@ -332,6 +394,9 @@ export default function BinderScreen() {
             )}
           />
           <Dots count={pages.length} current={page} />
+          <Txt size={13} muted style={{ textAlign: 'center' }}>
+            {t('binder.moveHint')}
+          </Txt>
         </>
       )}
     </TabScreen>
