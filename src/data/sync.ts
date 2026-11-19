@@ -68,19 +68,17 @@ async function push(db: SQLiteDatabase, r: QueueRow): Promise<PgError> {
       price_cents: number | null;
     }>('select status, qty, offer, price_cents from user_cards where card_id = ?', r.key);
     const res = m
-      ? await supabase
-          .from('user_cards')
-          .upsert(
-            {
-              card_id: r.key,
-              status: m.status,
-              qty: m.qty,
-              offer: m.offer,
-              price_cents: m.price_cents,
-              deleted_at: null,
-            },
-            { onConflict: 'user_id,card_id' },
-          )
+      ? await supabase.from('user_cards').upsert(
+          {
+            card_id: r.key,
+            status: m.status,
+            qty: m.qty,
+            offer: m.offer,
+            price_cents: m.price_cents,
+            deleted_at: null,
+          },
+          { onConflict: 'user_id,card_id' },
+        )
       : await supabase.from('user_cards').update({ deleted_at: now() }).eq('card_id', r.key);
     return res.error;
   }

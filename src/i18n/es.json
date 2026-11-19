@@ -375,6 +375,53 @@
     },
     "new": "¡Nueva!"
   },
+  "home": {
+    "hello": "Hola, @{username}",
+    "helloAnon": "Hola",
+    "demoTitle": "Tu colección, sin cuenta",
+    "doubles": {
+      "one": "1 coincidencia doble",
+      "other": "{count} coincidencias dobles"
+    },
+    "singles": {
+      "one": "1 coincidencia",
+      "other": "{count} coincidencias"
+    },
+    "none": "Aún sin coincidencias",
+    "noneBody": "Marca cartas como Busco y Repetida: te avisamos cuando alguien encaje contigo.",
+    "see": "Ver",
+    "allMatches": "Ver todas",
+    "binders": "Tus binders",
+    "seeAll": "Ver todos"
+  },
+  "matches": {
+    "title": "Coincidencias",
+    "all": "Todas",
+    "doubles": "Dobles",
+    "double": "Doble",
+    "single": "Simple",
+    "international": "Envío internacional",
+    "scope": "Buscar en",
+    "scopes": {
+      "zone": "Mi zona",
+      "country": "Mi país",
+      "region": "Mi región",
+      "international": "Internacional"
+    },
+    "note": "Ordenadas por coincidencia y cercanía. Nunca por precio.",
+    "offline": "Sin conexión: puede que la lista no esté al día.",
+    "needAccount": "Crea una cuenta para ver coincidencias",
+    "intlTitle": "¿Buscar en todo el mundo?",
+    "intlBody": "Los envíos internacionales tardan más, cuestan más y pueden pagar aduanas. Binku no interviene en envíos ni pagos.",
+    "intlOk": "Buscar en todo el mundo",
+    "theyGive": "Te da",
+    "youGive": "Le das",
+    "more": "{label} (+{n})",
+    "detailTheyGive": "@{username} te da",
+    "detailYouGive": "Tú le das",
+    "chatSoon": "El chat para proponer el cambio llega muy pronto.",
+    "gone": "Esta coincidencia ya no está disponible."
+  },
   "photo": {
     "title": "Tu foto",
     "scan": "Escanear",

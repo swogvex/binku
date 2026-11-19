@@ -67,6 +67,8 @@ function RootLayout() {
           <Stack.Screen name="sheet-demo" options={sheetOptions} />
           <Stack.Screen name="catalog-filters" options={sheetOptions} />
           <Stack.Screen name="card/[id]" />
+          <Stack.Screen name="matches" />
+          <Stack.Screen name="match/[id]" />
           <Stack.Screen name="binder-new" options={sheetOptions} />
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />

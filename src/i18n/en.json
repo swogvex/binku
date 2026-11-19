@@ -375,6 +375,53 @@
     },
     "new": "New!"
   },
+  "home": {
+    "hello": "Hi, @{username}",
+    "helloAnon": "Hi",
+    "demoTitle": "Your collection, no account",
+    "doubles": {
+      "one": "1 double match",
+      "other": "{count} double matches"
+    },
+    "singles": {
+      "one": "1 match",
+      "other": "{count} matches"
+    },
+    "none": "No matches yet",
+    "noneBody": "Mark cards as Want and Spare: we'll let you know when someone fits.",
+    "see": "View",
+    "allMatches": "See all",
+    "binders": "Your binders",
+    "seeAll": "See all"
+  },
+  "matches": {
+    "title": "Matches",
+    "all": "All",
+    "doubles": "Doubles",
+    "double": "Double",
+    "single": "Single",
+    "international": "International shipping",
+    "scope": "Search in",
+    "scopes": {
+      "zone": "My area",
+      "country": "My country",
+      "region": "My region",
+      "international": "International"
+    },
+    "note": "Ranked by match and distance. Never by price.",
+    "offline": "Offline: this list may be out of date.",
+    "needAccount": "Create an account to see matches",
+    "intlTitle": "Search worldwide?",
+    "intlBody": "International shipping takes longer, costs more and may carry customs fees. Binku is not involved in shipping or payments.",
+    "intlOk": "Search worldwide",
+    "theyGive": "Gives you",
+    "youGive": "You give",
+    "more": "{label} (+{n})",
+    "detailTheyGive": "@{username} gives you",
+    "detailYouGive": "You give",
+    "chatSoon": "Chat to propose the trade is coming very soon.",
+    "gone": "This match is no longer available."
+  },
   "photo": {
     "title": "Your photo",
     "scan": "Scan",

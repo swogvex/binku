@@ -16,8 +16,9 @@ export type ServerProfile = {
   subdivision: string | null;
   is_minor: boolean;
   deletion_requested_at: string | null;
+  match_scope: 'zone' | 'country' | 'region' | 'international';
 };
-const PROFILE_COLS = 'username,country,subdivision,is_minor,deletion_requested_at';
+const PROFILE_COLS = 'username,country,subdivision,is_minor,deletion_requested_at,match_scope';
 
 /** The signed-in user's profile, or null for a new account. */
 export async function fetchProfile() {

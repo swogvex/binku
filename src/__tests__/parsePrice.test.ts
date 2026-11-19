@@ -1,6 +1,7 @@
-jest.mock('@/i18n', () => ({ locale: 'es', t: (k: string) => k }));
-
 import { parsePrice } from '@/features/card/OfferSection';
+
+// hoisted by babel-jest above the import
+jest.mock('@/i18n', () => ({ locale: 'es', t: (k: string) => k }));
 
 test('reads prices with comma or dot, in cents', () => {
   expect(parsePrice('5,5')).toBe(550);
