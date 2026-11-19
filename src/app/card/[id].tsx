@@ -4,13 +4,15 @@ import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { UserMark } from '@/data/catalog';
-import { getDb, getKv } from '@/data/db';
+import { getDb } from '@/data/db';
 import { removePhoto, type Photo, type PhotoKind } from '@/data/photos';
 import { setMark } from '@/data/userCards';
 import { Card3D } from '@/features/card/Card3D';
 import { CardBack } from '@/features/card/CardBack';
+import { owned } from '@/features/binder/pages';
 import { markerProps } from '@/features/catalog/cardView';
 import { useCatalogData } from '@/features/catalog/useCatalog';
+import { useLinkedUser } from '@/features/auth/useLinked';
 import { openScan } from '@/features/scan/scan';
 import { t } from '@/i18n';
 import { haptics } from '@/lib/haptics';
@@ -125,7 +127,7 @@ export default function CardScreen() {
   const mark = card ? marks.get(card.id) : undefined;
   const cardPhotos = card ? photos.get(card.id) : undefined;
   const scan = cardPhotos?.scan;
-  const linked = !!getKv(getDb(), 'sync:user');
+  const linked = !!useLinkedUser();
 
   const shoot = (source: 'camera' | 'gallery', kind: PhotoKind) =>
     openScan(router, source, { cardId: card!.id, kind });
@@ -158,7 +160,16 @@ export default function CardScreen() {
       >
         {t('cardSheet.title')}
       </Txt>
-      {Platform.OS === 'ios' ? <View style={{ width: 44 }} /> : null}
+      {card && owned(mark) ? (
+        // Full screen is for your own collection only.
+        <RoundButton
+          icon="expand"
+          label={t('viewer.open')}
+          onPress={() => router.push({ pathname: '/card-viewer', params: { id: card.id } })}
+        />
+      ) : Platform.OS === 'ios' ? (
+        <View style={{ width: 44 }} />
+      ) : null}
     </View>
   );
 
@@ -191,6 +202,7 @@ export default function CardScreen() {
                   <ScanFrame
                     source={{ uri: scan.uri }}
                     member={card.memberName}
+                    state={markerProps(card, mark).state}
                     holo={card.isSpecial}
                     width={CARD_W}
                   />

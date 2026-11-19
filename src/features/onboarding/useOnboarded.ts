@@ -6,6 +6,8 @@ import { isOnboarded } from '@/data/profile';
 
 /** Re-reads the flag whenever local data changes (the version is referenced so memoisation keys on it). */
 export function useOnboarded() {
+  // The compiler would cache isOnboarded(getDb()) by its (never-changing) argument.
+  'use no memo';
   const v = useSyncExternalStore(dataVersion.subscribe, dataVersion.get);
   return useMemo(() => v >= 0 && isOnboarded(getDb()), [v]);
 }

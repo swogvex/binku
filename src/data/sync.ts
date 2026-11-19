@@ -286,10 +286,29 @@ const report = (e: unknown) => {
   Sentry.captureMessage(`sync failed (${err?.code || (e instanceof Error ? e.name : 'unknown')})`);
 };
 
+/**
+ * Without an account the app is a demo: what people add lives only until the app is closed
+ * (owner decision 2026-11-19). The account is the only place a collection is kept.
+ */
+export const isDemo = (db = getDb()) => !getKv(db, 'sync:user');
+
+/** Forgets this phone's collection (binders, marks, photos); an account keeps its own copy. */
+function clearCollection(db: SQLiteDatabase) {
+  db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+  clearPhotos(db);
+  db.execSync("delete from kv where key in ('binder:current', 'binder:hint');");
+}
+
 let started = false;
+/** Runs once per app launch: starts the sync loop and resets the previous session's demo. */
 export function startSync() {
   if (started) return;
   started = true;
+  const db = getDb();
+  if (isDemo(db)) {
+    clearCollection(db);
+    dataVersion.bump();
+  }
   let timer: ReturnType<typeof setTimeout> | undefined;
   setQueueListener(() => {
     clearTimeout(timer);
@@ -323,8 +342,7 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
     if (mode === 'fresh') {
-      db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
-      clearPhotos(db);
+      clearCollection(db);
     } else {
       // Binders made before M3 have local ids ("b-…"): give them server-valid uuids.
       for (const { id } of db.getAllSync<{ id: string }>('select id from binders')) {
@@ -357,10 +375,21 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
   await sync(db).catch(report);
 }
 
-/** Tries to upload what is pending, then unlinks. Local data stays on the device. */
+/** Changes still waiting to reach the account (offline): signing out now would lose them. */
+export const pendingChanges = (db = getDb()) =>
+  db.getFirstSync<{ n: number }>('select count(*) n from outbox')?.n ?? 0;
+
+/**
+ * Uploads what is pending, then signs out and forgets the collection on this phone: it lives in
+ * the account. Callers check `pendingChanges` first and warn when something could not be uploaded.
+ */
 export async function signOut(db = getDb()) {
   await flush(db).catch(report);
-  db.execSync(UNLINK);
+  db.withTransactionSync(() => {
+    db.execSync(UNLINK);
+    clearCollection(db);
+  });
+  dataVersion.bump();
   await supabase.auth.signOut();
   await signOutOfGoogle();
 }
@@ -377,11 +406,8 @@ export async function deleteAccount(db = getDb()) {
   await signOutOfGoogle();
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
-    db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
-    clearPhotos(db);
-    db.execSync(
-      "delete from kv where key in ('profile', 'onboarding:done', 'binder:current', 'binder:hint', 'scan:tips');",
-    );
+    clearCollection(db);
+    db.execSync("delete from kv where key in ('profile', 'onboarding:done', 'scan:tips');");
   });
   dataVersion.bump();
   return data as string;

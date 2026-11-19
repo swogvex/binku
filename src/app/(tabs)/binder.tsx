@@ -94,6 +94,7 @@ export default function BinderScreen() {
   const ownedCount = items.filter((card) => owned(marks.get(card.id))).length;
   const barColor = era[items[0]?.eraColor ?? 'tomato'];
   const newIndex = newId ? items.findIndex((x) => x.id === newId) : -1;
+  const near = (pageIndex: number) => Math.abs(pageIndex - page) <= 1;
 
   // Jump to the new card's page once (state adjusted during render, not in an effect).
   const [shownNew, setShownNew] = useState<string>();
@@ -249,7 +250,12 @@ export default function BinderScreen() {
             key={pagerKey}
             ref={pager}
             getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
-            onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
+            // The page changes as soon as the swipe passes halfway (dots and holo follow at once).
+            onScroll={(e) => {
+              const p = Math.round(e.nativeEvent.contentOffset.x / width);
+              if (p !== page) setPage(p);
+            }}
+            scrollEventThrottle={32}
             initialNumToRender={1}
             windowSize={3}
             renderItem={({ item: pageCards, index: pageIndex }) => (
@@ -290,14 +296,16 @@ export default function BinderScreen() {
                             <ScanFrame
                               source={{ uri: photo }}
                               member={card.memberName}
-                              holo={card.isSpecial && pageIndex === page}
+                              state={markerProps(card, mark).state}
+                              holo={card.isSpecial && near(pageIndex)}
                               width={pocketW}
                             />
                           ) : owned(mark) ? (
                             <CardMarker
                               {...markerProps(card, mark)}
-                              // Holo only on the visible page: each one listens to the sensor.
-                              holo={card.isSpecial && pageIndex === page}
+                              // Holo on the visible page and its neighbours, so a page swiped
+                              // into view already shines (all share one sensor).
+                              holo={card.isSpecial && near(pageIndex)}
                               width={pocketW}
                             />
                           ) : (

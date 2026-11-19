@@ -4,7 +4,7 @@ import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import { t } from '@/i18n';
 import { textOn } from '@/lib/contrast';
-import { cardRadius, cardRatio, colors, era, type Era } from '@/theme/tokens';
+import { cardRadius, cardRatio, colors, era, fonts, type Era } from '@/theme/tokens';
 
 import { Holo } from './Holo';
 import { Txt } from './Txt';
@@ -55,6 +55,57 @@ function FormatMark({ format, color }: { format: CardFormat; color: string }) {
     <Svg width={12} height={12} viewBox="0 0 12 12">
       {shape}
     </Svg>
+  );
+}
+
+/**
+ * Compact mark state: T (Tengo) filled, B (Busco) outlined = still missing, R×n (Repetida) filled
+ * with the count. Sits in a corner so it never covers the face on a photocard. Decorative: the
+ * card's accessibility label already says the state in words.
+ */
+export function StateBadge({
+  state,
+  on,
+  small,
+}: {
+  state: CardState;
+  on: string;
+  small?: boolean;
+}) {
+  const fg = textOn(on);
+  const filled = state.kind !== 'want';
+  const label =
+    state.kind === 'dupe'
+      ? t('card.short.dupe', { count: state.count })
+      : t(`card.short.${state.kind}`);
+  const size = small ? 18 : 22;
+  return (
+    <View
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      style={{
+        minWidth: size,
+        height: size,
+        paddingHorizontal: state.kind === 'dupe' ? 6 : 0,
+        borderRadius: size / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // Filled badges are ink on every era colour; a thin ring keeps them apart from dark eras.
+        backgroundColor: filled ? colors.light.ink : 'transparent',
+        borderWidth: 1.5,
+        borderColor: filled ? colors.light.onInk : fg,
+      }}
+    >
+      <Txt
+        variant="label"
+        size={small ? 12 : 13}
+        color={filled ? colors.light.onInk : fg}
+        allowFontScaling={false}
+        style={{ fontFamily: fonts.text700, lineHeight: small ? 14 : 16 }}
+      >
+        {label}
+      </Txt>
+    </View>
   );
 }
 
@@ -115,51 +166,32 @@ export function CardMarker({
         </Txt>
         <FormatMark format={format} color={fg} />
       </View>
-      {stateLabel ? (
-        <View
-          style={{
-            alignSelf: 'flex-start',
-            paddingHorizontal: 6,
-            paddingVertical: 2,
-            borderRadius: 999,
-            borderWidth: 1.5,
-            borderColor: state?.kind === 'have' ? colors.light.ink : fg,
-            backgroundColor: state?.kind === 'have' ? colors.light.ink : 'transparent',
-          }}
-        >
+      {/* Name bottom-left, state badge bottom-right: the middle stays clear (that is where the
+          face is on a real photocard). */}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
+        <View style={{ flex: 1 }}>
           <Txt
-            variant="label"
-            size={12}
-            color={state?.kind === 'have' ? colors.light.onInk : fg}
+            variant="display"
+            size={22}
+            color={fg}
             numberOfLines={1}
             maxFontSizeMultiplier={1.3}
             allowFontScaling={!decorative}
           >
-            {stateLabel}
+            {member}
+          </Txt>
+          <Txt
+            variant="body"
+            size={12}
+            color={fg}
+            numberOfLines={1}
+            maxFontSizeMultiplier={1.3}
+            allowFontScaling={!decorative}
+          >
+            {album}
           </Txt>
         </View>
-      ) : null}
-      <View>
-        <Txt
-          variant="display"
-          size={22}
-          color={fg}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.3}
-          allowFontScaling={!decorative}
-        >
-          {member}
-        </Txt>
-        <Txt
-          variant="body"
-          size={12}
-          color={fg}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.3}
-          allowFontScaling={!decorative}
-        >
-          {album}
-        </Txt>
+        {state ? <StateBadge state={state} on={bg} small={width < 90} /> : null}
       </View>
       {holo ? <Holo width={width} rotateX={holoRotate?.x} rotateY={holoRotate?.y} /> : null}
     </Container>

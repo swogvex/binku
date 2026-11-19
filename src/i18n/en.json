@@ -19,6 +19,11 @@
       "event": "event",
       "seasonGreetings": "season's greetings",
       "other": "other"
+    },
+    "short": {
+      "have": "H",
+      "want": "W",
+      "dupe": "D×{count}"
     }
   },
   "pocket": {
@@ -181,7 +186,13 @@
         "CL": "Chile",
         "PE": "Peru"
       },
-      "none": "No results"
+      "none": "No results",
+      "change": "Tap to change country",
+      "changeShort": "Change",
+      "pickCountry": "Choose your country",
+      "searchCountry": "Search your country",
+      "close": "Close",
+      "suggested": "From your phone"
     },
     "dob": {
       "title": "When were you born?",
@@ -201,7 +212,12 @@
       "bias": "{group} bias",
       "all": "All",
       "create": "Create my binder",
-      "skip": "Go to the catalog"
+      "skip": "Go to the catalog",
+      "members": {
+        "one": "{count} member",
+        "other": "{count} members"
+      },
+      "order": "chosen #{n}"
     },
     "ready": {
       "time": "Ready in {seconds} seconds",
@@ -301,7 +317,14 @@
     },
     "preferences": "Preferences",
     "language": "Language",
-    "languageName": "English"
+    "languageName": "English",
+    "signOutPending": {
+      "title": "Changes not uploaded yet",
+      "body": "We couldn't upload some changes (are you offline?). If you sign out now, they will be lost.",
+      "confirm": "Sign out anyway"
+    },
+    "languageSystem": "Same as the phone",
+    "languageTitle": "App language"
   },
   "scan": {
     "kicker": "Before your first photo",
@@ -370,5 +393,13 @@
     "add": "Add {side} photo",
     "redo": "Retake",
     "from": "Where should the photo come from?"
+  },
+  "demo": {
+    "title": "You are trying Binku",
+    "body": "Without an account Binku is a demo: whatever you add is erased when the app closes. Create an account or sign in to keep your collection."
+  },
+  "viewer": {
+    "close": "Close",
+    "open": "View full screen"
   }
 }

@@ -4,15 +4,15 @@ import { useLocales } from 'expo-localization';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { dataVersion } from '@/data/catalog';
 import { pullCatalogIfConfigured } from '@/data/catalogSync';
-import { getDb } from '@/data/db';
+import { getDb, getKv } from '@/data/db';
 import { startSync } from '@/data/sync';
 import { useOnboarded } from '@/features/onboarding/useOnboarded';
-import { setLocale } from '@/i18n';
+import { chooseLanguage, languageChoice, LANGS, setLocale, type Lang } from '@/i18n';
 import { fontFiles } from '@/theme/fonts';
 import { useTheme } from '@/theme/useTheme';
 import { sheetOptions } from '@/ui/sheet';
@@ -25,12 +25,19 @@ Sentry.init({
 
 SplashScreen.preventAutoHideAsync();
 
+// The language picked in Settings is applied before the first screen renders.
+const saved = getKv(getDb(), 'lang') as Lang | undefined;
+chooseLanguage(saved && LANGS.includes(saved) ? saved : null);
+
 function RootLayout() {
   const c = useTheme();
   const [loaded, error] = useFonts(fontFiles);
   const onboarded = useOnboarded();
-  // Per-app language changed in the OS settings: switch and re-render every screen.
-  const lang = setLocale(useLocales()[0]?.languageCode);
+  // Language picked in Settings, else the phone's: a change re-renders every screen.
+  // The choice is part of the argument so the compiler never reuses a stale result.
+  const chosen = useSyncExternalStore(languageChoice.subscribe, languageChoice.get);
+  const phone = useLocales()[0]?.languageCode;
+  const lang = setLocale(chosen ?? phone);
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
@@ -65,6 +72,15 @@ function RootLayout() {
           <Stack.Screen name="settings" />
           <Stack.Screen name="scan-review" options={{ gestureEnabled: false }} />
           <Stack.Screen name="scan-pick" options={sheetOptions} />
+          <Stack.Screen name="language" options={sheetOptions} />
+          <Stack.Screen
+            name="card-viewer"
+            options={{
+              presentation: 'fullScreenModal',
+              animation: 'fade',
+              contentStyle: { backgroundColor: '#000' },
+            }}
+          />
         </Stack.Protected>
         <Stack.Protected guard={!onboarded}>
           <Stack.Screen name="onboarding" />

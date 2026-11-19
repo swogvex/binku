@@ -19,6 +19,11 @@
       "event": "evento",
       "seasonGreetings": "season's greetings",
       "other": "otro"
+    },
+    "short": {
+      "have": "T",
+      "want": "B",
+      "dupe": "R×{count}"
     }
   },
   "pocket": {
@@ -181,7 +186,13 @@
         "CL": "Chile",
         "PE": "Perú"
       },
-      "none": "No hay resultados"
+      "none": "No hay resultados",
+      "change": "Toca para cambiar de país",
+      "changeShort": "Cambiar",
+      "pickCountry": "Elige tu país",
+      "searchCountry": "Busca tu país",
+      "close": "Cerrar",
+      "suggested": "Según tu móvil"
     },
     "dob": {
       "title": "¿Cuándo naciste?",
@@ -201,7 +212,12 @@
       "bias": "Bias de {group}",
       "all": "Todos",
       "create": "Crear mi binder",
-      "skip": "Ir al catálogo"
+      "skip": "Ir al catálogo",
+      "members": {
+        "one": "{count} miembro",
+        "other": "{count} miembros"
+      },
+      "order": "elegido en {n}.º lugar"
     },
     "ready": {
       "time": "Listo en {seconds} segundos",
@@ -301,7 +317,14 @@
     },
     "preferences": "Preferencias",
     "language": "Idioma",
-    "languageName": "Español"
+    "languageName": "Español",
+    "signOutPending": {
+      "title": "Hay cambios sin subir",
+      "body": "No hemos podido subir algunos cambios (¿estás sin conexión?). Si cierras sesión ahora, se perderán.",
+      "confirm": "Cerrar sesión igualmente"
+    },
+    "languageSystem": "Igual que el móvil",
+    "languageTitle": "Idioma de la app"
   },
   "scan": {
     "kicker": "Antes de la primera foto",
@@ -370,5 +393,13 @@
     "add": "Añadir foto del {side}",
     "redo": "Repetir",
     "from": "¿De dónde sacamos la foto?"
+  },
+  "demo": {
+    "title": "Estás probando Binku",
+    "body": "Sin cuenta, Binku es una demo: lo que añadas se borra al cerrar la app. Crea una cuenta o inicia sesión para guardar tu colección."
+  },
+  "viewer": {
+    "close": "Cerrar",
+    "open": "Ver a pantalla completa"
   }
 }

@@ -1,11 +1,11 @@
-import { Accelerometer } from 'expo-sensors';
-import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
+  SensorType,
+  useAnimatedReaction,
+  useAnimatedSensor,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
-  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
@@ -16,8 +16,9 @@ const bands = [era.tomato, era.mango, era.mint, era.cobalt, era.bubblegum, era.t
 
 /**
  * Iridescent overlay for special cards (lucky draw, POB, event, user-marked).
- * Tilting the phone slides the shine. Uses the accelerometer (no permission needed on iOS or
- * Android). Hidden entirely with reduced motion.
+ * Tilting the phone slides the shine. Reads the gravity sensor on the UI thread (no JS round
+ * trip, so it follows the phone without lag; no permission on iOS or Android). Every card shares
+ * one native sensor. Hidden entirely with reduced motion.
  */
 type Props = {
   width: number;
@@ -28,19 +29,22 @@ type Props = {
 
 export function Holo({ width, rotateX, rotateY }: Props) {
   const reduced = useReducedMotion();
+  // 30 readings a second is smooth for a sheen and half the work of 60.
+  const gravity = useAnimatedSensor(SensorType.GRAVITY, { interval: 33 });
   const x = useSharedValue(0);
   const y = useSharedValue(0);
-
-  useEffect(() => {
-    if (reduced) return;
-    Accelerometer.setUpdateInterval(60);
-    const sub = Accelerometer.addListener((a) => {
-      // a.x / a.y are gravity in g (-1..1): map tilt to a slide of up to ±0.4 card width.
-      x.set(withTiming(Math.max(-1, Math.min(1, a.x)) * width * 0.4, { duration: 120 }));
-      y.set(withTiming(Math.max(-1, Math.min(1, a.y)) * width * 0.4, { duration: 120 }));
-    });
-    return () => sub.remove();
-  }, [reduced, width, x, y]);
+  // Gravity in m/s² (both platforms): ±9.81 on an axis = fully tilted → slide up to ±0.4 width.
+  // Changes under 1 px are sensor noise: skipping them lets a still phone stop redrawing.
+  useAnimatedReaction(
+    () => gravity.sensor.get(),
+    (g) => {
+      const nx = Math.max(-1, Math.min(1, g.x / 9.81)) * width * 0.4;
+      const ny = Math.max(-1, Math.min(1, g.y / 9.81)) * width * 0.4;
+      if (Math.abs(nx - x.get()) < 1 && Math.abs(ny - y.get()) < 1) return;
+      x.set(nx);
+      y.set(ny);
+    },
+  );
 
   // Phone tilt and finger rotation add up, so both move the shine.
   const shine = useAnimatedStyle(() => {

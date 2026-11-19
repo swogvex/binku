@@ -49,7 +49,6 @@ function Preview({ uri, rotation }: { uri: string; rotation: number }) {
         backgroundColor: c.surface2,
         alignItems: 'center',
         justifyContent: 'center',
-        transform: [{ rotate: '-2deg' }],
       }}
     >
       <Image

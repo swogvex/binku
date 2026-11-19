@@ -10,13 +10,29 @@ type Keys<T, P extends string = ''> = {
 }[keyof T & string];
 export type TKey = Keys<Dict>;
 
-type Lang = 'es' | 'en';
+export type Lang = 'es' | 'en';
+export const LANGS: Lang[] = ['es', 'en'];
 const pick = (code?: string | null): Lang => (code === 'es' ? 'es' : 'en');
 
-// `let`: follows the per-app language chosen in the OS settings while the app runs.
+// Language picked inside the app (Settings → Idioma); null = follow the phone.
+let chosen: Lang | null = null;
+const listeners = new Set<() => void>();
+export const languageChoice = {
+  subscribe(fn: () => void) {
+    listeners.add(fn);
+    return () => listeners.delete(fn);
+  },
+  get: () => chosen,
+};
+export function chooseLanguage(lang: Lang | null) {
+  chosen = lang;
+  listeners.forEach((fn) => fn());
+}
+
+// `let`: follows the in-app choice, else the phone's (per-app) language, while the app runs.
 export let locale: Lang = pick(getLocales()[0]?.languageCode);
 
-/** Sets the active language from an OS language code (es → es, anything else → en). */
+/** Sets the active language from a language code (es → es, anything else → en). */
 export function setLocale(code?: string | null) {
   locale = pick(code);
   return locale;

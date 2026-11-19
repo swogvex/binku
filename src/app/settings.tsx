@@ -3,15 +3,16 @@
 import Constants from 'expo-constants';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
-import { Alert, Linking, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getDb } from '@/data/db';
-import { deleteAccount, signOut } from '@/data/sync';
+import { deleteAccount, flush, pendingChanges, signOut } from '@/data/sync';
 import { exportCsv, exportJson } from '@/features/account/exportData';
 import { authErrorKey, fetchProfile } from '@/features/auth/account';
+import { DemoNotice } from '@/features/auth/DemoNotice';
 import { useSession } from '@/features/auth/useSession';
-import { locale, t } from '@/i18n';
+import { languageChoice, locale, t } from '@/i18n';
 import { fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -136,6 +137,21 @@ export default function Settings() {
     }
   };
 
+  // Signing out forgets this phone's collection: warn if something never reached the account.
+  const onSignOut = () =>
+    run(async () => {
+      await flush().catch(() => {});
+      if (!pendingChanges()) return signOut();
+      Alert.alert(t('settings.signOutPending.title'), t('settings.signOutPending.body'), [
+        { text: t('settings.cancel'), style: 'cancel' },
+        {
+          text: t('settings.signOutPending.confirm'),
+          style: 'destructive',
+          onPress: () => run(signOut),
+        },
+      ]);
+    });
+
   const onExport = () =>
     Alert.alert(t('settings.export.title'), t('settings.export.body'), [
       { text: t('settings.export.json'), onPress: () => run(exportJson) },
@@ -219,27 +235,17 @@ export default function Settings() {
           </View>
         </View>
       ) : (
-        <View style={{ gap: 12 }}>
-          <Txt muted>{t('auth.email.body')}</Txt>
-          <View style={{ gap: 10 }}>
-            <Button label={t('auth.profile.signUp')} onPress={() => router.push('/sign-in')} />
-            <Button
-              variant="ghost"
-              label={t('auth.profile.signIn')}
-              onPress={() => router.push({ pathname: '/sign-in', params: { intent: 'signIn' } })}
-            />
-          </View>
-        </View>
+        <DemoNotice />
       )}
 
       <Section title={t('settings.preferences')}>
-        {/* Per-app language lives in the OS (iOS app settings, Android 13+ App info). */}
+        {/* Chosen in the app (also follows the phone's per-app language when on "Igual que el móvil"). */}
         <Row
           first
           icon="language"
           label={t('settings.language')}
-          value={t('settings.languageName')}
-          onPress={() => Linking.openSettings()}
+          value={languageChoice.get() ? t('settings.languageName') : t('settings.languageSystem')}
+          onPress={() => router.push('/language')}
         />
       </Section>
 
@@ -268,7 +274,7 @@ export default function Settings() {
           variant="ghost"
           label={t('auth.profile.signOut')}
           disabled={busy}
-          onPress={() => run(async () => void (await signOut()))}
+          onPress={onSignOut}
         />
       ) : null}
 
