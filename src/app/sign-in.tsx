@@ -1,5 +1,6 @@
 // Account from the Profile tab (people who chose "Explorar sin cuenta" first).
-// `?resume=1` finishes an account whose set-up was interrupted (offline, app closed).
+// `?resume=1` finishes an account whose set-up was interrupted (offline, app closed);
+// `?intent=signIn` words the email step for returning users ("Crear cuenta" is the default).
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,8 +16,12 @@ export default function SignIn() {
   const c = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { resume } = useLocalSearchParams<{ resume?: string }>();
-  const flow = useAccountFlow({ start: resume ? 'finish' : 'email', onDone: () => router.back() });
+  const { resume, intent } = useLocalSearchParams<{ resume?: string; intent?: 'signIn' }>();
+  const flow = useAccountFlow({
+    start: resume ? 'finish' : 'email',
+    intent: intent === 'signIn' ? 'signIn' : 'signUp',
+    onDone: () => router.back(),
+  });
 
   return (
     <KeyboardAvoidingView

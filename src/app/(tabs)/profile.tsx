@@ -2,8 +2,9 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 
-import { getDb, getKv } from '@/data/db';
 import { fetchProfile } from '@/features/auth/account';
+import { DemoNotice } from '@/features/auth/DemoNotice';
+import { useLinkedUser } from '@/features/auth/useLinked';
 import { useSession } from '@/features/auth/useSession';
 import { t } from '@/i18n';
 import { Button } from '@/ui/Button';
@@ -15,6 +16,7 @@ export default function Profile() {
   // Hook, not the global `router`: the global one is unbound while Android recreates the activity (e.g. font scale change).
   const router = useRouter();
   const session = useSession();
+  const linkedUser = useLinkedUser();
   // undefined = not loaded (or offline), null = account without @username yet.
   const [username, setUsername] = useState<string | null>();
 
@@ -40,19 +42,14 @@ export default function Profile() {
           onPress={() => router.push('/settings')}
         />
       </View>
-      {session === null ? (
-        <>
-          <Txt muted>{t('auth.email.body')}</Txt>
-          <Button label={t('auth.profile.signIn')} onPress={() => router.push('/sign-in')} />
-        </>
-      ) : null}
+      {session === null ? <DemoNotice /> : null}
       {session ? (
         <>
           <Txt variant="title" size={22}>
             {username ? `@${username}` : session.user.email}
           </Txt>
           {/* Set-up interrupted (offline, app closed): no @username yet or data not linked. */}
-          {username === null || (username && getKv(getDb(), 'sync:user') !== session.user.id) ? (
+          {username === null || (username && linkedUser !== session.user.id) ? (
             <Button
               label={t('auth.profile.finish')}
               onPress={() => router.push({ pathname: '/sign-in', params: { resume: '1' } })}

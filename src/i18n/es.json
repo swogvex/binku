@@ -19,6 +19,11 @@
       "event": "evento",
       "seasonGreetings": "season's greetings",
       "other": "otro"
+    },
+    "short": {
+      "have": "T",
+      "want": "B",
+      "dupe": "R×{count}"
     }
   },
   "pocket": {
@@ -42,7 +47,8 @@
     "cameraDenied": {
       "title": "Sin cámara no podemos escanear",
       "settings": "Abrir Ajustes",
-      "gallery": "Elegir de la galería"
+      "gallery": "Elegir de la galería",
+      "body": "Puedes activarla en Ajustes o elegir una foto que ya tengas: la recortamos igual."
     },
     "offline": {
       "title": "Sin conexión · Tu binder funciona igual.",
@@ -180,7 +186,13 @@
         "CL": "Chile",
         "PE": "Perú"
       },
-      "none": "No hay resultados"
+      "none": "No hay resultados",
+      "change": "Toca para cambiar de país",
+      "changeShort": "Cambiar",
+      "pickCountry": "Elige tu país",
+      "searchCountry": "Busca tu país",
+      "close": "Cerrar",
+      "suggested": "Según tu móvil"
     },
     "dob": {
       "title": "¿Cuándo naciste?",
@@ -200,7 +212,12 @@
       "bias": "Bias de {group}",
       "all": "Todos",
       "create": "Crear mi binder",
-      "skip": "Ir al catálogo"
+      "skip": "Ir al catálogo",
+      "members": {
+        "one": "{count} miembro",
+        "other": "{count} miembros"
+      },
+      "order": "elegido en {n}.º lugar"
     },
     "ready": {
       "time": "Listo en {seconds} segundos",
@@ -243,7 +260,8 @@
       "save": "Guardar"
     },
     "profile": {
-      "signIn": "Crear cuenta o entrar",
+      "signUp": "Crear cuenta",
+      "signIn": "Iniciar sesión",
       "signOut": "Cerrar sesión",
       "finish": "Terminar de crear tu cuenta"
     },
@@ -299,6 +317,90 @@
     },
     "preferences": "Preferencias",
     "language": "Idioma",
-    "languageName": "Español"
+    "languageName": "Español",
+    "signOutPending": {
+      "title": "Hay cambios sin subir",
+      "body": "No hemos podido subir algunos cambios (¿estás sin conexión?). Si cierras sesión ahora, se perderán.",
+      "confirm": "Cerrar sesión igualmente"
+    },
+    "languageSystem": "Igual que el móvil",
+    "languageTitle": "Idioma de la app"
+  },
+  "scan": {
+    "kicker": "Antes de la primera foto",
+    "title": "Tres trucos para que salga perfecta",
+    "tipDark": {
+      "title": "Fondo oscuro y liso",
+      "body": "Una mesa o una carpeta negra: el borde de la carta se detecta solo."
+    },
+    "tipLight": {
+      "title": "Luz indirecta, sin flash",
+      "body": "Junto a una ventana, sin sol directo encima."
+    },
+    "tipShine": {
+      "title": "¿Brilla? Inclina un poco",
+      "body": "Así no salen reflejos en las cartas holo o con brillo."
+    },
+    "privacyAsk": "Te pediremos la cámara. La foto se procesa en tu móvil y no se sube hasta que la guardes.",
+    "privacy": "La foto se procesa en tu móvil y no se sube hasta que la guardes.",
+    "camera": "Abrir cámara",
+    "gallery": "Elegir de la galería",
+    "unavailable": {
+      "title": "Este móvil no tiene el escáner",
+      "body": "Falta el escáner de documentos de Google. Elige una foto de la galería: la recortamos igual."
+    },
+    "review": {
+      "close": "Cerrar",
+      "kickerCamera": "Recortada y enderezada",
+      "kickerGallery": "Recortada a tamaño carta",
+      "title": "Revisa el recorte",
+      "titleCondition": "Revisa la foto",
+      "rotate": "Rotar",
+      "retake": "Repetir",
+      "which": "¿Qué carta es?",
+      "suggested": "Sugerida por tu binder",
+      "change": "Cambiar",
+      "choose": "Elegir carta",
+      "none": "Elige qué carta es para guardarla.",
+      "save": "Guardar en el binder",
+      "saveCard": "Guardar foto",
+      "saving": "Guardando…",
+      "error": "No hemos podido guardar la foto. Inténtalo otra vez.",
+      "preview": "Vista previa del recorte",
+      "galleryRule": "Solo fotos de tus propias photocards. Cualquier otra imagen se borra y puede suspender tu cuenta."
+    },
+    "pick": {
+      "search": "Busca miembro, grupo o álbum",
+      "empty": "Ninguna carta coincide."
+    },
+    "new": "¡Nueva!"
+  },
+  "photo": {
+    "title": "Tu foto",
+    "scan": "Escanear",
+    "gallery": "Galería",
+    "change": "Cambiar foto",
+    "remove": "Quitar foto",
+    "removeTitle": "¿Quitar esta foto?",
+    "removeBody": "Se borra de este móvil y de tu cuenta. La carta sigue marcada.",
+    "cancel": "Cancelar",
+    "quota": "Esta foto solo está en tu móvil: ya tienes 1.000 cartas con foto en la nube.",
+    "noAccount": "Está solo en este móvil. Se subirá cuando crees tu cuenta.",
+    "conditionTitle": "Fotos del estado",
+    "conditionBody": "Tal cual, sin filtros ni retoques. Se enseñan cuando ofrezcas esta carta.",
+    "front": "Frente",
+    "back": "Dorso",
+    "optional": "Opcional",
+    "add": "Añadir foto del {side}",
+    "redo": "Repetir",
+    "from": "¿De dónde sacamos la foto?"
+  },
+  "demo": {
+    "title": "Estás probando Binku",
+    "body": "Sin cuenta, Binku es una demo: lo que añadas se borra al cerrar la app. Crea una cuenta o inicia sesión para guardar tu colección."
+  },
+  "viewer": {
+    "close": "Cerrar",
+    "open": "Ver a pantalla completa"
   }
 }

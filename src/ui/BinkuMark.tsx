@@ -26,7 +26,12 @@ export function BinkuMark({ size = 28, wordmark = true }: { size?: number; wordm
       accessibilityLabel="Binku"
       style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
     >
-      <Svg width={size} height={size} viewBox="0 0 100 100">
+      {/* Beside the wordmark the symbol is ~18 % smaller, so it reads as an icon, not a letter. */}
+      <Svg
+        width={wordmark ? Math.round(size * 0.82) : size}
+        height={wordmark ? Math.round(size * 0.82) : size}
+        viewBox="0 0 100 100"
+      >
         {pockets.map(([x, y]) => (
           <Rect
             key={`${x}-${y}`}

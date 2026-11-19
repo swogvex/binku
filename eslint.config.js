@@ -6,5 +6,5 @@ const prettierConfig = require('eslint-config-prettier');
 module.exports = defineConfig([
   expoConfig,
   prettierConfig,
-  { ignores: ['dist/*', 'docs/*', '.expo/*', 'coverage/*'] },
+  { ignores: ['dist/*', 'docs/*', '.expo/*', 'coverage/*', 'supabase/functions/photos/*'] },
 ]);

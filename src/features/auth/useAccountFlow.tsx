@@ -219,13 +219,16 @@ export function useAccountFlow({ start, intent = 'signUp', onDone, onNeedsProfil
   const userId = async () => (await supabase.auth.getSession()).data.session!.user.id;
   const done = () => onDone(result.current!);
 
-  /** Links this phone's data to the account, asking first if there is a local binder. */
+  /**
+   * Links this phone's data to the account. Signing in to an existing account always replaces the
+   * demo with the account's collection; a brand-new account is offered to keep what was tried.
+   */
   const linkOrAsk = async () => {
     const db = getDb();
     const uid = await userId();
     if (getKv(db, 'sync:user') === uid) return done();
     const s = localSummary(db);
-    if (s.binders || s.cards) {
+    if (!result.current?.existing && (s.binders || s.cards)) {
       setSummary(s);
       setStep('upload');
       return;

@@ -29,16 +29,17 @@ import { selectBinder } from '@/features/binder/useBinder';
 import { useCatalogData } from '@/features/catalog/useCatalog';
 import { fold } from '@/features/catalog/filter';
 import { ageOn, fromDate, isoDate, type Dob } from '@/features/onboarding/age';
+import { CountryPicker } from '@/features/onboarding/CountryPicker';
+import { GroupPicker, type PickGroup } from '@/features/onboarding/GroupPicker';
+import { IntroPager } from '@/features/onboarding/IntroPager';
 import { locale, t, type TKey } from '@/i18n';
-import { textOn } from '@/lib/contrast';
 import { haptics } from '@/lib/haptics';
-import { cardRadius, cardRatio, era, radius, screenPadding, type Era } from '@/theme/tokens';
+import { era, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { BinkuMark } from '@/ui/BinkuMark';
 import { RoundButton } from '@/ui/RoundButton';
 import { Button } from '@/ui/Button';
 import { CardMarker } from '@/ui/CardMarker';
-import { Chip } from '@/ui/Chip';
 import { Icon } from '@/ui/icons/Icon';
 import { SearchField } from '@/ui/SearchField';
 import { StateView } from '@/ui/StateView';
@@ -49,7 +50,6 @@ type Country = keyof typeof geo;
 type Step =
   'intro0' | 'intro1' | 'intro2' | 'welcome' | 'place' | 'dob' | 'blocked' | 'account' | 'groups';
 type Mode = 'signup' | 'login' | 'explore';
-const INTROS = ['collect', 'mark', 'match'] as const;
 const COUNTRIES = Object.keys(geo) as Country[];
 const formatDate = (d: Date) =>
   d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
@@ -58,246 +58,6 @@ const deviceCountry = (): Country => {
   const region = getLocales()[0]?.regionCode as Country | undefined;
   return region && region in geo ? region : 'ES';
 };
-
-function Circle({ children }: { children: ReactNode }) {
-  const c = useTheme();
-  return (
-    <View
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={{
-        alignSelf: 'center',
-        width: 260,
-        height: 260,
-        borderRadius: 130,
-        backgroundColor: c.surface2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        gap: 12,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
-/**
- * A binder page in the logo's motif: 3×3 pockets, some filled with era colours. The empty
- * middle-right pocket (the logo's filled one) is outlined in ink: the card on top goes there.
- */
-function BinderPage() {
-  const c = useTheme();
-  const fill: (Era | null)[][] = [
-    ['cobalt', null, 'mint'],
-    [null, 'bubblegum', null],
-    ['mango', null, 'cobalt'],
-  ];
-  // Explicit size (no aspectRatio): RN mis-measures aspectRatio children in wrapped rows.
-  const W = 40;
-  const pocket = { width: W, height: Math.round(W / cardRatio), borderRadius: cardRadius(W) };
-  return (
-    <View
-      style={{
-        padding: 12,
-        gap: 7,
-        borderRadius: 18,
-        backgroundColor: c.surface,
-        borderWidth: 1,
-        borderColor: c.line,
-      }}
-    >
-      {fill.map((row, r) => (
-        <View key={r} style={{ flexDirection: 'row', gap: 7 }}>
-          {row.map((e, col) =>
-            e ? (
-              <View key={col} style={[pocket, { backgroundColor: era[e] }]} />
-            ) : (
-              <View
-                key={col}
-                style={[
-                  pocket,
-                  {
-                    borderWidth: 1.5,
-                    borderStyle: 'dashed',
-                    // Middle-right: the logo's filled pocket, where the loose card goes.
-                    borderColor: r === 1 && col === 2 ? c.ink : c.muted,
-                    backgroundColor: c.surface2,
-                  },
-                ]}
-              />
-            ),
-          )}
-        </View>
-      ))}
-    </View>
-  );
-}
-
-/** Have / Want / Dupe as the card sheet shows them (canvas segmented control). */
-function MarkSwitch() {
-  const c = useTheme();
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        gap: 4,
-        padding: 4,
-        borderRadius: radius.control,
-        backgroundColor: c.surface,
-        borderWidth: 1,
-        borderColor: c.line,
-      }}
-    >
-      {(['have', 'want', 'dupe'] as const).map((s) => (
-        <View
-          key={s}
-          style={{
-            paddingHorizontal: 12,
-            paddingVertical: 6,
-            borderRadius: 10,
-            backgroundColor: s === 'want' ? c.ink : 'transparent',
-          }}
-        >
-          <Txt
-            variant="label"
-            size={12}
-            color={s === 'want' ? c.onInk : c.ink}
-            allowFontScaling={false}
-          >
-            {s === 'dupe' ? t('cardSheet.dupe') : t(`card.${s}`)}
-          </Txt>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-function IntroArt({ kind }: { kind: (typeof INTROS)[number] }) {
-  const c = useTheme();
-  if (kind === 'collect')
-    return (
-      <Circle>
-        <View style={{ transform: [{ translateX: -26 }, { rotate: '-5deg' }] }}>
-          <BinderPage />
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            transform: [{ translateX: 84 }, { translateY: 52 }, { rotate: '13deg' }],
-          }}
-        >
-          <CardMarker
-            decorative
-            member="Hana"
-            album="Paper Moon"
-            version="Ver. A"
-            format="album"
-            eraColor="tomato"
-            width={80}
-          />
-        </View>
-      </Circle>
-    );
-  if (kind === 'mark')
-    return (
-      <Circle>
-        <View
-          style={{
-            position: 'absolute',
-            transform: [{ translateX: -76 }, { translateY: -14 }, { rotate: '-12deg' }],
-          }}
-        >
-          <CardMarker
-            decorative
-            member="Hana"
-            album="Paper Moon"
-            version="Ver. A"
-            format="album"
-            eraColor="tomato"
-            state={{ kind: 'have' }}
-            width={80}
-          />
-        </View>
-        <View
-          style={{
-            position: 'absolute',
-            transform: [{ translateX: 76 }, { translateY: -14 }, { rotate: '12deg' }],
-          }}
-        >
-          <CardMarker
-            decorative
-            member="Jiwan"
-            album="Paper Moon"
-            version="Ver. B"
-            format="album"
-            eraColor="mint"
-            state={{ kind: 'dupe', count: 2 }}
-            width={80}
-          />
-        </View>
-        <View style={{ position: 'absolute', transform: [{ translateY: -26 }] }}>
-          <CardMarker
-            decorative
-            member="Mina"
-            album="Paper Moon"
-            version="POB"
-            format="pob"
-            eraColor="cobalt"
-            state={{ kind: 'want' }}
-            width={96}
-          />
-        </View>
-        <View style={{ position: 'absolute', bottom: 30 }}>
-          <MarkSwitch />
-        </View>
-      </Circle>
-    );
-  return (
-    <Circle>
-      <View style={{ alignItems: 'center', gap: 6, transform: [{ rotate: '-5deg' }] }}>
-        <CardMarker
-          decorative
-          member="Jiwan"
-          album="Paper Moon"
-          version="Ver. B"
-          format="album"
-          eraColor="mint"
-          width={84}
-        />
-        <Txt variant="label" size={12} muted allowFontScaling={false}>
-          {t('onboarding.intro.youWant')}
-        </Txt>
-      </View>
-      <View
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          backgroundColor: c.ink,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Icon name="swap" size={22} color={c.onInk} strokeWidth={2} />
-      </View>
-      <View style={{ alignItems: 'center', gap: 6, transform: [{ rotate: '5deg' }] }}>
-        <CardMarker
-          decorative
-          member="Seora"
-          album="Paper Moon"
-          version="LD"
-          format="luckyDraw"
-          eraColor="bubblegum"
-          width={84}
-        />
-        <Txt variant="label" size={12} muted allowFontScaling={false}>
-          {t('onboarding.intro.youHave')}
-        </Txt>
-      </View>
-    </Circle>
-  );
-}
 
 /** Welcome art: the app-icon tile over a fan of tilted photocards (fictional members). */
 function WelcomeArt() {
@@ -373,30 +133,6 @@ function WelcomeArt() {
   );
 }
 
-/** Intro position: the current page is a short ink bar, the others small dots. */
-function PageDots({ index, count }: { index: number; count: number }) {
-  const c = useTheme();
-  return (
-    <View
-      accessible
-      accessibilityLabel={t('onboarding.page', { n: index + 1, total: count })}
-      style={{ flexDirection: 'row', gap: 6 }}
-    >
-      {Array.from({ length: count }, (_, i) => (
-        <View
-          key={i}
-          style={{
-            width: i === index ? 22 : 7,
-            height: 7,
-            borderRadius: 4,
-            backgroundColor: i === index ? c.ink : c.line,
-          }}
-        />
-      ))}
-    </View>
-  );
-}
-
 /** Set-up progress: one segment per step, filled up to the current one. */
 function StepProgress({ index, count }: { index: number; count: number }) {
   const c = useTheme();
@@ -453,82 +189,6 @@ function Radio({ selected }: { selected: boolean }) {
     >
       {selected ? <Icon name="check" size={14} color={c.onInk} strokeWidth={2.4} /> : null}
     </View>
-  );
-}
-
-type Group = { id: string; name: string; monogram: string; color: keyof typeof era };
-
-function Monogram({ group, size }: { group: Group; size: number }) {
-  const bg = era[group.color];
-  return (
-    <View
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: bg,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {/* A badge graphic: it keeps its size so the letters always fit the circle. */}
-      <Txt
-        variant="display"
-        size={size >= 48 ? 22 : 13}
-        color={textOn(bg)}
-        allowFontScaling={false}
-      >
-        {group.monogram}
-      </Txt>
-    </View>
-  );
-}
-
-/** Half-width group card: monogram on top, name below, ink outline + check when chosen. */
-function GroupTile(props: { group: Group; selected: boolean; onPress: () => void }) {
-  const c = useTheme();
-  return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: props.selected }}
-      accessibilityLabel={props.group.name}
-      onPress={() => {
-        haptics.selection();
-        props.onPress();
-      }}
-      style={({ pressed }) => ({
-        width: '48.5%',
-        // Tiles in a row stretch to the tallest one, so the grid stays aligned at any font size.
-        minHeight: 136,
-        padding: 14,
-        gap: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: radius.card,
-        borderWidth: props.selected ? 2 : 1.5,
-        borderColor: props.selected ? c.ink : c.line,
-        backgroundColor: pressed ? c.surface2 : c.surface,
-      })}
-    >
-      <Monogram group={props.group} size={52} />
-      {/* Long names (e.g. "TOMORROW X TOGETHER") wrap to two lines and shrink a little. */}
-      <Txt
-        variant="title"
-        size={15}
-        numberOfLines={2}
-        adjustsFontSizeToFit
-        minimumFontScale={0.8}
-        maxFontSizeMultiplier={1.5}
-        style={{ textAlign: 'center', alignSelf: 'stretch' }}
-      >
-        {props.group.name}
-      </Txt>
-      {props.selected ? (
-        <View style={{ position: 'absolute', top: 10, right: 10 }}>
-          <Radio selected />
-        </View>
-      ) : null}
-    </Pressable>
   );
 }
 
@@ -611,14 +271,19 @@ export default function Onboarding() {
     return () => sub.remove();
   });
 
-  const allGroups = [
+  const allGroups: PickGroup[] = [
     ...new Map(
       cards.map((x) => [
         x.groupId,
         { id: x.groupId, name: x.groupName, monogram: x.groupMonogram, color: x.groupColor },
       ]),
     ).values(),
-  ];
+  ].map((g) => ({
+    ...g,
+    members: [
+      ...new Map(cards.filter((x) => x.groupId === g.id).map((x) => [x.memberId, x.memberName])),
+    ].map(([id, name]) => ({ id, name })),
+  }));
 
   const finish = (withBinder: boolean) => {
     const db = getDb();
@@ -666,30 +331,11 @@ export default function Onboarding() {
 
   const isIntro = step.startsWith('intro');
   const introIndex = Number(step.slice(5));
-  const intro = INTROS[introIndex];
 
   let body: ReactNode;
   let action: ReactNode;
   if (isIntro) {
-    body = (
-      <View style={{ alignItems: 'center', gap: 28 }}>
-        <IntroArt kind={intro} />
-        <View style={{ alignItems: 'center', gap: 10 }}>
-          <Txt
-            variant="display"
-            size={46}
-            accessibilityRole="header"
-            style={{ textAlign: 'center' }}
-          >
-            {t(`onboarding.intro.${intro}.title`)}
-          </Txt>
-          <Txt size={17} muted style={{ textAlign: 'center', maxWidth: 320 }}>
-            {t(`onboarding.intro.${intro}.body`)}
-          </Txt>
-        </View>
-        <PageDots index={introIndex} count={INTROS.length} />
-      </View>
-    );
+    body = null; // the pager below replaces the scroll area
     action = <Button label={t('onboarding.next')} onPress={next} />;
   } else if (step === 'place') {
     body = (
@@ -702,22 +348,18 @@ export default function Onboarding() {
         />
         <View style={{ gap: 10 }}>
           <FieldLabel>{t('onboarding.place.country')}</FieldLabel>
-          <View
-            style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8 }}
-          >
-            {COUNTRIES.map((code) => (
-              <Chip
-                key={code}
-                label={t(`onboarding.place.countries.${code}`)}
-                selected={code === country}
-                onPress={() => {
-                  setCountry(code);
-                  setSubdivision(undefined);
-                  setRegionQuery('');
-                }}
-              />
-            ))}
-          </View>
+          <CountryPicker
+            countries={COUNTRIES}
+            value={country}
+            suggested={deviceCountry()}
+            name={(code) => t(`onboarding.place.countries.${code}`)}
+            onChange={(code) => {
+              if (code === country) return;
+              setCountry(code);
+              setSubdivision(undefined);
+              setRegionQuery('');
+            }}
+          />
         </View>
         <View style={{ gap: 10 }}>
           <FieldLabel>{term}</FieldLabel>
@@ -936,7 +578,6 @@ export default function Onboarding() {
       <Button variant="ghost" label={t('onboarding.blocked.back')} onPress={() => setStep('dob')} />
     );
   } else {
-    const q = fold(groupQuery.trim());
     body = (
       <View style={{ gap: 24 }}>
         <StepHeader
@@ -950,68 +591,16 @@ export default function Onboarding() {
           onChangeText={setGroupQuery}
           placeholder={t('onboarding.groups.search')}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            rowGap: 10,
-          }}
-        >
-          {allGroups
-            .filter((g) => fold(g.name).includes(q))
-            .map((g) => (
-              <GroupTile
-                key={g.id}
-                group={g}
-                selected={groups.includes(g.id)}
-                onPress={() =>
-                  setGroups((gs) =>
-                    gs.includes(g.id) ? gs.filter((x) => x !== g.id) : [...gs, g.id],
-                  )
-                }
-              />
-            ))}
-        </View>
-        {groups.map((gid) => {
-          const g = allGroups.find((x) => x.id === gid)!;
-          const members = [
-            ...new Map(
-              cards.filter((x) => x.groupId === gid).map((x) => [x.memberId, x.memberName]),
-            ),
-          ];
-          const chosen = bias[gid] ?? 'all';
-          return (
-            <View
-              key={gid}
-              style={{
-                gap: 12,
-                padding: 14,
-                borderRadius: radius.card,
-                backgroundColor: c.surface,
-                borderWidth: 1,
-                borderColor: c.line,
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <Monogram group={g} size={28} />
-                <Txt variant="title" size={15} accessibilityRole="header">
-                  {t('onboarding.groups.bias', { group: g.name })}
-                </Txt>
-              </View>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {[...members, ['all', t('onboarding.groups.all')] as const].map(([id, label]) => (
-                  <Chip
-                    key={id}
-                    label={label}
-                    selected={chosen === id}
-                    onPress={() => setBias((b) => ({ ...b, [gid]: id }))}
-                  />
-                ))}
-              </View>
-            </View>
-          );
-        })}
+        <GroupPicker
+          groups={allGroups}
+          query={groupQuery}
+          chosen={groups}
+          bias={bias}
+          onToggle={(id) =>
+            setGroups((gs) => (gs.includes(id) ? gs.filter((x) => x !== id) : [...gs, id]))
+          }
+          onBias={(gid, m) => setBias((b) => ({ ...b, [gid]: m }))}
+        />
       </View>
     );
     action = (
@@ -1077,19 +666,23 @@ export default function Onboarding() {
           )}
         </View>
       )}
-      <ScrollView
-        style={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          flexGrow: 1,
-          // Short steps sit in the middle of the screen; long lists scroll from the top.
-          justifyContent: 'center',
-          padding: screenPadding,
-          paddingBottom: 24,
-        }}
-      >
-        {body}
-      </ScrollView>
+      {isIntro ? (
+        <IntroPager index={introIndex} onIndex={(i) => setStep(`intro${i}` as Step)} />
+      ) : (
+        <ScrollView
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            flexGrow: 1,
+            // Short steps sit in the middle of the screen; long lists scroll from the top.
+            justifyContent: 'center',
+            padding: screenPadding,
+            paddingBottom: 24,
+          }}
+        >
+          {body}
+        </ScrollView>
+      )}
       <View
         style={{
           paddingHorizontal: screenPadding,

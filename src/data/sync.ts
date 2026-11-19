@@ -9,6 +9,14 @@ import { loadOrder } from '@/data/binders';
 import { dataVersion } from '@/data/catalog';
 import { getDb, getKv, setKv } from '@/data/db';
 import { enqueue, isPermanent, setQueueListener, type Entity } from '@/data/outbox';
+import {
+  applyServerPhotos,
+  clearPhotos,
+  downloadMissingThumbs,
+  pushPhoto,
+  unsyncedPhotoIds,
+  type ServerPhoto,
+} from '@/data/photos';
 import { signOutOfGoogle } from '@/features/auth/google';
 import { supabase } from '@/lib/supabase';
 import { isUuid, uuid } from '@/lib/uuid';
@@ -49,6 +57,7 @@ async function linkedUser(db: SQLiteDatabase) {
 }
 
 async function push(db: SQLiteDatabase, r: QueueRow): Promise<PgError> {
+  if (r.entity === 'photo') return pushPhoto(db, r.key);
   if (r.entity === 'mark') {
     const m = db.getFirstSync<{ status: string; qty: number }>(
       'select status, qty from user_cards where card_id = ?',
@@ -95,7 +104,7 @@ async function doFlush(db: SQLiteDatabase) {
   if (!(await linkedUser(db))) return;
   const rows = db.getAllSync<QueueRow>(
     `select entity, key, version, attempts from outbox where next_try <= ? and attempts < ?
-     order by case entity when 'binder' then 0 when 'slots' then 1 else 2 end, created_at`,
+     order by case entity when 'binder' then 0 when 'slots' then 1 when 'mark' then 2 else 3 end, created_at`,
     Date.now(),
     MAX_ATTEMPTS,
   );
@@ -136,7 +145,7 @@ export function flush(db = getDb()) {
 /** Rows changed after the cursor, keyset-paged on (updated_at, key): bulk writes share one timestamp. */
 async function pullChanged<T extends { updated_at: string }>(
   db: SQLiteDatabase,
-  table: 'binders' | 'user_cards',
+  table: 'binders' | 'user_cards' | 'photos',
   key: 'id' | 'card_id',
   apply: (rows: T[]) => Promise<() => void>,
 ) {
@@ -242,9 +251,19 @@ async function pullMarks(db: SQLiteDatabase) {
   });
 }
 
-/** Binders and marks are independent: one failing never blocks the other. */
+async function pullPhotos(db: SQLiteDatabase) {
+  await pullChanged<ServerPhoto>(
+    db,
+    'photos',
+    'id',
+    async (rows) => () => applyServerPhotos(db, rows, (id) => pending(db, 'photo', id)),
+  );
+  await downloadMissingThumbs(db);
+}
+
+/** Binders, marks and photos are independent: one failing never blocks the others. */
 async function pull(db: SQLiteDatabase) {
-  const results = await Promise.allSettled([pullBinders(db), pullMarks(db)]);
+  const results = await Promise.allSettled([pullBinders(db), pullMarks(db), pullPhotos(db)]);
   const failed = results.find((r) => r.status === 'rejected');
   if (failed) throw failed.reason;
 }
@@ -267,10 +286,29 @@ const report = (e: unknown) => {
   Sentry.captureMessage(`sync failed (${err?.code || (e instanceof Error ? e.name : 'unknown')})`);
 };
 
+/**
+ * Without an account the app is a demo: what people add lives only until the app is closed
+ * (owner decision 2026-11-19). The account is the only place a collection is kept.
+ */
+export const isDemo = (db = getDb()) => !getKv(db, 'sync:user');
+
+/** Forgets this phone's collection (binders, marks, photos); an account keeps its own copy. */
+function clearCollection(db: SQLiteDatabase) {
+  db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+  clearPhotos(db);
+  db.execSync("delete from kv where key in ('binder:current', 'binder:hint');");
+}
+
 let started = false;
+/** Runs once per app launch: starts the sync loop and resets the previous session's demo. */
 export function startSync() {
   if (started) return;
   started = true;
+  const db = getDb();
+  if (isDemo(db)) {
+    clearCollection(db);
+    dataVersion.bump();
+  }
   let timer: ReturnType<typeof setTimeout> | undefined;
   setQueueListener(() => {
     clearTimeout(timer);
@@ -304,7 +342,7 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
     if (mode === 'fresh') {
-      db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
+      clearCollection(db);
     } else {
       // Binders made before M3 have local ids ("b-…"): give them server-valid uuids.
       for (const { id } of db.getAllSync<{ id: string }>('select id from binders')) {
@@ -329,6 +367,7 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
         'select card_id from user_cards',
       ))
         enqueue(db, 'mark', card_id);
+      for (const id of unsyncedPhotoIds(db)) enqueue(db, 'photo', id);
     }
   });
   dataVersion.bump();
@@ -336,10 +375,21 @@ export async function linkAccount(db: SQLiteDatabase, userId: string, mode: 'upl
   await sync(db).catch(report);
 }
 
-/** Tries to upload what is pending, then unlinks. Local data stays on the device. */
+/** Changes still waiting to reach the account (offline): signing out now would lose them. */
+export const pendingChanges = (db = getDb()) =>
+  db.getFirstSync<{ n: number }>('select count(*) n from outbox')?.n ?? 0;
+
+/**
+ * Uploads what is pending, then signs out and forgets the collection on this phone: it lives in
+ * the account. Callers check `pendingChanges` first and warn when something could not be uploaded.
+ */
 export async function signOut(db = getDb()) {
   await flush(db).catch(report);
-  db.execSync(UNLINK);
+  db.withTransactionSync(() => {
+    db.execSync(UNLINK);
+    clearCollection(db);
+  });
+  dataVersion.bump();
   await supabase.auth.signOut();
   await signOutOfGoogle();
 }
@@ -356,10 +406,8 @@ export async function deleteAccount(db = getDb()) {
   await signOutOfGoogle();
   db.withTransactionSync(() => {
     db.execSync(UNLINK);
-    db.execSync('delete from binder_slots; delete from binders; delete from user_cards;');
-    db.execSync(
-      "delete from kv where key in ('profile', 'onboarding:done', 'binder:current', 'binder:hint');",
-    );
+    clearCollection(db);
+    db.execSync("delete from kv where key in ('profile', 'onboarding:done', 'scan:tips');");
   });
   dataVersion.bump();
   return data as string;

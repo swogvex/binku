@@ -32,7 +32,7 @@ type Mark = {
 async function collect() {
   const { data } = await supabase.auth.getSession();
   const user = data.session!.user;
-  const [profile, binders, slots, marks] = await Promise.all([
+  const [profile, binders, slots, marks, photos] = await Promise.all([
     rows<Record<string, unknown>>('profiles', 'id'),
     rows<Record<string, unknown> & { id: string; deleted_at: string | null }>('binders', 'id'),
     rows<{ binder_id: string; page: number; position: number; card_id: string }>(
@@ -42,6 +42,14 @@ async function collect() {
       'position',
     ),
     rows<Mark>('user_cards', 'card_id'),
+    rows<{
+      id: string;
+      card_id: string;
+      kind: string;
+      bytes: number;
+      created_at: string;
+      removed_at: string | null;
+    }>('photos', 'id'),
   ]);
   return {
     user,
@@ -49,6 +57,16 @@ async function collect() {
     binders: binders.filter((b) => !b.deleted_at),
     slots,
     marks: marks.filter((m) => !m.deleted_at),
+    // Metadata only: the photos themselves are on the phone (originals) and in the user's binder.
+    photos: photos
+      .filter((p) => !p.removed_at)
+      .map(({ id, card_id, kind, bytes, created_at }) => ({
+        id,
+        card_id,
+        kind,
+        bytes,
+        created_at,
+      })),
   };
 }
 
@@ -76,6 +94,7 @@ export async function exportJson() {
         .map((s) => s.card_id),
     })),
     marks: d.marks,
+    photos: d.photos,
   };
   await share(`binku-${stamp()}.json`, JSON.stringify(json, null, 2), 'application/json');
 }

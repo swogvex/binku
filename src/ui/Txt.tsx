@@ -43,5 +43,24 @@ export function Txt({ variant = 'body', size, color, muted, style, ...rest }: Pr
       paddingBottom: Math.ceil(fontSize * 0.12),
     }),
   };
-  return <Text style={[base, style]} {...rest} />;
+  // Big Shoulders draws "@" 0.1 em below its capitals (it hangs under the baseline), so
+  // "@usuario" looked sunk in headings. Instrument Sans' "@" at cap height sits level.
+  const children =
+    variant === 'display' && typeof rest.children === 'string' && rest.children.includes('@')
+      ? rest.children.split('@').flatMap((part, i) =>
+          i === 0
+            ? [part]
+            : [
+                <Text key={i} style={{ fontFamily: fonts.text700, fontSize: fontSize * 1.08 }}>
+                  @
+                </Text>,
+                part,
+              ],
+        )
+      : rest.children;
+  return (
+    <Text style={[base, style]} {...rest}>
+      {children}
+    </Text>
+  );
 }

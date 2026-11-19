@@ -4,7 +4,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { getKv } from '@/data/db';
 
-export type Entity = 'binder' | 'slots' | 'mark';
+export type Entity = 'binder' | 'slots' | 'mark' | 'photo';
 
 /**
  * Server rejections that can never succeed on retry (bad value, constraint, RLS): drop and report.

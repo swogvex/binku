@@ -1,21 +1,28 @@
 // Card detail ("Ficha de carta"): mark Tengo / Busco / Repetida, see the catalog data.
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { UserMark } from '@/data/catalog';
 import { getDb } from '@/data/db';
+import { removePhoto, type Photo, type PhotoKind } from '@/data/photos';
 import { setMark } from '@/data/userCards';
 import { Card3D } from '@/features/card/Card3D';
 import { CardBack } from '@/features/card/CardBack';
+import { owned } from '@/features/binder/pages';
 import { markerProps } from '@/features/catalog/cardView';
 import { useCatalogData } from '@/features/catalog/useCatalog';
+import { useLinkedUser } from '@/features/auth/useLinked';
+import { openScan } from '@/features/scan/scan';
 import { t } from '@/i18n';
 import { haptics } from '@/lib/haptics';
-import { fonts, radius, screenPadding } from '@/theme/tokens';
+import { cardRadius, cardRatio, fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
+import { Button } from '@/ui/Button';
+import { Icon } from '@/ui/icons/Icon';
 import { RoundButton } from '@/ui/RoundButton';
+import { ScanFrame } from '@/ui/ScanFrame';
 import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
 
@@ -46,14 +53,100 @@ function Row({ label, value, hangul }: { label: string; value: string; hangul?: 
   );
 }
 
+const CONDITION_W = 96;
+
+/** A condition photo slot (front / back): add, retake or remove. */
+function ConditionSlot({
+  label,
+  optional,
+  photo,
+  onAdd,
+  onRemove,
+}: {
+  label: string;
+  optional?: boolean;
+  photo?: Photo;
+  onAdd: () => void;
+  onRemove: () => void;
+}) {
+  const c = useTheme();
+  const onPress = () =>
+    photo
+      ? Alert.alert(label, undefined, [
+          { text: t('photo.redo'), onPress: onAdd },
+          { text: t('photo.remove'), style: 'destructive', onPress: onRemove },
+          { text: t('photo.cancel'), style: 'cancel' },
+        ])
+      : onAdd();
+  return (
+    <View style={{ alignItems: 'center', gap: 6 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={photo ? label : t('photo.add', { side: label.toLowerCase() })}
+        onPress={onPress}
+      >
+        {photo?.uri ? (
+          <ScanFrame source={{ uri: photo.uri }} member={label} width={CONDITION_W} />
+        ) : (
+          <View
+            style={{
+              width: CONDITION_W,
+              aspectRatio: cardRatio,
+              borderRadius: cardRadius(CONDITION_W),
+              borderWidth: 1.5,
+              borderStyle: 'dashed',
+              borderColor: c.muted,
+              backgroundColor: c.surface2,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icon name="plus" size={24} />
+          </View>
+        )}
+      </Pressable>
+      <Txt variant="label" importantForAccessibility="no">
+        {label}
+      </Txt>
+      {optional ? (
+        <Txt size={12} muted importantForAccessibility="no">
+          {t('photo.optional')}
+        </Txt>
+      ) : null}
+    </View>
+  );
+}
+
 export default function CardScreen() {
   const c = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { cards, marks } = useCatalogData();
+  const { cards, marks, photos } = useCatalogData();
   const card = cards.find((x) => x.id === id);
   const mark = card ? marks.get(card.id) : undefined;
+  const cardPhotos = card ? photos.get(card.id) : undefined;
+  const scan = cardPhotos?.scan;
+  const linked = !!useLinkedUser();
+
+  const shoot = (source: 'camera' | 'gallery', kind: PhotoKind) =>
+    openScan(router, source, { cardId: card!.id, kind });
+  // Android alerts fit three buttons: camera, gallery, cancel.
+  const chooseSource = (kind: PhotoKind) =>
+    Alert.alert(t('photo.from'), undefined, [
+      { text: t('photo.scan'), onPress: () => shoot('camera', kind) },
+      { text: t('photo.gallery'), onPress: () => shoot('gallery', kind) },
+      { text: t('photo.cancel'), style: 'cancel' },
+    ]);
+  const confirmRemove = () =>
+    Alert.alert(t('photo.removeTitle'), t('photo.removeBody'), [
+      { text: t('photo.cancel'), style: 'cancel' },
+      {
+        text: t('photo.remove'),
+        style: 'destructive',
+        onPress: () => removePhoto(getDb(), card!.id, 'scan'),
+      },
+    ]);
 
   const header = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -67,7 +160,16 @@ export default function CardScreen() {
       >
         {t('cardSheet.title')}
       </Txt>
-      {Platform.OS === 'ios' ? <View style={{ width: 44 }} /> : null}
+      {card && owned(mark) ? (
+        // Full screen is for your own collection only.
+        <RoundButton
+          icon="expand"
+          label={t('viewer.open')}
+          onPress={() => router.push({ pathname: '/card-viewer', params: { id: card.id } })}
+        />
+      ) : Platform.OS === 'ios' ? (
+        <View style={{ width: 44 }} />
+      ) : null}
     </View>
   );
 
@@ -95,14 +197,24 @@ export default function CardScreen() {
             <Card3D
               width={CARD_W}
               label={`${card.memberName}, ${card.releaseTitle}, ${markerProps(card).version}`}
-              front={(rotate) => (
-                <CardMarker
-                  {...markerProps(card, mark)}
-                  holo={card.isSpecial}
-                  holoRotate={rotate}
-                  width={CARD_W}
-                />
-              )}
+              front={(rotate) =>
+                scan?.uri ? (
+                  <ScanFrame
+                    source={{ uri: scan.uri }}
+                    member={card.memberName}
+                    state={markerProps(card, mark).state}
+                    holo={card.isSpecial}
+                    width={CARD_W}
+                  />
+                ) : (
+                  <CardMarker
+                    {...markerProps(card, mark)}
+                    holo={card.isSpecial}
+                    holoRotate={rotate}
+                    width={CARD_W}
+                  />
+                )
+              }
               back={
                 <CardBack
                   width={CARD_W}
@@ -185,6 +297,83 @@ export default function CardScreen() {
                 label={t('cardSheet.more')}
                 onPress={() => update({ ...mark, qty: mark.qty + 1 })}
               />
+            </View>
+          ) : null}
+
+          <View style={{ gap: 10 }}>
+            <Txt variant="title" accessibilityRole="header">
+              {t('photo.title')}
+            </Txt>
+            {scan ? (
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                <Button
+                  label={t('photo.change')}
+                  icon="camera"
+                  variant="ghost"
+                  style={{ flex: 1 }}
+                  onPress={() => chooseSource('scan')}
+                />
+                <Button
+                  label={t('photo.remove')}
+                  variant="danger"
+                  style={{ flex: 1 }}
+                  onPress={confirmRemove}
+                />
+              </View>
+            ) : (
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                <Button
+                  label={t('photo.scan')}
+                  icon="scan"
+                  variant="accent"
+                  style={{ flex: 1 }}
+                  onPress={() => shoot('camera', 'scan')}
+                />
+                <Button
+                  label={t('photo.gallery')}
+                  icon="image"
+                  variant="ghost"
+                  style={{ flex: 1 }}
+                  onPress={() => shoot('gallery', 'scan')}
+                />
+              </View>
+            )}
+            {scan?.state === 'quota' ? (
+              <Txt size={13} muted>
+                {t('photo.quota')}
+              </Txt>
+            ) : scan && !linked ? (
+              <Txt size={13} muted>
+                {t('photo.noAccount')}
+              </Txt>
+            ) : null}
+          </View>
+
+          {mark?.status === 'dupe' ? (
+            <View style={{ gap: 10 }}>
+              <Txt variant="title" accessibilityRole="header">
+                {t('photo.conditionTitle')}
+              </Txt>
+              <Txt size={13} muted>
+                {t('photo.conditionBody')}
+              </Txt>
+              <View style={{ flexDirection: 'row', gap: 18 }}>
+                <ConditionSlot
+                  label={t('photo.front')}
+                  photo={cardPhotos?.condition_front}
+                  // Condition photos are what other collectors see: camera only, so they show
+                  // the real card in hand (no gallery images).
+                  onAdd={() => shoot('camera', 'condition_front')}
+                  onRemove={() => removePhoto(getDb(), card.id, 'condition_front')}
+                />
+                <ConditionSlot
+                  label={t('photo.back')}
+                  optional
+                  photo={cardPhotos?.condition_back}
+                  onAdd={() => shoot('camera', 'condition_back')}
+                  onRemove={() => removePhoto(getDb(), card.id, 'condition_back')}
+                />
+              </View>
             </View>
           ) : null}
 
