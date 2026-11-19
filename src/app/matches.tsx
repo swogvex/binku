@@ -1,7 +1,6 @@
 // Coincidencias (08-spec-matches-home): filter chips, rows ranked by proximity and cards, never
 // by price. The scope chips are the user's saved setting (Mi país by default).
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import { Alert, FlatList, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -26,8 +25,7 @@ export default function MatchesScreen() {
   const { cards } = useCatalogData();
   const res = useMatches();
   const scope = useMatchScope();
-  const [doublesOnly, setDoublesOnly] = useState(false);
-  const rows = (res?.matches ?? []).filter((m) => !doublesOnly || m.kind === 'double');
+  const rows = res?.matches ?? [];
 
   const pickScope = (s: Scope) => {
     const apply = () =>
@@ -39,9 +37,6 @@ export default function MatchesScreen() {
       ]);
     else apply();
   };
-
-  const all = res?.matches ?? [];
-  const nDoubles = all.filter((m) => m.kind === 'double').length;
 
   const header = (
     <View style={{ gap: 16, paddingBottom: 6 }}>
@@ -55,43 +50,6 @@ export default function MatchesScreen() {
         <Txt size={13} muted>
           {t('matches.note')}
         </Txt>
-      </View>
-
-      {/* Todas / Dobles: same segmented control as the card sheet's Tengo/Busco/Repetida */}
-      <View
-        accessibilityRole="radiogroup"
-        style={{
-          flexDirection: 'row',
-          gap: 4,
-          padding: 4,
-          borderRadius: radius.control,
-          backgroundColor: c.surface2,
-        }}
-      >
-        {([false, true] as const).map((d) => {
-          const selected = doublesOnly === d;
-          const n = d ? nDoubles : all.length;
-          return (
-            <Pressable
-              key={String(d)}
-              accessibilityRole="radio"
-              accessibilityState={{ checked: selected }}
-              onPress={() => setDoublesOnly(d)}
-              style={{
-                flex: 1,
-                minHeight: 44,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: selected ? c.ink : 'transparent',
-              }}
-            >
-              <Txt variant="title" size={15} color={selected ? c.onInk : c.ink}>
-                {`${t(d ? 'matches.doubles' : 'matches.all')} · ${n}`}
-              </Txt>
-            </Pressable>
-          );
-        })}
       </View>
 
       <View
@@ -150,7 +108,7 @@ export default function MatchesScreen() {
       renderItem={({ item: m }) => (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`@${m.username}, ${t(`matches.${m.kind}`)}, ${placeName(m)}`}
+          accessibilityLabel={`@${m.username}, ${placeName(m)}`}
           onPress={() => router.push({ pathname: '/match/[id]', params: { id: m.user_id } })}
           style={({ pressed }) => ({
             gap: 10,

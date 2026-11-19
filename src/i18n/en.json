@@ -409,11 +409,7 @@
     "hello": "Hi, @{username}",
     "helloAnon": "Hi",
     "demoTitle": "Your collection, no account",
-    "doubles": {
-      "one": "double match",
-      "other": "double matches"
-    },
-    "singles": {
+    "count": {
       "one": "match",
       "other": "matches"
     },
@@ -432,10 +428,6 @@
   },
   "matches": {
     "title": "Matches",
-    "all": "All",
-    "doubles": "Doubles",
-    "double": "Double",
-    "single": "Single",
     "international": "International shipping",
     "scope": "Search in",
     "scopes": {
@@ -456,8 +448,6 @@
     "detailTheyGive": "@{username} gives you",
     "detailYouGive": "You give",
     "chatSoon": "You'll be able to propose it by chat very soon.",
-    "nothingForYou": "Nothing you're looking for",
-    "nothingFromYou": "Not looking for yours yet",
     "gone": "This match is no longer available.",
     "propose": "Propose this trade",
     "tipsTitle": "Before you trade",
@@ -472,7 +462,7 @@
   "alerts": {
     "title": "Match alerts",
     "matches": "Matches",
-    "matchesBody": "Right away for a double match; single matches in one daily summary. Never ads.",
+    "matchesBody": "We tell you right away when someone has what you want and wants something of yours. Never ads.",
     "denied": "Binku isn't allowed to notify you. Turn it on in your phone's settings.",
     "openSettings": "Open phone settings",
     "error": "We couldn't save the change. Check your connection.",

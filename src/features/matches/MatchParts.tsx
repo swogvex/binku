@@ -63,39 +63,23 @@ export function Avatar({ username, size = 40 }: { username: string; size?: numbe
   );
 }
 
-/** Tag "Doble" (accent) / "Simple" (+ "Envío internacional" across borders). */
+/** "Envío internacional" across borders (every match is mutual, so no Doble/Simple tag). */
 export function MatchTags({ m }: { m: Match }) {
   const c = useTheme();
-  const double = m.kind === 'double';
+  if (m.proximity !== 3) return null;
   return (
-    <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-      <View
-        style={{
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          borderRadius: 999,
-          backgroundColor: double ? c.accent : c.surface2,
-        }}
-      >
-        <Txt size={12} variant="label" color={double ? textOn(c.accent) : c.ink}>
-          {t(`matches.${m.kind}`)}
-        </Txt>
-      </View>
-      {m.proximity === 3 ? (
-        <View
-          style={{
-            paddingHorizontal: 10,
-            paddingVertical: 2,
-            borderRadius: 999,
-            borderWidth: 1.5,
-            borderColor: c.line,
-          }}
-        >
-          <Txt size={12} variant="label">
-            {t('matches.international')}
-          </Txt>
-        </View>
-      ) : null}
+    <View
+      style={{
+        paddingHorizontal: 10,
+        paddingVertical: 2,
+        borderRadius: 999,
+        borderWidth: 1.5,
+        borderColor: c.line,
+      }}
+    >
+      <Txt size={12} variant="label">
+        {t('matches.international')}
+      </Txt>
     </View>
   );
 }
@@ -181,48 +165,25 @@ function Side({
   ids,
   cards,
   width,
-  empty,
   tilt,
 }: {
   label: string;
   ids: string[];
   cards: CatalogCard[];
   width: number;
-  empty: string;
   tilt: number;
 }) {
-  const c = useTheme();
   return (
     <View style={{ gap: 8, alignItems: 'center' }}>
       <Txt size={12} variant="label" muted>
-        {ids.length ? `${label} · ${ids.length}` : label}
+        {`${label} · ${ids.length}`}
       </Txt>
-      {ids.length ? (
-        <Fan ids={ids} cards={cards} width={width} tilt={tilt} />
-      ) : (
-        <View
-          style={{
-            width,
-            height: width / cardRatio,
-            borderRadius: 8,
-            borderWidth: 1.5,
-            borderStyle: 'dashed',
-            borderColor: c.line,
-            padding: 6,
-            justifyContent: 'center',
-            transform: [{ rotate: `${tilt}deg` }],
-          }}
-        >
-          <Txt size={12} muted style={{ textAlign: 'center' }}>
-            {empty}
-          </Txt>
-        </View>
-      )}
+      <Fan ids={ids} cards={cards} width={width} tilt={tilt} />
     </View>
   );
 }
 
-/** "Te da" ⇄ "Le das". A single match keeps the empty side visible so the gap reads. */
+/** "Te da" ⇄ "Le das": every match is mutual, so both sides always have cards. */
 export function SwapRow({
   m,
   cards,
@@ -245,7 +206,6 @@ export function SwapRow({
         ids={m.they_give}
         cards={cards}
         width={width}
-        empty={t('matches.nothingForYou')}
         tilt={4}
       />
       <View
@@ -266,7 +226,6 @@ export function SwapRow({
         ids={m.you_give}
         cards={cards}
         width={width}
-        empty={t('matches.nothingFromYou')}
         tilt={-4}
       />
     </View>

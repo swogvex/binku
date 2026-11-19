@@ -9,7 +9,6 @@ export type Match = {
   username: string;
   country: string;
   subdivision: string | null;
-  kind: 'double' | 'single';
   they_give: string[];
   you_give: string[];
   /** 0 same subdivision · 1 same country · 2 same region · 3 elsewhere */
