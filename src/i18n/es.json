@@ -409,11 +409,7 @@
     "hello": "Hola, @{username}",
     "helloAnon": "Hola",
     "demoTitle": "Tu colección, sin cuenta",
-    "doubles": {
-      "one": "coincidencia doble",
-      "other": "coincidencias dobles"
-    },
-    "singles": {
+    "count": {
       "one": "coincidencia",
       "other": "coincidencias"
     },
@@ -432,10 +428,6 @@
   },
   "matches": {
     "title": "Coincidencias",
-    "all": "Todas",
-    "doubles": "Dobles",
-    "double": "Doble",
-    "single": "Simple",
     "international": "Envío internacional",
     "scope": "Buscar en",
     "scopes": {
@@ -456,8 +448,6 @@
     "detailTheyGive": "@{username} te da",
     "detailYouGive": "Tú le das",
     "chatSoon": "Podrás proponerlo por chat muy pronto.",
-    "nothingForYou": "No tiene nada de lo que buscas",
-    "nothingFromYou": "Aún no busca nada tuyo",
     "gone": "Esta coincidencia ya no está disponible.",
     "propose": "Proponer este cambio",
     "tipsTitle": "Antes del cambio",
@@ -472,7 +462,7 @@
   "alerts": {
     "title": "Avisos de coincidencias",
     "matches": "Coincidencias",
-    "matchesBody": "Al momento cuando aparezca una coincidencia doble; las simples, en un resumen al día. Nunca publicidad.",
+    "matchesBody": "Te avisamos al momento cuando alguien tenga lo que buscas y busque algo tuyo. Nunca publicidad.",
     "denied": "Binku no tiene permiso para avisarte. Actívalo en los ajustes del móvil.",
     "openSettings": "Abrir ajustes del móvil",
     "error": "No hemos podido guardar el cambio. Revisa tu conexión.",

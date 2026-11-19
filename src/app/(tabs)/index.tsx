@@ -147,9 +147,8 @@ function Matches() {
   const res = useMatches();
   if (!res) return null;
   if (res.status === 'loading' && !res.matches.length) return null;
-  const doubles = res.matches.filter((m) => m.kind === 'double');
-  const top = doubles[0] ?? res.matches[0];
-  const n = doubles.length || res.matches.length;
+  const top = res.matches[0];
+  const n = res.matches.length;
 
   if (!top)
     return (
@@ -175,7 +174,7 @@ function Matches() {
         <Txt variant="display" size={46} color={c.accentText}>
           {n}
         </Txt>{' '}
-        {t(doubles.length ? 'home.doubles' : 'home.singles', { count: n })}
+        {t('home.count', { count: n })}
       </Txt>
       {res.status === 'error' ? (
         <Txt size={13} muted>
