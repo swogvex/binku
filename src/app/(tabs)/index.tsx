@@ -18,6 +18,8 @@ import { t } from '@/i18n';
 import { era, radius } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
+import { Icon } from '@/ui/icons/Icon';
+import { StateView } from '@/ui/StateView';
 import { TabScreen } from '@/ui/TabScreen';
 import { Txt } from '@/ui/Txt';
 
@@ -29,7 +31,57 @@ function Binders() {
   const router = useRouter();
   const { cards, marks } = useCatalogData();
   const binders = listBinders(getDb());
-  if (!binders.length) return null;
+  if (!binders.length)
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${t('home.firstBinder')}. ${t('home.firstBinderBody')}`}
+        onPress={() => router.navigate('/binder')}
+        style={({ pressed }) => ({
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 14,
+          padding: 16,
+          borderRadius: radius.card,
+          borderWidth: 1.5,
+          borderStyle: 'dashed',
+          borderColor: c.line,
+          opacity: pressed ? 0.7 : 1,
+        })}
+      >
+        {/* a tiny 3×3 page with one pocket filled, like the Binku mark */}
+        <View
+          style={{
+            width: 52,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 4,
+            transform: [{ rotate: '-6deg' }],
+          }}
+        >
+          {Array.from({ length: 9 }, (_, i) => (
+            <View
+              key={i}
+              style={{
+                width: 13,
+                height: 18,
+                borderRadius: 3,
+                backgroundColor: i === 4 ? era.tomato : c.surface2,
+              }}
+            />
+          ))}
+        </View>
+        <View style={{ flex: 1, gap: 4 }}>
+          <Txt variant="title" size={17}>
+            {t('home.firstBinder')}
+          </Txt>
+          <Txt size={13} muted>
+            {t('home.firstBinderBody')}
+          </Txt>
+        </View>
+        <Icon name="chevronRight" size={18} color={c.muted} />
+      </Pressable>
+    );
   return (
     <View style={{ gap: 14 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -94,69 +146,103 @@ function Matches() {
   const { cards } = useCatalogData();
   const res = useMatches();
   if (!res) return null;
+  if (res.status === 'loading' && !res.matches.length) return null;
   const doubles = res.matches.filter((m) => m.kind === 'double');
   const top = doubles[0] ?? res.matches[0];
   const n = doubles.length || res.matches.length;
-  const headline =
-    res.status === 'loading' && !res.matches.length
-      ? null
-      : !res.matches.length
-        ? t('home.none')
-        : doubles.length
-          ? t('home.doubles', { count: n })
-          : t('home.singles', { count: n });
+
+  if (!top)
+    return (
+      <View style={{ gap: 6 }}>
+        {res.status === 'error' ? (
+          <Txt size={13} muted>
+            {t('matches.offline')}
+          </Txt>
+        ) : null}
+        <StateView
+          illustration="pocket"
+          title={t('home.none')}
+          body={t('home.noneBody')}
+          actions={[{ label: t('home.toCatalog'), onPress: () => router.navigate('/catalog') }]}
+        />
+      </View>
+    );
+
   return (
     <View style={{ gap: 14 }}>
-      {headline ? (
-        <Txt variant="display" size={46} accessibilityRole="header">
-          {headline}
-        </Txt>
-      ) : null}
+      {/* Editorial headline: the number in the accent colour carries the news */}
+      <Txt variant="display" size={46} accessibilityRole="header">
+        <Txt variant="display" size={46} color={c.accentText}>
+          {n}
+        </Txt>{' '}
+        {t(doubles.length ? 'home.doubles' : 'home.singles', { count: n })}
+      </Txt>
       {res.status === 'error' ? (
         <Txt size={13} muted>
           {t('matches.offline')}
         </Txt>
       ) : null}
-      {top ? (
-        <View
-          style={{
-            gap: 12,
-            padding: 14,
-            borderRadius: radius.card,
-            backgroundColor: c.surface,
-            borderWidth: 1,
-            borderColor: c.line,
-          }}
-        >
-          <View accessible style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <Avatar username={top.username} />
-            <View style={{ flex: 1, gap: 2 }}>
-              <Txt variant="title" size={15}>
-                @{top.username}
-              </Txt>
-              <Txt size={12} muted>
-                {placeName(top)}
-              </Txt>
-            </View>
-            <MatchTags m={top} />
+      <View
+        style={{
+          gap: 14,
+          padding: 16,
+          borderRadius: radius.card,
+          backgroundColor: c.surface,
+          borderWidth: 1.5,
+          borderColor: c.ink,
+        }}
+      >
+        <View accessible style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <Avatar username={top.username} size={44} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <Txt variant="title" size={17} numberOfLines={1}>
+              @{top.username}
+            </Txt>
+            <Txt size={13} muted numberOfLines={1}>
+              {placeName(top)}
+            </Txt>
           </View>
-          <SwapRow m={top} cards={cards} />
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Button
-              label={t('home.see')}
-              style={{ flex: 1 }}
-              onPress={() => router.push({ pathname: '/match/[id]', params: { id: top.user_id } })}
-            />
-            <Button
-              label={t('home.allMatches')}
-              variant="ghost"
-              style={{ flex: 1 }}
-              onPress={() => router.push('/matches')}
-            />
-          </View>
+          <MatchTags m={top} />
         </View>
-      ) : res.status === 'ready' ? (
-        <Txt muted>{t('home.noneBody')}</Txt>
+        <SwapRow m={top} cards={cards} width={92} />
+        <Button
+          label={t('home.see')}
+          onPress={() => router.push({ pathname: '/match/[id]', params: { id: top.user_id } })}
+        />
+      </View>
+      {res.matches.length > 1 ? (
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => router.push('/matches')}
+          style={({ pressed }) => ({
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 10,
+            minHeight: 48,
+            opacity: pressed ? 0.6 : 1,
+          })}
+        >
+          {/* a little stack of the next people waiting */}
+          <View style={{ flexDirection: 'row' }}>
+            {res.matches.slice(1, 4).map((m, i) => (
+              <View
+                key={m.user_id}
+                style={{
+                  marginLeft: i ? -10 : 0,
+                  borderRadius: 18,
+                  borderWidth: 2,
+                  borderColor: c.bg,
+                }}
+              >
+                <Avatar username={m.username} size={32} />
+              </View>
+            ))}
+          </View>
+          <Txt variant="label" size={15} color={c.accentText} style={{ flex: 1 }}>
+            {t('home.allMatches', { count: res.matches.length })}
+          </Txt>
+          <Icon name="chevronRight" size={18} color={c.accentText} />
+        </Pressable>
       ) : null}
     </View>
   );

@@ -380,19 +380,25 @@
     "helloAnon": "Hola",
     "demoTitle": "Tu colección, sin cuenta",
     "doubles": {
-      "one": "1 coincidencia doble",
-      "other": "{count} coincidencias dobles"
+      "one": "coincidencia doble",
+      "other": "coincidencias dobles"
     },
     "singles": {
-      "one": "1 coincidencia",
-      "other": "{count} coincidencias"
+      "one": "coincidencia",
+      "other": "coincidencias"
     },
     "none": "Aún sin coincidencias",
     "noneBody": "Marca cartas como Busco y Repetida: te avisamos cuando alguien encaje contigo.",
-    "see": "Ver",
-    "allMatches": "Ver todas",
+    "see": "Ver coincidencia",
+    "allMatches": {
+      "one": "Ver tu coincidencia",
+      "other": "Ver las {count} coincidencias"
+    },
     "binders": "Tus binders",
-    "seeAll": "Ver todos"
+    "seeAll": "Ver todos",
+    "toCatalog": "Ir al catálogo",
+    "firstBinder": "Monta tu primer binder",
+    "firstBinderBody": "Elige grupo, miembro o era y ve llenando bolsillos."
   },
   "matches": {
     "title": "Coincidencias",
@@ -420,6 +426,8 @@
     "detailTheyGive": "@{username} te da",
     "detailYouGive": "Tú le das",
     "chatSoon": "El chat para proponer el cambio llega muy pronto.",
+    "nothingForYou": "No tiene nada de lo que buscas",
+    "nothingFromYou": "Aún no busca nada tuyo",
     "gone": "Esta coincidencia ya no está disponible."
   },
   "alerts": {

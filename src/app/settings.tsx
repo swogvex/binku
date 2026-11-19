@@ -251,7 +251,7 @@ export default function Settings() {
         />
         {session ? (
           <Row
-            icon="sparkle"
+            icon="bell"
             label={t('alerts.title')}
             onPress={() => router.push('/notifications')}
           />

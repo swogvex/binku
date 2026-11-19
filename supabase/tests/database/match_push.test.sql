@@ -59,7 +59,7 @@ select is(public.queue_match_notices(), 2, 'one double, announced to both people
 select is(public.queue_match_notices(), 0, 'nothing new on the next run');
 select is(
   (select messages -> 0 ->> 'body' from public.due_match_pushes() where user_id = '00000000-0000-0000-0000-0000000000a2'),
-  'New double match with @bea', 'alba gets an instant push in her phone''s language');
+  'With @bea. Open it to see the trade.', 'alba gets an instant push in her phone''s language');
 
 select * from finish();
 rollback;

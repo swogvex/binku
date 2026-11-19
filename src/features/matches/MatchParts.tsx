@@ -1,5 +1,4 @@
 // Pieces shared by Home, the matches list and the match detail.
-import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
 import geo from '@/content/geo/subdivisions.json';
@@ -49,7 +48,14 @@ export function Avatar({ username, size = 40 }: { username: string; size?: numbe
     >
       <Txt
         allowFontScaling={false}
-        style={{ fontFamily: fonts.display800, fontSize: size / 2, color: textOn(bg) }}
+        // own line height: the body default is shorter than this glyph and clips its top
+        style={{
+          fontFamily: fonts.display800,
+          fontSize: size / 2,
+          lineHeight: size * 0.62,
+          includeFontPadding: false,
+          color: textOn(bg),
+        }}
       >
         {username[0]!.toUpperCase()}
       </Txt>
@@ -57,103 +63,203 @@ export function Avatar({ username, size = 40 }: { username: string; size?: numbe
   );
 }
 
-/** Tag "Doble" / "Simple" (+ "Envío internacional" across borders). */
+/** Tag "Doble" (accent) / "Simple" (+ "Envío internacional" across borders). */
 export function MatchTags({ m }: { m: Match }) {
   const c = useTheme();
-  const tags = [t(`matches.${m.kind}`), ...(m.proximity === 3 ? [t('matches.international')] : [])];
+  const double = m.kind === 'double';
   return (
-    <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
-      {tags.map((label, i) => (
+    <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+      <View
+        style={{
+          paddingHorizontal: 10,
+          paddingVertical: 3,
+          borderRadius: 999,
+          backgroundColor: double ? c.accent : c.surface2,
+        }}
+      >
+        <Txt size={12} variant="label" color={double ? textOn(c.accent) : c.ink}>
+          {t(`matches.${m.kind}`)}
+        </Txt>
+      </View>
+      {m.proximity === 3 ? (
         <View
-          key={label}
           style={{
-            paddingHorizontal: 8,
+            paddingHorizontal: 10,
             paddingVertical: 2,
             borderRadius: 999,
-            backgroundColor: i === 0 && m.kind === 'double' ? c.ink : c.surface2,
+            borderWidth: 1.5,
+            borderColor: c.line,
           }}
         >
-          <Txt size={12} variant="label" color={i === 0 && m.kind === 'double' ? c.onInk : c.ink}>
-            {label}
+          <Txt size={12} variant="label">
+            {t('matches.international')}
           </Txt>
         </View>
-      ))}
+      ) : null}
     </View>
   );
 }
 
-/** One side of the swap: label + first card + "+N" for the rest. */
-type SideProps = {
+const STEP = 0.42; // how much of each card peeks out of the fan
+
+/** Up to three cards fanned like a hand, "+N" for the rest. Illustration only. */
+function Fan({
+  ids,
+  cards,
+  width,
+  tilt,
+}: {
+  ids: string[];
+  cards: CatalogCard[];
+  width: number;
+  /** the two sides lean towards each other */
+  tilt: number;
+}) {
+  const c = useTheme();
+  const shown = ids
+    .slice(0, 3)
+    .map((id) => cards.find((x) => x.id === id))
+    .filter((x): x is CatalogCard => !!x);
+  const n = shown.length;
+  const height = width / cardRatio;
+  return (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ width: width * (1 + STEP * Math.max(n - 1, 0)) + 6, height: height + 8 }}
+    >
+      {shown.map((card, i) => (
+        <View
+          key={card.id}
+          style={{
+            position: 'absolute',
+            top: 4,
+            left: 3 + i * width * STEP, // 3 px each side for the tilt, so both fans sit symmetric
+            transform: [{ rotate: `${tilt + (i - (n - 1) / 2) * 7}deg` }],
+          }}
+        >
+          <CardMarker {...markerProps(card)} width={width} decorative />
+        </View>
+      ))}
+      {ids.length > 3 ? (
+        <View
+          style={{
+            position: 'absolute',
+            right: -4,
+            bottom: -2,
+            minWidth: 28,
+            height: 28,
+            paddingHorizontal: 6,
+            borderRadius: 14,
+            backgroundColor: c.ink,
+            borderWidth: 2,
+            borderColor: c.surface,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Txt size={12} variant="label" color={c.onInk} allowFontScaling={false}>
+            +{ids.length - 3}
+          </Txt>
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+function Side({
+  label,
+  ids,
+  cards,
+  width,
+  empty,
+  tilt,
+}: {
   label: string;
   ids: string[];
   cards: CatalogCard[];
   width: number;
-  tappable: boolean;
-};
-function Side({ label, ids, cards, width, tappable }: SideProps) {
-  const router = useRouter();
-  const first = cards.find((x) => x.id === ids[0]);
+  empty: string;
+  tilt: number;
+}) {
+  const c = useTheme();
   return (
-    <View style={{ gap: 4, alignItems: 'flex-start' }}>
-      <Txt size={12} muted>
-        {ids.length > 1 ? t('matches.more', { label, n: ids.length - 1 }) : label}
+    <View style={{ gap: 8, alignItems: 'center' }}>
+      <Txt size={12} variant="label" muted>
+        {ids.length ? `${label} · ${ids.length}` : label}
       </Txt>
-      {first ? (
-        <CardMarker
-          {...markerProps(first)}
-          width={width}
-          onPress={
-            tappable
-              ? () => router.push({ pathname: '/card/[id]', params: { id: first.id } })
-              : undefined
-          }
-          decorative={!tappable}
-        />
+      {ids.length ? (
+        <Fan ids={ids} cards={cards} width={width} tilt={tilt} />
       ) : (
-        <View style={{ width, height: width / cardRatio }} />
+        <View
+          style={{
+            width,
+            height: width / cardRatio,
+            borderRadius: 8,
+            borderWidth: 1.5,
+            borderStyle: 'dashed',
+            borderColor: c.line,
+            padding: 6,
+            justifyContent: 'center',
+            transform: [{ rotate: `${tilt}deg` }],
+          }}
+        >
+          <Txt size={12} muted style={{ textAlign: 'center' }}>
+            {empty}
+          </Txt>
+        </View>
       )}
     </View>
   );
 }
 
-/** "Te da" ⇄ "Le das" (a single match shows only the side that exists). */
+/** "Te da" ⇄ "Le das". A single match keeps the empty side visible so the gap reads. */
 export function SwapRow({
   m,
   cards,
-  width = 74,
-  tappable = true,
+  width = 80,
 }: {
   m: Match;
   cards: CatalogCard[];
   width?: number;
-  /** false inside a row that is itself a button */
-  tappable?: boolean;
 }) {
+  const c = useTheme();
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-      {m.they_give.length ? (
-        <Side
-          label={t('matches.theyGive')}
-          ids={m.they_give}
-          cards={cards}
-          width={width}
-          tappable={tappable}
-        />
-      ) : null}
-      {m.they_give.length && m.you_give.length ? (
-        <View style={{ flex: 1, alignItems: 'center' }} importantForAccessibility="no">
-          <Icon name="swap" size={28} />
-        </View>
-      ) : null}
-      {m.you_give.length ? (
-        <Side
-          label={t('matches.youGive')}
-          ids={m.you_give}
-          cards={cards}
-          width={width}
-          tappable={tappable}
-        />
-      ) : null}
+    <View
+      accessible
+      accessibilityLabel={`${t('matches.theyGive')}: ${m.they_give.length}. ${t('matches.youGive')}: ${m.you_give.length}.`}
+      // Centred and close together: the two cards read as one swap, not two far corners.
+      style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14 }}
+    >
+      <Side
+        label={t('matches.theyGive')}
+        ids={m.they_give}
+        cards={cards}
+        width={width}
+        empty={t('matches.nothingForYou')}
+        tilt={4}
+      />
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: c.surface2,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 26,
+        }}
+      >
+        <Icon name="swap" size={22} />
+      </View>
+      <Side
+        label={t('matches.youGive')}
+        ids={m.you_give}
+        cards={cards}
+        width={width}
+        empty={t('matches.nothingFromYou')}
+        tilt={-4}
+      />
     </View>
   );
 }

@@ -380,19 +380,25 @@
     "helloAnon": "Hi",
     "demoTitle": "Your collection, no account",
     "doubles": {
-      "one": "1 double match",
-      "other": "{count} double matches"
+      "one": "double match",
+      "other": "double matches"
     },
     "singles": {
-      "one": "1 match",
-      "other": "{count} matches"
+      "one": "match",
+      "other": "matches"
     },
     "none": "No matches yet",
     "noneBody": "Mark cards as Want and Spare: we'll let you know when someone fits.",
-    "see": "View",
-    "allMatches": "See all",
+    "see": "View match",
+    "allMatches": {
+      "one": "See your match",
+      "other": "See all {count} matches"
+    },
     "binders": "Your binders",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "toCatalog": "Go to the catalog",
+    "firstBinder": "Set up your first binder",
+    "firstBinderBody": "Pick a group, member or era and fill the pockets."
   },
   "matches": {
     "title": "Matches",
@@ -420,6 +426,8 @@
     "detailTheyGive": "@{username} gives you",
     "detailYouGive": "You give",
     "chatSoon": "Chat to propose the trade is coming very soon.",
+    "nothingForYou": "Nothing you're looking for",
+    "nothingFromYou": "Not looking for yours yet",
     "gone": "This match is no longer available."
   },
   "alerts": {
