@@ -25,7 +25,14 @@ export type CatalogCard = {
   eraColor: Era;
 };
 
-export type UserMark = { status: 'have' | 'want' | 'dupe'; qty: number };
+export type Offer = 'trade' | 'sale' | 'both';
+export type UserMark = {
+  status: 'have' | 'want' | 'dupe';
+  qty: number;
+  /** Only for spares (Repetida); price only with sale/both. */
+  offer?: Offer | null;
+  priceCents?: number | null;
+};
 
 /** All approved cards, or just `cardId` when given. */
 export function loadCatalog(db: SQLiteDatabase, cardId?: string): CatalogCard[] {
@@ -48,10 +55,19 @@ export function loadCatalog(db: SQLiteDatabase, cardId?: string): CatalogCard[] 
 }
 
 export function loadMarks(db: SQLiteDatabase): Map<string, UserMark> {
-  const rows = db.getAllSync<UserMark & { card_id: string }>(
-    'select card_id, status, qty from user_cards',
+  const rows = db.getAllSync<{
+    card_id: string;
+    status: UserMark['status'];
+    qty: number;
+    offer: Offer | null;
+    price_cents: number | null;
+  }>('select card_id, status, qty, offer, price_cents from user_cards');
+  return new Map(
+    rows.map((r) => [
+      r.card_id,
+      { status: r.status, qty: r.qty, offer: r.offer, priceCents: r.price_cents },
+    ]),
   );
-  return new Map(rows.map((r) => [r.card_id, { status: r.status, qty: r.qty }]));
 }
 
 // Screens re-read when the catalog or the user's marks change.

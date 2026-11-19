@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getDb } from '@/data/db';
 import { deleteAccount, flush, pendingChanges, signOut } from '@/data/sync';
+import { forgetThisDevice } from '@/features/notifications/push';
 import { exportCsv, exportJson } from '@/features/account/exportData';
 import { authErrorKey, fetchProfile } from '@/features/auth/account';
 import { DemoNotice } from '@/features/auth/DemoNotice';
@@ -141,6 +142,7 @@ export default function Settings() {
   const onSignOut = () =>
     run(async () => {
       await flush().catch(() => {});
+      await forgetThisDevice();
       if (!pendingChanges()) return signOut();
       Alert.alert(t('settings.signOutPending.title'), t('settings.signOutPending.body'), [
         { text: t('settings.cancel'), style: 'cancel' },
@@ -247,6 +249,13 @@ export default function Settings() {
           value={t('settings.languageName')}
           onPress={() => router.push('/language')}
         />
+        {session ? (
+          <Row
+            icon="bell"
+            label={t('alerts.title')}
+            onPress={() => router.push('/notifications')}
+          />
+        ) : null}
       </Section>
 
       {session ? (

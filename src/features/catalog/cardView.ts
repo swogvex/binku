@@ -23,6 +23,8 @@ export function markerProps(card: CatalogCard, mark?: UserMark) {
     member: card.memberName,
     album: card.releaseTitle,
     version: card.versionLabel ?? t(`catalog.type.${card.type}`),
+    // what fits on the card face ("SG", "LD"): fans' own shorthand; screen readers get `version`
+    short: card.versionLabel ?? t(`catalog.typeShort.${card.type}`),
     format: formats[card.type],
     eraColor: card.eraColor,
     state,

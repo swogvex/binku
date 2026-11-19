@@ -1,4 +1,4 @@
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { haptics } from '@/lib/haptics';
 import { radius } from '@/theme/tokens';
@@ -6,9 +6,15 @@ import { useTheme } from '@/theme/useTheme';
 
 import { Txt } from './Txt';
 
-type Props = { label: string; selected?: boolean; onPress?: () => void };
+type Props = {
+  label: string;
+  selected?: boolean;
+  onPress?: () => void;
+  /** Leading colour dot (a group's or binder's era colour). */
+  dot?: string;
+};
 
-export function Chip({ label, selected = false, onPress }: Props) {
+export function Chip({ label, selected = false, onPress, dot }: Props) {
   const c = useTheme();
   return (
     <Pressable
@@ -22,7 +28,9 @@ export function Chip({ label, selected = false, onPress }: Props) {
       style={({ pressed }) => ({
         minHeight: 36,
         paddingHorizontal: 14,
-        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
         borderRadius: radius.chip,
         borderWidth: 1.5,
         borderColor: selected ? c.ink : c.line,
@@ -30,6 +38,18 @@ export function Chip({ label, selected = false, onPress }: Props) {
         opacity: pressed ? 0.75 : 1,
       })}
     >
+      {dot ? (
+        <View
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            backgroundColor: dot,
+            borderWidth: 1.5,
+            borderColor: selected ? c.onInk : c.surface,
+          }}
+        />
+      ) : null}
       <Txt variant="label" color={selected ? c.onInk : c.ink}>
         {label}
       </Txt>

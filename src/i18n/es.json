@@ -87,6 +87,18 @@
         "one": "Ver {count} carta",
         "other": "Ver {count} cartas"
       }
+    },
+    "summary": {
+      "one": "{count} carta · tienes {have}",
+      "other": "{count} cartas · tienes {have}"
+    },
+    "typeShort": {
+      "album": "Álbum",
+      "pob": "POB",
+      "lucky_draw": "LD",
+      "event": "Evento",
+      "season_greetings": "SG",
+      "other": "Otra"
     }
   },
   "cardSheet": {
@@ -104,7 +116,15 @@
     "store": "Tienda",
     "korean": "Coreano",
     "notFound": "Esta carta ya no está en el catálogo",
-    "turnHint": "Arrastra para girarla. Toca para darle la vuelta."
+    "turnHint": "Arrastra para girarla. Toca para darle la vuelta.",
+    "special": "Holo",
+    "details": "Datos de la carta",
+    "hint": {
+      "none": "Márcala para llevar la cuenta de tu colección.",
+      "have": "La tienes. Si te sobra alguna, márcala como Repetida.",
+      "want": "Te avisamos cuando alguien la tenga repetida.",
+      "dupe": "Quien la busque podrá verla en sus coincidencias."
+    }
   },
   "binder": {
     "new": "+ Nuevo",
@@ -137,7 +157,16 @@
       "confirmTitle": "¿Eliminar este binder?",
       "confirmBody": "Tus marcas de Tengo y Busco no se borran.",
       "cancel": "Cancelar"
-    }
+    },
+    "kicker": "Binder",
+    "kind": {
+      "group": "Grupo",
+      "member": "Miembro",
+      "era": "Era",
+      "custom": "Personal"
+    },
+    "moveHint": "Mantén pulsada una carta y arrástrala para cambiarla de bolsillo.",
+    "summary": "{owned} de {total} cartas · {dupes} repetidas"
   },
   "onboarding": {
     "skip": "Saltar",
@@ -376,6 +405,81 @@
     },
     "new": "¡Nueva!"
   },
+  "home": {
+    "hello": "Hola, @{username}",
+    "helloAnon": "Hola",
+    "demoTitle": "Tu colección, sin cuenta",
+    "doubles": {
+      "one": "coincidencia doble",
+      "other": "coincidencias dobles"
+    },
+    "singles": {
+      "one": "coincidencia",
+      "other": "coincidencias"
+    },
+    "none": "Aún sin coincidencias",
+    "noneBody": "Marca cartas como Busco y Repetida: te avisamos cuando alguien encaje contigo.",
+    "see": "Ver coincidencia",
+    "allMatches": {
+      "one": "Ver tu coincidencia",
+      "other": "Ver las {count} coincidencias"
+    },
+    "binders": "Tus binders",
+    "seeAll": "Ver todos",
+    "toCatalog": "Ir al catálogo",
+    "firstBinder": "Monta tu primer binder",
+    "firstBinderBody": "Elige grupo, miembro o era y ve llenando bolsillos."
+  },
+  "matches": {
+    "title": "Coincidencias",
+    "all": "Todas",
+    "doubles": "Dobles",
+    "double": "Doble",
+    "single": "Simple",
+    "international": "Envío internacional",
+    "scope": "Buscar en",
+    "scopes": {
+      "zone": "Mi zona",
+      "country": "Mi país",
+      "region": "Mi región",
+      "international": "Internacional"
+    },
+    "note": "Ordenadas por coincidencia y cercanía. Nunca por precio.",
+    "offline": "Sin conexión: puede que la lista no esté al día.",
+    "needAccount": "Crea una cuenta para ver coincidencias",
+    "intlTitle": "¿Buscar en todo el mundo?",
+    "intlBody": "Los envíos internacionales tardan más, cuestan más y pueden pagar aduanas. Binku no interviene en envíos ni pagos.",
+    "intlOk": "Buscar en todo el mundo",
+    "theyGive": "Te da",
+    "youGive": "Le das",
+    "more": "{label} (+{n})",
+    "detailTheyGive": "@{username} te da",
+    "detailYouGive": "Tú le das",
+    "chatSoon": "Podrás proponerlo por chat muy pronto.",
+    "nothingForYou": "No tiene nada de lo que buscas",
+    "nothingFromYou": "Aún no busca nada tuyo",
+    "gone": "Esta coincidencia ya no está disponible.",
+    "propose": "Proponer este cambio",
+    "tipsTitle": "Antes del cambio",
+    "tipAddress": "No compartas tu dirección en el chat.",
+    "tipTracked": "Envío con seguimiento recomendado.",
+    "tipPayments": "La app no interviene en pagos ni envíos.",
+    "stepsTitle": "Cómo será el cambio",
+    "step1": "Propón el cambio por chat y acordad los detalles.",
+    "step2": "Enviad las cartas, mejor con seguimiento.",
+    "step3": "Confirmad la llegada y valoraos: tus cartas se actualizan solas."
+  },
+  "alerts": {
+    "title": "Avisos de coincidencias",
+    "matches": "Coincidencias",
+    "matchesBody": "Al momento cuando aparezca una coincidencia doble; las simples, en un resumen al día. Nunca publicidad.",
+    "denied": "Binku no tiene permiso para avisarte. Actívalo en los ajustes del móvil.",
+    "openSettings": "Abrir ajustes del móvil",
+    "error": "No hemos podido guardar el cambio. Revisa tu conexión.",
+    "quiet": "Horas de silencio",
+    "quietBody": "Los avisos que lleguen en esas horas te esperan hasta que terminen.",
+    "quietOff": "Sin horas de silencio"
+  },
   "photo": {
     "title": "Tu foto",
     "scan": "Escanear",
@@ -399,6 +503,17 @@
   "demo": {
     "title": "Estás probando Binku",
     "body": "Sin cuenta, Binku es una demo: lo que añadas se borra al cerrar la app. Crea una cuenta o inicia sesión para guardar tu colección."
+  },
+  "offer": {
+    "title": "Ofrecer para",
+    "trade": "Solo intercambio",
+    "sale": "Venta",
+    "both": "Ambas",
+    "needsPhoto": "Para ofrecerla, añade antes la foto del frente.",
+    "price": "Precio ({currency}, opcional)",
+    "pricePlaceholder": "Ej. 5,50",
+    "priceHint": "Solo se ve en esta ficha. Nunca en listas ni coincidencias.",
+    "priceShown": "{price} · solo se ve en esta ficha."
   },
   "viewer": {
     "close": "Cerrar",

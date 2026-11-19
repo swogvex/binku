@@ -6,6 +6,7 @@ import { screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 
 import { useDockScrollHandler, useDockSpace } from './dockVisibility';
+import { StatusBarScrim } from './StatusBarScrim';
 
 /** Scrollable tab root: theme background, safe area, room for the dock, hide-on-scroll. */
 export function TabScreen({ children }: { children: ReactNode }) {
@@ -13,18 +14,21 @@ export function TabScreen({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   const onScroll = useDockScrollHandler();
   return (
-    <Animated.ScrollView
-      onScroll={onScroll}
-      scrollEventThrottle={16}
-      style={{ flex: 1, backgroundColor: c.bg }}
-      contentContainerStyle={{
-        paddingTop: insets.top + 12,
-        paddingHorizontal: screenPadding,
-        paddingBottom: useDockSpace(),
-        gap: 18,
-      }}
-    >
-      {children}
-    </Animated.ScrollView>
+    <>
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        style={{ flex: 1, backgroundColor: c.bg }}
+        contentContainerStyle={{
+          paddingTop: insets.top + 12,
+          paddingHorizontal: screenPadding,
+          paddingBottom: useDockSpace(),
+          gap: 18,
+        }}
+      >
+        {children}
+      </Animated.ScrollView>
+      <StatusBarScrim />
+    </>
   );
 }

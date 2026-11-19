@@ -16,6 +16,8 @@ type Props = {
   member: string;
   album: string;
   version: string;
+  /** Shorter text for the card face; `version` stays in the accessibility label. */
+  short?: string;
   format: CardFormat;
   eraColor: Era;
   state?: CardState;
@@ -114,6 +116,7 @@ export function CardMarker({
   member,
   album,
   version,
+  short,
   format,
   eraColor,
   state,
@@ -162,7 +165,7 @@ export function CardMarker({
           allowFontScaling={!decorative}
           style={{ flexShrink: 1 }}
         >
-          {version}
+          {short ?? version}
         </Txt>
         <FormatMark format={format} color={fg} />
       </View>

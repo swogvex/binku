@@ -87,6 +87,18 @@
         "one": "Show {count} card",
         "other": "Show {count} cards"
       }
+    },
+    "summary": {
+      "one": "{count} card · you have {have}",
+      "other": "{count} cards · you have {have}"
+    },
+    "typeShort": {
+      "album": "Album",
+      "pob": "POB",
+      "lucky_draw": "LD",
+      "event": "Event",
+      "season_greetings": "SG",
+      "other": "Other"
     }
   },
   "cardSheet": {
@@ -104,7 +116,15 @@
     "store": "Store",
     "korean": "Korean",
     "notFound": "This card is no longer in the catalog",
-    "turnHint": "Drag to turn it. Tap to flip it."
+    "turnHint": "Drag to turn it. Tap to flip it.",
+    "special": "Holo",
+    "details": "Card details",
+    "hint": {
+      "none": "Mark it to keep track of your collection.",
+      "have": "You have it. If you have a spare, mark it as Dupe.",
+      "want": "We'll let you know when someone has a spare.",
+      "dupe": "People looking for it will see it in their matches."
+    }
   },
   "binder": {
     "new": "+ New",
@@ -137,7 +157,16 @@
       "confirmTitle": "Delete this binder?",
       "confirmBody": "Your Have and Want marks are kept.",
       "cancel": "Cancel"
-    }
+    },
+    "kicker": "Binder",
+    "kind": {
+      "group": "Group",
+      "member": "Member",
+      "era": "Era",
+      "custom": "Custom"
+    },
+    "moveHint": "Press and hold a card, then drag it to another pocket.",
+    "summary": "{owned} of {total} cards · {dupes} dupes"
   },
   "onboarding": {
     "skip": "Skip",
@@ -376,6 +405,81 @@
     },
     "new": "New!"
   },
+  "home": {
+    "hello": "Hi, @{username}",
+    "helloAnon": "Hi",
+    "demoTitle": "Your collection, no account",
+    "doubles": {
+      "one": "double match",
+      "other": "double matches"
+    },
+    "singles": {
+      "one": "match",
+      "other": "matches"
+    },
+    "none": "No matches yet",
+    "noneBody": "Mark cards as Want and Spare: we'll let you know when someone fits.",
+    "see": "View match",
+    "allMatches": {
+      "one": "See your match",
+      "other": "See all {count} matches"
+    },
+    "binders": "Your binders",
+    "seeAll": "See all",
+    "toCatalog": "Go to the catalog",
+    "firstBinder": "Set up your first binder",
+    "firstBinderBody": "Pick a group, member or era and fill the pockets."
+  },
+  "matches": {
+    "title": "Matches",
+    "all": "All",
+    "doubles": "Doubles",
+    "double": "Double",
+    "single": "Single",
+    "international": "International shipping",
+    "scope": "Search in",
+    "scopes": {
+      "zone": "My area",
+      "country": "My country",
+      "region": "My region",
+      "international": "International"
+    },
+    "note": "Ranked by match and distance. Never by price.",
+    "offline": "Offline: this list may be out of date.",
+    "needAccount": "Create an account to see matches",
+    "intlTitle": "Search worldwide?",
+    "intlBody": "International shipping takes longer, costs more and may carry customs fees. Binku is not involved in shipping or payments.",
+    "intlOk": "Search worldwide",
+    "theyGive": "Gives you",
+    "youGive": "You give",
+    "more": "{label} (+{n})",
+    "detailTheyGive": "@{username} gives you",
+    "detailYouGive": "You give",
+    "chatSoon": "You'll be able to propose it by chat very soon.",
+    "nothingForYou": "Nothing you're looking for",
+    "nothingFromYou": "Not looking for yours yet",
+    "gone": "This match is no longer available.",
+    "propose": "Propose this trade",
+    "tipsTitle": "Before you trade",
+    "tipAddress": "Don't share your address in the chat.",
+    "tipTracked": "Tracked shipping recommended.",
+    "tipPayments": "The app is not involved in payments or shipping.",
+    "stepsTitle": "How the trade goes",
+    "step1": "Propose the trade by chat and agree on the details.",
+    "step2": "Send the cards, ideally with tracking.",
+    "step3": "Confirm they arrived and rate each other: your cards update by themselves."
+  },
+  "alerts": {
+    "title": "Match alerts",
+    "matches": "Matches",
+    "matchesBody": "Right away for a double match; single matches in one daily summary. Never ads.",
+    "denied": "Binku isn't allowed to notify you. Turn it on in your phone's settings.",
+    "openSettings": "Open phone settings",
+    "error": "We couldn't save the change. Check your connection.",
+    "quiet": "Quiet hours",
+    "quietBody": "Alerts that arrive during these hours wait until they end.",
+    "quietOff": "No quiet hours"
+  },
   "photo": {
     "title": "Your photo",
     "scan": "Scan",
@@ -399,6 +503,17 @@
   "demo": {
     "title": "You are trying Binku",
     "body": "Without an account Binku is a demo: whatever you add is erased when the app closes. Create an account or sign in to keep your collection."
+  },
+  "offer": {
+    "title": "Offer for",
+    "trade": "Trade only",
+    "sale": "Sale",
+    "both": "Both",
+    "needsPhoto": "To offer it, add the front photo first.",
+    "price": "Price ({currency}, optional)",
+    "pricePlaceholder": "E.g. 5.50",
+    "priceHint": "Only shown on this card sheet. Never in lists or matches.",
+    "priceShown": "{price} · only shown on this card sheet."
   },
   "viewer": {
     "close": "Close",
