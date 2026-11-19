@@ -14,7 +14,7 @@ insert into auth.users (id, email)
 select ('00000000-0000-4000-8000-' || lpad(i::text, 12, '0'))::uuid, 'p' || i || '@test.local'
 from generate_series(1, 5000) i;
 insert into public.profiles (id, username, birth_date, country, subdivision)
-select ('00000000-0000-4000-8000-' || lpad(i::text, 12, '0'))::uuid, 'p' || i, '1990-01-01', 'ES',
+select ('00000000-0000-4000-8000-' || lpad(i::text, 12, '0'))::uuid, 'perf' || i, '1990-01-01', 'ES',
   (array['ES-V', 'ES-M', 'ES-B', 'ES-SE'])[1 + i % 4]
 from generate_series(1, 5000) i;
 -- 300 cards each (a window of the 1,000), a third Busco, a third Repetida, a third Tengo.
