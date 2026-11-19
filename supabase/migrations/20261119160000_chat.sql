@@ -188,11 +188,9 @@ language sql immutable set search_path = '' as $$
   select case when c.user_a = me then c.user_b else c.user_a end
 $$;
 
-/**
- * Sends a message to a conversation, or to a user (p_to) on first contact: the conversation is
- * created then, so opening a chat and leaving does not count against the daily limit.
- * proposal: {"type":"offer","give":[card ids],"get":[card ids]} or {"type":"accept"|"tracked"|"shipped"|"received"}.
- */
+-- Sends a message to a conversation, or to a user (p_to) on first contact: the conversation is
+-- created then, so opening a chat and leaving does not count against the daily limit.
+-- proposal: {"type":"offer","give":[card ids],"get":[card ids]} or {"type":"accept"|"tracked"|"shipped"|"received"}.
 create function public.send_message(
   p_conversation uuid, p_to uuid, p_kind text,
   p_body text default null, p_card text default null, p_proposal jsonb default null,
@@ -332,7 +330,7 @@ returns table (
   id uuid, other_id uuid, other_username text, other_country char(2), other_subdivision text,
   last_message_at timestamptz, last_kind text, last_body text, last_card text, last_proposal jsonb,
   last_mine boolean, unread int, other_read_at timestamptz, muted boolean, blocked boolean,
-  structured boolean, strict boolean
+  structured boolean, strict boolean, stage text, offer jsonb, offer_mine boolean
 )
 language sql stable security definer set search_path = '' as $$
   with me as (select p from public.profiles p where p.id = (select auth.uid())),
@@ -360,13 +358,21 @@ language sql stable security definer set search_path = '' as $$
     c.their_read, c.muted,
     exists (select 1 from public.blocks b where b.blocker_id = (select auth.uid()) and b.blocked_id = o.id),
     public.is_minor(me.p) <> public.is_minor(o),
-    public.is_minor(me.p) or public.is_minor(o)
+    public.is_minor(me.p) or public.is_minor(o),
+    (select m.proposal ->> 'type' from public.messages m
+      where m.conversation_id = c.id and m.kind = 'proposal' order by m.id desc limit 1),
+    lo.proposal, lo.sender_id = (select auth.uid())
   from convs c
   cross join me
   join public.profiles o on o.id = c.other_id and o.username is not null
   left join lateral (
     select m.* from public.messages m where m.conversation_id = c.id order by m.id desc limit 1
   ) l on true
+  left join lateral (
+    select m.proposal, m.sender_id from public.messages m
+    where m.conversation_id = c.id and m.kind = 'proposal' and m.proposal ->> 'type' = 'offer'
+    order by m.id desc limit 1
+  ) lo on true
   where c.id is null or l.id is not null
   order by c.last_message_at desc nulls first
   limit 200
