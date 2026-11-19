@@ -85,7 +85,11 @@ export async function offerMessageAlerts() {
 }
 export const setQuietHours = (q: Quiet) => updateMyProfile({ quiet_hours: q });
 
-export const loadAlertSettings = fetchAlertSettings;
+/** Server settings plus whether this phone may show notifications at all. */
+export async function loadAlertSettings() {
+  const [s, p] = await Promise.all([fetchAlertSettings(), Notifications.getPermissionsAsync()]);
+  return s && { ...s, permitted: p.granted };
+}
 
 /** Before signing out: this phone stops receiving that account's alerts. */
 export async function forgetThisDevice() {

@@ -459,7 +459,7 @@
     "step3": "Confirmad la llegada y valoraos: tus cartas se actualizan solas."
   },
   "alerts": {
-    "title": "Avisos de coincidencias",
+    "title": "Avisos",
     "matches": "Coincidencias",
     "matchesBody": "Te avisamos al momento cuando alguien tenga lo que buscas y busque algo tuyo. Nunca publicidad.",
     "denied": "Binku no tiene permiso para avisarte. Actívalo en los ajustes del móvil.",
