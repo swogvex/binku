@@ -1,7 +1,8 @@
+import { isInappropriate, toInput } from '@/lib/imageFilter';
+
+// hoisted by babel-jest above the import
 jest.mock('@sentry/react-native', () => ({}));
 jest.mock('expo-image-manipulator', () => ({}));
-
-import { isInappropriate, toInput } from '@/lib/imageFilter';
 
 // classes: drawings, hentai, neutral, porn, sexy
 const s = (...v: number[]) => new Float32Array(v);
