@@ -15,6 +15,7 @@ import { useOnboarded } from '@/features/onboarding/useOnboarded';
 import { chooseLanguage, languageChoice, LANGS, setLocale, type Lang } from '@/i18n';
 import { fontFiles } from '@/theme/fonts';
 import { useTheme } from '@/theme/useTheme';
+import { colors } from '@/theme/tokens';
 import { sheetOptions } from '@/ui/sheet';
 
 Sentry.init({
@@ -78,7 +79,7 @@ function RootLayout() {
             options={{
               presentation: 'fullScreenModal',
               animation: 'fade',
-              contentStyle: { backgroundColor: '#000' },
+              contentStyle: { backgroundColor: colors.dark.bg },
             }}
           />
         </Stack.Protected>

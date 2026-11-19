@@ -12,7 +12,7 @@ import { exportCsv, exportJson } from '@/features/account/exportData';
 import { authErrorKey, fetchProfile } from '@/features/auth/account';
 import { DemoNotice } from '@/features/auth/DemoNotice';
 import { useSession } from '@/features/auth/useSession';
-import { languageChoice, locale, t } from '@/i18n';
+import { locale, t } from '@/i18n';
 import { fonts, radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -244,7 +244,7 @@ export default function Settings() {
           first
           icon="language"
           label={t('settings.language')}
-          value={languageChoice.get() ? t('settings.languageName') : t('settings.languageSystem')}
+          value={t('settings.languageName')}
           onPress={() => router.push('/language')}
         />
       </Section>

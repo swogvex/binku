@@ -1,11 +1,11 @@
-// "Idioma de la app" sheet: Español, English or the phone's language. Applies at once and is
+// "Idioma de la app" sheet: Español or English (until chosen, the phone's language applies). Applies at once and is
 // remembered on this phone (kv `lang`).
 import { useRouter } from 'expo-router';
 import { useSyncExternalStore } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { getDb, setKv } from '@/data/db';
-import { chooseLanguage, languageChoice, t, type Lang } from '@/i18n';
+import { chooseLanguage, languageChoice, locale, t, type Lang } from '@/i18n';
 import { haptics } from '@/lib/haptics';
 import { radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -13,10 +13,9 @@ import { Icon } from '@/ui/icons/Icon';
 import { Txt } from '@/ui/Txt';
 
 // Native names: someone lost in a language they don't read can still find their own.
-const OPTIONS: { lang: Lang | null; label: () => string }[] = [
+const OPTIONS: { lang: Lang; label: () => string }[] = [
   { lang: 'es', label: () => 'Español' },
   { lang: 'en', label: () => 'English' },
-  { lang: null, label: () => t('settings.languageSystem') },
 ];
 
 export default function LanguageSheet() {
@@ -24,9 +23,9 @@ export default function LanguageSheet() {
   const router = useRouter();
   const chosen = useSyncExternalStore(languageChoice.subscribe, languageChoice.get);
 
-  const pick = (lang: Lang | null) => {
+  const pick = (lang: Lang) => {
     haptics.selection();
-    setKv(getDb(), 'lang', lang ?? '');
+    setKv(getDb(), 'lang', lang);
     router.back();
     chooseLanguage(lang);
   };
@@ -49,10 +48,10 @@ export default function LanguageSheet() {
         }}
       >
         {OPTIONS.map((o, i) => {
-          const selected = o.lang === chosen;
+          const selected = o.lang === (chosen ?? locale);
           return (
             <Pressable
-              key={o.lang ?? 'system'}
+              key={o.lang}
               accessibilityRole="radio"
               accessibilityState={{ checked: selected }}
               onPress={() => pick(o.lang)}

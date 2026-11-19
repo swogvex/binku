@@ -33,7 +33,7 @@ export default function CardViewer() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
+    <View style={{ flex: 1, backgroundColor: colors.dark.bg }}>
       <StatusBar style="light" />
       <View
         style={{
