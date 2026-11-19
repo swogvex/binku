@@ -16,6 +16,7 @@ export class InappropriateImageError extends Error {}
 let model: Promise<TfliteModel> | null = null;
 const load = () =>
   (model ??= import('react-native-fast-tflite') // lazy: the native module must not load in Jest
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- Metro bundles assets via require()
     .then((m) => m.loadTensorflowModel(require('../../assets/models/nsfw.tflite'), []))
     .catch((e) => {
       model = null;
