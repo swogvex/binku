@@ -1,11 +1,13 @@
-// "Avisos de coincidencias" sheet: on/off (asks the system permission the first time) and
+// Alerts sheet: matches and messages on/off (asks the system permission the first time) and
 // quiet hours. Minors start with their country's quiet hours (22:00–09:00 in Spain).
 import { useEffect, useState } from 'react';
 import { Linking, ScrollView, Switch, View } from 'react-native';
 
 import {
   disableMatchAlerts,
+  disableMessageAlerts,
   enableMatchAlerts,
+  enableMessageAlerts,
   loadAlertSettings,
   setQuietHours,
   type Quiet,
@@ -18,35 +20,89 @@ import { Button } from '@/ui/Button';
 import { Chip } from '@/ui/Chip';
 import { Txt } from '@/ui/Txt';
 
+type Kind = 'matches' | 'messages';
+const API = {
+  matches: { on: enableMatchAlerts, off: disableMatchAlerts },
+  messages: { on: enableMessageAlerts, off: disableMessageAlerts },
+};
+
+function AlertRow({
+  title,
+  body,
+  value,
+  onChange,
+}: {
+  title: string;
+  body: string;
+  value: boolean | undefined;
+  onChange: (v: boolean) => void;
+}) {
+  const c = useTheme();
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        padding: 14,
+        borderRadius: radius.card,
+        borderWidth: 1,
+        borderColor: c.line,
+      }}
+    >
+      <View style={{ flex: 1, gap: 4 }}>
+        <Txt variant="title" size={15}>
+          {title}
+        </Txt>
+        <Txt size={13} muted>
+          {body}
+        </Txt>
+      </View>
+      <Switch
+        value={!!value}
+        disabled={value === undefined}
+        onValueChange={onChange}
+        accessibilityLabel={title}
+        trackColor={{ true: c.ink, false: c.line }}
+        thumbColor={c.surface}
+      />
+    </View>
+  );
+}
+
 const QUIET: Exclude<Quiet, null>[] = ['off', '22:00-09:00', '23:00-08:00'];
 
 export default function NotificationsSheet() {
   const c = useTheme();
-  const [on, setOn] = useState<boolean>();
+  const [on, setOn] = useState<Partial<Record<Kind, boolean>>>({});
   const [quiet, setQuiet] = useState<Exclude<Quiet, null>>('off');
   const [problem, setProblem] = useState<'denied' | 'error' | null>(null);
 
   useEffect(() => {
     loadAlertSettings()
       .then((s) => {
-        setOn(!!s?.notify_matches);
+        // messages are on by default on the server, but only reach a phone that allowed them
+        setOn({
+          matches: !!s?.notify_matches,
+          messages: !!s?.notify_messages && !!s?.permitted,
+        });
         setQuiet(s?.quiet_hours ?? (s?.is_minor ? '22:00-09:00' : 'off'));
       })
       .catch(() => setProblem('error'));
   }, []);
 
-  const toggle = async (next: boolean) => {
+  const toggle = async (kind: Kind, next: boolean) => {
     haptics.selection();
     setProblem(null);
-    setOn(next);
+    setOn((o) => ({ ...o, [kind]: next }));
     try {
-      if (!next) await disableMatchAlerts();
-      else if (!(await enableMatchAlerts())) {
-        setOn(false);
+      if (!next) await API[kind].off();
+      else if (!(await API[kind].on())) {
+        setOn((o) => ({ ...o, [kind]: false }));
         setProblem('denied');
       }
     } catch {
-      setOn(!next);
+      setOn((o) => ({ ...o, [kind]: !next }));
       setProblem('error');
     }
   };
@@ -68,33 +124,18 @@ export default function NotificationsSheet() {
       <Txt variant="title" size={22} accessibilityRole="header">
         {t('alerts.title')}
       </Txt>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-          padding: 14,
-          borderRadius: radius.card,
-          borderWidth: 1,
-          borderColor: c.line,
-        }}
-      >
-        <View style={{ flex: 1, gap: 4 }}>
-          <Txt variant="title" size={15}>
-            {t('alerts.matches')}
-          </Txt>
-          <Txt size={13} muted>
-            {t('alerts.matchesBody')}
-          </Txt>
-        </View>
-        <Switch
-          value={!!on}
-          disabled={on === undefined}
-          onValueChange={toggle}
-          accessibilityLabel={t('alerts.matches')}
-          trackColor={{ true: c.ink, false: c.line }}
-        />
-      </View>
+      <AlertRow
+        title={t('alerts.matches')}
+        body={t('alerts.matchesBody')}
+        value={on.matches}
+        onChange={(v) => toggle('matches', v)}
+      />
+      <AlertRow
+        title={t('alerts.messages')}
+        body={t('alerts.messagesBody')}
+        value={on.messages}
+        onChange={(v) => toggle('messages', v)}
+      />
 
       {problem === 'denied' ? (
         <View style={{ gap: 10 }}>

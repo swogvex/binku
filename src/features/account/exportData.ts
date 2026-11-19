@@ -32,7 +32,7 @@ type Mark = {
 async function collect() {
   const { data } = await supabase.auth.getSession();
   const user = data.session!.user;
-  const [profile, binders, slots, marks, photos, devices] = await Promise.all([
+  const [profile, binders, slots, marks, photos, devices, messages, blocks] = await Promise.all([
     rows<Record<string, unknown>>('profiles', 'id'),
     rows<Record<string, unknown> & { id: string; deleted_at: string | null }>('binders', 'id'),
     rows<{ binder_id: string; page: number; position: number; card_id: string }>(
@@ -52,6 +52,9 @@ async function collect() {
     }>('photos', 'id'),
     // phones registered for match alerts (push token, language, time zone)
     rows<Record<string, unknown>>('devices', 'token'),
+    // chats the user is in (RLS: members only), deleted 90 days after the last message
+    rows<Record<string, unknown>>('messages', 'id'),
+    rows<Record<string, unknown>>('blocks', 'blocked_id'),
   ]);
   return {
     user,
@@ -70,6 +73,8 @@ async function collect() {
         created_at,
       })),
     devices,
+    messages,
+    blocks,
   };
 }
 
@@ -98,6 +103,9 @@ export async function exportJson() {
     })),
     marks: d.marks,
     photos: d.photos,
+    devices: d.devices,
+    messages: d.messages,
+    blocks: d.blocks,
   };
   await share(`binku-${stamp()}.json`, JSON.stringify(json, null, 2), 'application/json');
 }

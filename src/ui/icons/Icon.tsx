@@ -43,6 +43,13 @@ const paths = {
   lock: 'M7 10h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2zM8 10V7a4 4 0 0 1 8 0v3',
   rotate: 'M20 12a8 8 0 1 1-2.34-5.66M20 4v4h-4',
   expand: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
+  // Chat (send and shield copied from the canvas ios-chat).
+  more: 'M5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
+  send: 'M4 12l16-8-6 16-2-6z',
+  shield: 'M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z',
+  flag: 'M5 21V4M5 4h11l-2 4 2 4H5',
+  block: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8',
+  bellOff: 'M8.5 6A6 6 0 0 1 18 11v4M6 11v5l-1.5 2H16M10 20a2 2 0 0 0 4 0M4 4l16 16',
 } as const;
 
 export type IconName = keyof typeof paths;

@@ -219,3 +219,46 @@ export function SwapRow({
     </View>
   );
 }
+
+/** How a trade goes, from the canvas trade flow: propose → ship → confirm and rate. */
+export function TradeSteps() {
+  const c = useTheme();
+  const items = [t('matches.step1'), t('matches.step2'), t('matches.step3')];
+  return (
+    <View>
+      <Txt variant="title" size={17} accessibilityRole="header" style={{ marginBottom: 14 }}>
+        {t('matches.stepsTitle')}
+      </Txt>
+      {items.map((text, i) => (
+        <View key={i} style={{ flexDirection: 'row', gap: 14 }}>
+          <View style={{ alignItems: 'center' }}>
+            <View
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: i === 0 ? c.accent : c.surface2,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Txt variant="title" size={15} color={i === 0 ? textOn(c.accent) : c.ink}>
+                {i + 1}
+              </Txt>
+            </View>
+            {/* the thread between steps */}
+            {i < items.length - 1 ? (
+              <View style={{ width: 2, flex: 1, backgroundColor: c.line }} />
+            ) : null}
+          </View>
+          <Txt
+            size={15}
+            style={{ flex: 1, paddingTop: 5, paddingBottom: i < items.length - 1 ? 22 : 0 }}
+          >
+            {text}
+          </Txt>
+        </View>
+      ))}
+    </View>
+  );
+}

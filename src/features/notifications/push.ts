@@ -33,12 +33,17 @@ async function token() {
       name: locale === 'es' ? 'Coincidencias' : 'Matches',
       importance: AndroidImportance.DEFAULT,
     });
+  if (Platform.OS === 'android')
+    await Notifications.setNotificationChannelAsync('messages', {
+      name: locale === 'es' ? 'Mensajes' : 'Messages',
+      importance: AndroidImportance.HIGH,
+    });
   const projectId = Constants.expoConfig?.extra?.eas?.projectId as string;
   return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
 }
 
-/** Turns alerts on. Returns false if the user refused the system permission. */
-export async function enableMatchAlerts() {
+/** Asks the system permission and links this phone to the account. False if refused. */
+async function registerThisPhone() {
   const { granted } = await Notifications.requestPermissionsAsync();
   if (!granted) return false;
   await registerDevice({
@@ -47,14 +52,44 @@ export async function enableMatchAlerts() {
     lang: locale,
     timezone: getCalendars()[0]?.timeZone ?? 'Europe/Madrid',
   });
+  return true;
+}
+
+/** Turns alerts on. Returns false if the user refused the system permission. */
+export async function enableMatchAlerts() {
+  if (!(await registerThisPhone())) return false;
   await updateMyProfile({ notify_matches: true });
   return true;
 }
 
 export const disableMatchAlerts = () => updateMyProfile({ notify_matches: false });
+
+export async function enableMessageAlerts() {
+  if (!(await registerThisPhone())) return false;
+  await updateMyProfile({ notify_messages: true });
+  return true;
+}
+export const disableMessageAlerts = () => updateMyProfile({ notify_messages: false });
+
+/**
+ * After the first message the user sends: ask once for the permission so replies can reach
+ * them (message alerts are on by default on the server). Never asks again if they said no.
+ */
+export async function offerMessageAlerts() {
+  try {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'denied') await registerThisPhone(); // granted: just refreshes the token
+  } catch {
+    // offline or no push service: alerts can be turned on in Settings later
+  }
+}
 export const setQuietHours = (q: Quiet) => updateMyProfile({ quiet_hours: q });
 
-export const loadAlertSettings = fetchAlertSettings;
+/** Server settings plus whether this phone may show notifications at all. */
+export async function loadAlertSettings() {
+  const [s, p] = await Promise.all([fetchAlertSettings(), Notifications.getPermissionsAsync()]);
+  return s && { ...s, permitted: p.granted };
+}
 
 /** Before signing out: this phone stops receiving that account's alerts. */
 export async function forgetThisDevice() {

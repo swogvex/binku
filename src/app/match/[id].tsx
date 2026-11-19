@@ -1,15 +1,14 @@
 // Match detail: who, where (subdivision only), the swap at a glance and every card both ways.
-// Proposing the trade needs chat (M6); their condition photos come with it.
+// "Proponer este cambio" opens the chat with the trade ready to send.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { markerProps } from '@/features/catalog/cardView';
 import { useCatalogData } from '@/features/catalog/useCatalog';
-import { Avatar, MatchTags, placeName } from '@/features/matches/MatchParts';
+import { Avatar, MatchTags, placeName, TradeSteps } from '@/features/matches/MatchParts';
 import { useMatches } from '@/features/matches/useMatches';
 import { t } from '@/i18n';
-import { textOn } from '@/lib/contrast';
 import { radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Button } from '@/ui/Button';
@@ -109,49 +108,6 @@ function Ticket({ they, you }: { they: string[]; you: string[] }) {
   );
 }
 
-/** How a trade goes, from the canvas trade flow: propose → ship → confirm and rate. */
-function Steps() {
-  const c = useTheme();
-  const items = [t('matches.step1'), t('matches.step2'), t('matches.step3')];
-  return (
-    <View>
-      <Txt variant="title" size={17} accessibilityRole="header" style={{ marginBottom: 14 }}>
-        {t('matches.stepsTitle')}
-      </Txt>
-      {items.map((text, i) => (
-        <View key={i} style={{ flexDirection: 'row', gap: 14 }}>
-          <View style={{ alignItems: 'center' }}>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 16,
-                backgroundColor: i === 0 ? c.accent : c.surface2,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Txt variant="title" size={15} color={i === 0 ? textOn(c.accent) : c.ink}>
-                {i + 1}
-              </Txt>
-            </View>
-            {/* the thread between steps */}
-            {i < items.length - 1 ? (
-              <View style={{ width: 2, flex: 1, backgroundColor: c.line }} />
-            ) : null}
-          </View>
-          <Txt
-            size={15}
-            style={{ flex: 1, paddingTop: 5, paddingBottom: i < items.length - 1 ? 22 : 0 }}
-          >
-            {text}
-          </Txt>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 /** Before trading: the safety notes from the canvas trade flow. */
 function Tips() {
   const c = useTheme();
@@ -233,14 +189,14 @@ export default function MatchScreen() {
               <MatchTags m={m} />
             </View>
             <Ticket they={m.they_give} you={m.you_give} />
-            <Steps />
+            <TradeSteps />
             <Tips />
           </>
         )}
       </ScrollView>
 
       {m ? (
-        // The next step stays visible; it switches on when chat arrives (M6).
+        // The next step stays visible at the bottom.
         <View
           style={{
             gap: 8,
@@ -252,10 +208,16 @@ export default function MatchScreen() {
             backgroundColor: c.bg,
           }}
         >
-          <Button label={t('matches.propose')} icon="swap" variant="ghost" disabled />
-          <Txt size={12} muted style={{ textAlign: 'center' }}>
-            {t('matches.chatSoon')}
-          </Txt>
+          <Button
+            label={t('matches.propose')}
+            icon="swap"
+            onPress={() =>
+              router.push({
+                pathname: '/chat/[id]',
+                params: { id: 'new', to: m.user_id, propose: '1' },
+              })
+            }
+          />
         </View>
       ) : null}
     </View>
