@@ -1,4 +1,5 @@
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import { useEffect } from 'react';
 import { Pressable, useColorScheme, View } from 'react-native';
 import Animated, { useAnimatedStyle, useReducedMotion, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -56,6 +57,9 @@ export function Dock({ state, emitter, navigateToTab }: BottomTabBarProps) {
   const reduced = useReducedMotion();
   const keyboard = useKeyboardVisible();
   const bottom = Math.max(insets.bottom, 12);
+
+  // Any tab change (back gesture, push, deep link) shows the dock again; the new tab may not scroll.
+  useEffect(() => hidden?.set(0), [state.index, hidden]);
 
   // With reduced motion the dock simply stays put instead of sliding.
   const slide = useAnimatedStyle(() => ({
