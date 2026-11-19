@@ -1,10 +1,10 @@
 // The user's match scope (25-international): Mi zona / Mi país (default) / Mi región / Internacional.
 import { useSyncExternalStore } from 'react';
 
-import { fetchProfile, type ServerProfile } from '@/features/auth/account';
-import { supabase } from '@/lib/supabase';
+import { updateMyProfile, type Scope } from '@/data/matches';
+import { fetchProfile } from '@/features/auth/account';
 
-export type Scope = ServerProfile['match_scope'];
+export type { Scope };
 
 let scope: Scope | undefined;
 const listeners = new Set<() => void>();
@@ -25,11 +25,6 @@ const subscribe = (l: () => void) => {
 export const useMatchScope = () => useSyncExternalStore(subscribe, () => scope);
 
 export async function setMatchScope(s: Scope) {
-  const { data } = await supabase.auth.getSession();
-  const { error } = await supabase
-    .from('profiles')
-    .update({ match_scope: s })
-    .eq('id', data.session!.user.id);
-  if (error) throw error;
+  await updateMyProfile({ match_scope: s });
   set(s);
 }

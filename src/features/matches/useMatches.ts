@@ -3,20 +3,10 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useSyncExternalStore } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { fetchMatches, type Match } from '@/data/matches';
 import { useSession } from '@/features/auth/useSession';
 
-export type Match = {
-  user_id: string;
-  username: string;
-  country: string;
-  subdivision: string | null;
-  kind: 'double' | 'single';
-  they_give: string[];
-  you_give: string[];
-  /** 0 same subdivision · 1 same country · 2 same region · 3 elsewhere */
-  proximity: number;
-};
+export type { Match } from '@/data/matches';
 type State = { status: 'loading' | 'ready' | 'error'; matches: Match[] };
 
 let state: State = { status: 'loading', matches: [] };
@@ -33,11 +23,12 @@ const subscribe = (l: () => void) => {
 let inFlight: Promise<void> | null = null;
 export function refreshMatches() {
   inFlight ??= (async () => {
-    const { data, error } = await supabase.rpc('get_matches');
-    // Keep the last good list on errors (offline): the screen shows a banner, not an empty list.
-    set(
-      error ? { ...state, status: 'error' } : { status: 'ready', matches: (data ?? []) as Match[] },
-    );
+    try {
+      set({ status: 'ready', matches: await fetchMatches() });
+    } catch {
+      // Keep the last good list (offline): the screen shows a banner, not an empty list.
+      set({ ...state, status: 'error' });
+    }
   })().finally(() => (inFlight = null));
   return inFlight;
 }

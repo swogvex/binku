@@ -32,7 +32,7 @@ type Mark = {
 async function collect() {
   const { data } = await supabase.auth.getSession();
   const user = data.session!.user;
-  const [profile, binders, slots, marks, photos] = await Promise.all([
+  const [profile, binders, slots, marks, photos, devices] = await Promise.all([
     rows<Record<string, unknown>>('profiles', 'id'),
     rows<Record<string, unknown> & { id: string; deleted_at: string | null }>('binders', 'id'),
     rows<{ binder_id: string; page: number; position: number; card_id: string }>(
@@ -50,6 +50,8 @@ async function collect() {
       created_at: string;
       removed_at: string | null;
     }>('photos', 'id'),
+    // phones registered for match alerts (push token, language, time zone)
+    rows<Record<string, unknown>>('devices', 'token'),
   ]);
   return {
     user,
@@ -67,6 +69,7 @@ async function collect() {
         bytes,
         created_at,
       })),
+    devices,
   };
 }
 
