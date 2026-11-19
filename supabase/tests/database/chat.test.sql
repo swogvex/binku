@@ -8,7 +8,7 @@ from generate_series(1, 9) i;
 -- 01 ana, 02 bea (adults) · 03 cris (15) · 04 eve (outsider) · 05–09 more adults for the daily limit
 insert into public.profiles (id, username, birth_date, country, subdivision)
 select ('00000000-0000-0000-0000-0000000001' || lpad(i::text, 2, '0'))::uuid,
-  (array['ana', 'bea', 'cris', 'eve', 'u5', 'u6', 'u7', 'u8', 'u9'])[i],
+  (array['ana', 'bea', 'cris', 'eve', 'user5', 'user6', 'user7', 'user8', 'user9'])[i],
   case when i = 3 then current_date - interval '15 years' else date '1990-01-01' end, 'ES', 'ES-VC'
 from generate_series(1, 9) i;
 insert into public.groups (id, name, monogram, color, status) values ('k-g', 'Test', 'T', 'cobalt', 'approved');
