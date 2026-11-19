@@ -608,6 +608,8 @@
       "tooManyReports": "Has enviado muchas denuncias hoy. Vuelve a probar mañana.",
       "offline": "No se ha podido enviar. Revisa tu conexión."
     },
-    "notSent": "No enviado"
+    "notSent": "No enviado",
+    "offlineTitle": "Sin conexión",
+    "offlineBody": "Esta conversación se abrirá cuando vuelvas a tener internet."
   }
 }

@@ -8,6 +8,7 @@ jest.mock('expo-router', () => ({ useRouter: () => ({}), useFocusEffect: () => {
 jest.mock('@/features/auth/useSession', () => ({ useSession: () => null }));
 jest.mock('@/features/auth/account', () => ({}));
 jest.mock('@/features/matches/useMatches', () => ({ useMatches: () => null }));
+jest.mock('@/features/chat/useChats', () => ({ useChats: () => null, unreadTotal: () => 0 }));
 jest.mock('@/features/catalog/useCatalog', () => ({
   useCatalogData: () => ({ cards: [], marks: new Map() }),
 }));

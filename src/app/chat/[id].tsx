@@ -160,6 +160,7 @@ export default function ChatScreen() {
   const [loaded, setLoaded] = useState(!convId);
   const [more, setMore] = useState(true);
   const [error, setError] = useState<TKey | null>(null);
+  const [offline, setOffline] = useState(false);
   const [sending, setSending] = useState(false);
   const [draft, setDraft] = useState<Offer | null>(() => {
     const m = params.propose && otherParam ? findMatch(otherParam) : undefined;
@@ -171,6 +172,7 @@ export default function ChatScreen() {
     if (!by) return setChat(null);
     fetchChat(by)
       .then((x) => {
+        setOffline(false);
         setChat(x);
         // the same trade is already on the table: don't offer to send it again
         const sent = x?.offer && JSON.stringify([x.offer.give, x.offer.get]);
@@ -185,7 +187,7 @@ export default function ChatScreen() {
           setConvId(x.id);
         }
       })
-      .catch(() => setChat((prev) => prev ?? null));
+      .catch(() => setOffline(true)); // keep what is on screen; say so if there is nothing
   }, [convId, otherParam]);
 
   // Header again on focus: block / mute may have changed in the options sheet.
@@ -271,11 +273,23 @@ export default function ChatScreen() {
   const lastMineId = messages.find((m) => m.sender_id === me)?.id;
   const readUpTo = chat?.other_read_at ? new Date(chat.other_read_at).getTime() : 0;
 
-  if (chat === null)
+  if (chat === null || (!chat && offline))
     return (
       <View style={{ flex: 1, backgroundColor: c.bg, paddingTop: insets.top + 8 }}>
         <Header chat={null} onMenu={() => {}} />
-        <StateView illustration="ups" title={t('chat.err.unavailable')} />
+        {/* centred in the space under the header, not stuck to the top */}
+        <View style={{ flex: 1, justifyContent: 'center', paddingBottom: insets.bottom + 48 }}>
+          {chat === null ? (
+            <StateView illustration="ups" title={t('chat.err.unavailable')} />
+          ) : (
+            <StateView
+              illustration="ups"
+              title={t('chat.offlineTitle')}
+              body={t('chat.offlineBody')}
+              actions={[{ label: t('states.error.retry'), onPress: loadHeader }]}
+            />
+          )}
+        </View>
       </View>
     );
 

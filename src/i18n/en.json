@@ -608,6 +608,8 @@
       "tooManyReports": "You've sent many reports today. Try again tomorrow.",
       "offline": "Couldn't send. Check your connection."
     },
-    "notSent": "Not sent"
+    "notSent": "Not sent",
+    "offlineTitle": "No connection",
+    "offlineBody": "This conversation opens when you're back online."
   }
 }
