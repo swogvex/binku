@@ -196,7 +196,7 @@ language sql stable security definer set search_path = '' as $$
       n.other_id, (select o.username from public.profiles o where o.id = n.other_id) other,
       row_number() over (partition by n.user_id, n.kind order by n.created_at desc) rn
     from public.match_notices n
-    join public.profiles p on p.id = n.user_id and p.notify_matches
+    join public.profiles p on p.id = n.user_id and p.notify_matches and p.deletion_requested_at is null
     where n.sent_at is null
   ),
   per_user as (

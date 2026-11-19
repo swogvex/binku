@@ -422,6 +422,17 @@
     "chatSoon": "El chat para proponer el cambio llega muy pronto.",
     "gone": "Esta coincidencia ya no está disponible."
   },
+  "alerts": {
+    "title": "Avisos de coincidencias",
+    "matches": "Coincidencias",
+    "matchesBody": "Al momento cuando aparezca una coincidencia doble; las simples, en un resumen al día. Nunca publicidad.",
+    "denied": "Binku no tiene permiso para avisarte. Actívalo en los ajustes del móvil.",
+    "openSettings": "Abrir ajustes del móvil",
+    "error": "No hemos podido guardar el cambio. Revisa tu conexión.",
+    "quiet": "Horas de silencio",
+    "quietBody": "Los avisos que lleguen en esas horas te esperan hasta que terminen.",
+    "quietOff": "Sin horas de silencio"
+  },
   "photo": {
     "title": "Tu foto",
     "scan": "Escanear",

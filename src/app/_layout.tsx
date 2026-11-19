@@ -1,7 +1,8 @@
 import * as Sentry from '@sentry/react-native';
 import { useFonts } from 'expo-font';
 import { useLocales } from 'expo-localization';
-import { Stack } from 'expo-router';
+import * as Notifications from 'expo-notifications';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useSyncExternalStore } from 'react';
@@ -44,6 +45,15 @@ function RootLayout() {
     if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
+  // Tapping a match push opens it. Only our two routes are accepted, whatever the payload says.
+  const router = useRouter();
+  const tapped = Notifications.useLastNotificationResponse();
+  useEffect(() => {
+    const url = tapped?.notification.request.content.data?.url;
+    if (onboarded && typeof url === 'string' && /^\/(matches|match\/[0-9a-f-]{36})$/.test(url))
+      router.push(url as '/matches');
+  }, [tapped, onboarded, router]);
+
   useEffect(() => {
     // Offline is normal: the bundled/cached catalog keeps working. Report only server errors.
     pullCatalogIfConfigured(getDb())
@@ -69,6 +79,7 @@ function RootLayout() {
           <Stack.Screen name="card/[id]" />
           <Stack.Screen name="matches" />
           <Stack.Screen name="match/[id]" />
+          <Stack.Screen name="notifications" options={sheetOptions} />
           <Stack.Screen name="binder-new" options={sheetOptions} />
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />

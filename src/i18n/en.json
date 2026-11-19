@@ -422,6 +422,17 @@
     "chatSoon": "Chat to propose the trade is coming very soon.",
     "gone": "This match is no longer available."
   },
+  "alerts": {
+    "title": "Match alerts",
+    "matches": "Matches",
+    "matchesBody": "Right away for a double match; single matches in one daily summary. Never ads.",
+    "denied": "Binku isn't allowed to notify you. Turn it on in your phone's settings.",
+    "openSettings": "Open phone settings",
+    "error": "We couldn't save the change. Check your connection.",
+    "quiet": "Quiet hours",
+    "quietBody": "Alerts that arrive during these hours wait until they end.",
+    "quietOff": "No quiet hours"
+  },
   "photo": {
     "title": "Your photo",
     "scan": "Scan",
