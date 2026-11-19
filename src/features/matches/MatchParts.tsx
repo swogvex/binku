@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import geo from '@/content/geo/subdivisions.json';
 import type { CatalogCard } from '@/data/catalog';
 import { markerProps } from '@/features/catalog/cardView';
-import { t } from '@/i18n';
+import { t, type TKey } from '@/i18n';
 import { textOn } from '@/lib/contrast';
 import { cardRatio, era, fonts } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
@@ -16,13 +16,16 @@ import { Txt } from '@/ui/Txt';
 import type { Match } from './useMatches';
 
 type Geo = Record<string, { subdivisions: { code: string; name: string }[] }>;
-const regionNames = new Intl.DisplayNames(['es'], { type: 'region' });
+// Hermes has no Intl.DisplayNames: names come from the dictionary (launch countries).
+const NAMED = ['ES', 'MX', 'AR', 'CO', 'CL', 'PE'];
 
 /** "Valencia" at home, "Ciudad de México · México" abroad. Never a city or anything finer. */
 export function placeName(m: Pick<Match, 'country' | 'subdivision' | 'proximity'>) {
   const sub = (geo as Geo)[m.country]?.subdivisions.find((s) => s.code === m.subdivision)?.name;
   if (m.proximity <= 1) return sub ?? '';
-  const country = regionNames.of(m.country) ?? m.country;
+  const country = NAMED.includes(m.country)
+    ? t(`onboarding.place.countries.${m.country}` as TKey)
+    : m.country;
   return sub ? `${sub} · ${country}` : country;
 }
 
