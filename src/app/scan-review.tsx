@@ -183,6 +183,12 @@ export default function ScanReview() {
           <Txt variant="display" size={34} accessibilityRole="header">
             {kind === 'scan' ? t('scan.review.title') : t('scan.review.titleCondition')}
           </Txt>
+          {params.source === 'gallery' ? (
+            // Gallery images skip the scanner: remind what may be uploaded (moderated by reports).
+            <Txt size={13} muted>
+              {t('scan.review.galleryRule')}
+            </Txt>
+          ) : null}
         </View>
 
         <View style={{ alignItems: 'center', paddingVertical: 8 }}>

@@ -366,7 +366,8 @@
       "saveCard": "Guardar foto",
       "saving": "Guardando…",
       "error": "No hemos podido guardar la foto. Inténtalo otra vez.",
-      "preview": "Vista previa del recorte"
+      "preview": "Vista previa del recorte",
+      "galleryRule": "Solo fotos de tus propias photocards. Cualquier otra imagen se borra y puede suspender tu cuenta."
     },
     "pick": {
       "search": "Busca miembro, grupo o álbum",

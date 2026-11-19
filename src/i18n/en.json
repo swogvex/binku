@@ -366,7 +366,8 @@
       "saveCard": "Save photo",
       "saving": "Saving…",
       "error": "We couldn't save the photo. Please try again.",
-      "preview": "Crop preview"
+      "preview": "Crop preview",
+      "galleryRule": "Only photos of your own photocards. Any other image is removed and may get your account suspended."
     },
     "pick": {
       "search": "Search member, group or album",

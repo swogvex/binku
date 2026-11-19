@@ -361,14 +361,16 @@ export default function CardScreen() {
                 <ConditionSlot
                   label={t('photo.front')}
                   photo={cardPhotos?.condition_front}
-                  onAdd={() => chooseSource('condition_front')}
+                  // Condition photos are what other collectors see: camera only, so they show
+                  // the real card in hand (no gallery images).
+                  onAdd={() => shoot('camera', 'condition_front')}
                   onRemove={() => removePhoto(getDb(), card.id, 'condition_front')}
                 />
                 <ConditionSlot
                   label={t('photo.back')}
                   optional
                   photo={cardPhotos?.condition_back}
-                  onAdd={() => chooseSource('condition_back')}
+                  onAdd={() => shoot('camera', 'condition_back')}
                   onRemove={() => removePhoto(getDb(), card.id, 'condition_back')}
                 />
               </View>
