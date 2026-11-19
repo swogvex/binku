@@ -129,9 +129,10 @@ export default function MatchesScreen() {
 
   return (
     <FlatList
-      style={{ flex: 1, backgroundColor: c.bg }}
+      // margin, not padding: nothing scrolls under the status bar
+      style={{ flex: 1, backgroundColor: c.bg, marginTop: insets.top }}
       contentContainerStyle={{
-        paddingTop: insets.top + 8,
+        paddingTop: 8,
         paddingBottom: insets.bottom + 24,
         paddingHorizontal: screenPadding,
         gap: 12,

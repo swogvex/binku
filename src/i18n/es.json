@@ -425,10 +425,19 @@
     "more": "{label} (+{n})",
     "detailTheyGive": "@{username} te da",
     "detailYouGive": "Tú le das",
-    "chatSoon": "El chat para proponer el cambio llega muy pronto.",
+    "chatSoon": "Podrás proponerlo por chat muy pronto.",
     "nothingForYou": "No tiene nada de lo que buscas",
     "nothingFromYou": "Aún no busca nada tuyo",
-    "gone": "Esta coincidencia ya no está disponible."
+    "gone": "Esta coincidencia ya no está disponible.",
+    "propose": "Proponer este cambio",
+    "tipsTitle": "Antes del cambio",
+    "tipAddress": "No compartas tu dirección en el chat.",
+    "tipTracked": "Envío con seguimiento recomendado.",
+    "tipPayments": "La app no interviene en pagos ni envíos.",
+    "stepsTitle": "Cómo será el cambio",
+    "step1": "Propón el cambio por chat y acordad los detalles.",
+    "step2": "Enviad las cartas, mejor con seguimiento.",
+    "step3": "Confirmad la llegada y valoraos: tus cartas se actualizan solas."
   },
   "alerts": {
     "title": "Avisos de coincidencias",

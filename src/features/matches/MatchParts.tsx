@@ -100,9 +100,13 @@ export function MatchTags({ m }: { m: Match }) {
   );
 }
 
-const STEP = 0.42; // how much of each card peeks out of the fan
+const PEEK = 6; // how far each card behind peeks out of the stack
 
-/** Up to three cards fanned like a hand, "+N" for the rest. Illustration only. */
+/**
+ * A small stack: the first card in front, up to two more peeking out behind it, "+N" for the
+ * rest. Same footprint for one card or ten, so both sides of a swap stay symmetric.
+ * Illustration only.
+ */
 function Fan({
   ids,
   cards,
@@ -120,33 +124,38 @@ function Fan({
     .slice(0, 3)
     .map((id) => cards.find((x) => x.id === id))
     .filter((x): x is CatalogCard => !!x);
-  const n = shown.length;
   const height = width / cardRatio;
+  const lean = Math.sign(tilt) || 1;
   return (
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={{ width: width * (1 + STEP * Math.max(n - 1, 0)) + 6, height: height + 8 }}
+      style={{ width: width + PEEK * 4, height: height + 10 }}
     >
-      {shown.map((card, i) => (
+      {/* drawn back to front */}
+      {shown
+        .map((card, i) => ({ card, i }))
+        .reverse()
+        .map(({ card, i }) => (
+          <View
+            key={card.id}
+            style={{
+              position: 'absolute',
+              top: 5,
+              left: PEEK * 2 + lean * i * PEEK,
+              transform: [{ rotate: `${tilt + lean * i * 6}deg` }],
+              opacity: i ? 0.9 : 1,
+            }}
+          >
+            <CardMarker {...markerProps(card)} width={width} decorative />
+          </View>
+        ))}
+      {ids.length > 1 ? (
         <View
-          key={card.id}
           style={{
             position: 'absolute',
-            top: 4,
-            left: 3 + i * width * STEP, // 3 px each side for the tilt, so both fans sit symmetric
-            transform: [{ rotate: `${tilt + (i - (n - 1) / 2) * 7}deg` }],
-          }}
-        >
-          <CardMarker {...markerProps(card)} width={width} decorative />
-        </View>
-      ))}
-      {ids.length > 3 ? (
-        <View
-          style={{
-            position: 'absolute',
-            right: -4,
-            bottom: -2,
+            right: 0,
+            bottom: 0,
             minWidth: 28,
             height: 28,
             paddingHorizontal: 6,
@@ -159,7 +168,7 @@ function Fan({
           }}
         >
           <Txt size={12} variant="label" color={c.onInk} allowFontScaling={false}>
-            +{ids.length - 3}
+            {`×${ids.length}`}
           </Txt>
         </View>
       ) : null}

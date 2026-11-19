@@ -425,10 +425,19 @@
     "more": "{label} (+{n})",
     "detailTheyGive": "@{username} gives you",
     "detailYouGive": "You give",
-    "chatSoon": "Chat to propose the trade is coming very soon.",
+    "chatSoon": "You'll be able to propose it by chat very soon.",
     "nothingForYou": "Nothing you're looking for",
     "nothingFromYou": "Not looking for yours yet",
-    "gone": "This match is no longer available."
+    "gone": "This match is no longer available.",
+    "propose": "Propose this trade",
+    "tipsTitle": "Before you trade",
+    "tipAddress": "Don't share your address in the chat.",
+    "tipTracked": "Tracked shipping recommended.",
+    "tipPayments": "The app is not involved in payments or shipping.",
+    "stepsTitle": "How the trade goes",
+    "step1": "Propose the trade by chat and agree on the details.",
+    "step2": "Send the cards, ideally with tracking.",
+    "step3": "Confirm they arrived and rate each other: your cards update by themselves."
   },
   "alerts": {
     "title": "Match alerts",
