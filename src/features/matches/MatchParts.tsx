@@ -201,13 +201,7 @@ export function SwapRow({
       // Centred and close together: the two cards read as one swap, not two far corners.
       style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14 }}
     >
-      <Side
-        label={t('matches.theyGive')}
-        ids={m.they_give}
-        cards={cards}
-        width={width}
-        tilt={4}
-      />
+      <Side label={t('matches.theyGive')} ids={m.they_give} cards={cards} width={width} tilt={4} />
       <View
         style={{
           width: 40,
@@ -221,13 +215,7 @@ export function SwapRow({
       >
         <Icon name="swap" size={22} />
       </View>
-      <Side
-        label={t('matches.youGive')}
-        ids={m.you_give}
-        cards={cards}
-        width={width}
-        tilt={-4}
-      />
+      <Side label={t('matches.youGive')} ids={m.you_give} cards={cards} width={width} tilt={-4} />
     </View>
   );
 }
