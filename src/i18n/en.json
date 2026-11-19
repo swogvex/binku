@@ -244,7 +244,8 @@
       "save": "Save"
     },
     "profile": {
-      "signIn": "Create account or sign in",
+      "signUp": "Create account",
+      "signIn": "Sign in",
       "signOut": "Sign out",
       "finish": "Finish creating your account"
     },

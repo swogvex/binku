@@ -43,7 +43,14 @@ export default function Profile() {
       {session === null ? (
         <>
           <Txt muted>{t('auth.email.body')}</Txt>
-          <Button label={t('auth.profile.signIn')} onPress={() => router.push('/sign-in')} />
+          <View style={{ gap: 10 }}>
+            <Button label={t('auth.profile.signUp')} onPress={() => router.push('/sign-in')} />
+            <Button
+              variant="ghost"
+              label={t('auth.profile.signIn')}
+              onPress={() => router.push({ pathname: '/sign-in', params: { intent: 'signIn' } })}
+            />
+          </View>
         </>
       ) : null}
       {session ? (
