@@ -16,7 +16,8 @@ import { Txt } from '@/ui/Txt';
 import { SwapPair } from './ChatParts';
 
 type Offer = Extract<Proposal, { type: 'offer' }>;
-const QUICK: Exclude<ProposalType, 'offer'>[] = ['accept', 'tracked', 'shipped', 'received'];
+// Accepting lives on their offer bubble; these follow once the trade is accepted.
+const QUICK: Exclude<ProposalType, 'offer' | 'accept'>[] = ['tracked', 'shipped', 'received'];
 
 function CircleButton({
   icon,
@@ -85,13 +86,13 @@ function Draft({
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <SwapPair give={offer.give} get={offer.get} cards={cards} width={30} />
+        <SwapPair give={offer.give} get={offer.get} cards={cards} width={40} />
         <View style={{ flex: 1, gap: 2 }}>
           <Txt variant="title" size={15}>
             {t('chat.draft')}
           </Txt>
           <Txt size={12} muted numberOfLines={2}>
-            {`${t('chat.youGive')} ${offer.give.map(name).join(', ')} · ${t('chat.youGet')} ${offer.get.map(name).join(', ')}`}
+            {`${t('matches.theyGive')} ${offer.get.map(name).join(', ')} · ${t('matches.youGive')} ${offer.give.map(name).join(', ')}`}
           </Txt>
         </View>
       </View>

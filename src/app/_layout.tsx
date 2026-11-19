@@ -86,9 +86,12 @@ function RootLayout() {
           <Stack.Screen name="notifications" options={sheetOptions} />
           <Stack.Screen name="messages" />
           <Stack.Screen name="chat/[id]" />
-          <Stack.Screen name="chat-options" options={sheetOptions} />
+          <Stack.Screen
+            name="chat-options"
+            options={{ ...sheetOptions, sheetAllowedDetents: 'fitToContents' }}
+          />
           <Stack.Screen name="chat-attach" options={sheetOptions} />
-          <Stack.Screen name="report" options={sheetOptions} />
+          <Stack.Screen name="report" options={{ ...sheetOptions, sheetAllowedDetents: [1] }} />
           <Stack.Screen name="binder-new" options={sheetOptions} />
           <Stack.Screen name="binder-options" options={sheetOptions} />
           <Stack.Screen name="sign-in" />

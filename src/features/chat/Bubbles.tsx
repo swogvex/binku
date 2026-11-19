@@ -48,20 +48,14 @@ function Side({ label, ids, cards }: { label: string; ids: string[]; cards: Cata
           <View
             key={id}
             style={{
-              marginLeft: i ? -22 : 0,
+              marginLeft: i ? -40 : 0,
               transform: [{ rotate: `${(i - (Math.min(ids.length, 3) - 1) / 2) * 7}deg` }],
             }}
           >
-            <MiniCard id={id} cards={cards} width={50} />
+            <MiniCard id={id} cards={cards} width={64} />
           </View>
         ))}
       </View>
-      <Txt size={12} numberOfLines={1} style={{ maxWidth: 120 }}>
-        {ids
-          .map((id) => cards.find((x) => x.id === id)?.memberName)
-          .filter(Boolean)
-          .join(', ')}
-      </Txt>
     </View>
   );
 }
@@ -101,7 +95,7 @@ export function Bubble({
     // seen from the viewer: what I give / what I get
     const give = mine ? p.give : p.get;
     const get = mine ? p.get : p.give;
-    label = `${mine ? t('chat.offerMine') : t('chat.offerTheirs', { username: otherUsername })}. ${t('chat.youGive')}: ${give.length}. ${t('chat.youGet')}: ${get.length}.`;
+    label = `${mine ? t('chat.offerMine') : t('chat.offerTheirs', { username: otherUsername })}. ${t('matches.theyGive')}: ${get.length}. ${t('matches.youGive')}: ${give.length}.`;
     body = (
       <View
         style={{
@@ -124,7 +118,7 @@ export function Bubble({
           importantForAccessibility="no-hide-descendants"
           style={{ flexDirection: 'row', alignItems: 'center' }}
         >
-          <Side label={t('chat.youGive')} ids={give} cards={cards} />
+          <Side label={t('matches.theyGive')} ids={get} cards={cards} />
           <View
             style={{
               width: 32,
@@ -137,7 +131,7 @@ export function Bubble({
           >
             <Icon name="swap" size={16} />
           </View>
-          <Side label={t('chat.youGet')} ids={get} cards={cards} />
+          <Side label={t('matches.youGive')} ids={give} cards={cards} />
         </View>
         {canAccept ? (
           <Button label={t('chat.accept')} icon="check" compact onPress={onAccept} />

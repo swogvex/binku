@@ -548,11 +548,8 @@
     "structured": "With under-18s only proposals and cards can be sent. It keeps everyone safe.",
     "offerMine": "Your proposal",
     "offerTheirs": "@{username}'s proposal",
-    "youGive": "You give",
-    "youGet": "You get",
     "accept": "Accept the trade",
     "quick": {
-      "accept": "I accept",
       "tracked": "Tracked shipping",
       "shipped": "I've sent it",
       "received": "It arrived"

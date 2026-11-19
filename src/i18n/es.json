@@ -548,11 +548,8 @@
     "structured": "Con menores de edad solo se envían propuestas y cartas. Así cuidamos a todos.",
     "offerMine": "Tu propuesta",
     "offerTheirs": "Propuesta de @{username}",
-    "youGive": "Das",
-    "youGet": "Recibes",
     "accept": "Aceptar el cambio",
     "quick": {
-      "accept": "Acepto",
       "tracked": "Envío con seguimiento",
       "shipped": "Ya lo he enviado",
       "received": "Me ha llegado"

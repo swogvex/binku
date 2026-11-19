@@ -64,6 +64,7 @@ function AlertRow({
         onValueChange={onChange}
         accessibilityLabel={title}
         trackColor={{ true: c.ink, false: c.line }}
+        thumbColor={c.surface}
       />
     </View>
   );

@@ -26,7 +26,7 @@ import { Bubble, DaySeparator } from '@/features/chat/Bubbles';
 import { sameDay, StageTag, SwapPair, viewerSides } from '@/features/chat/ChatParts';
 import { Composer } from '@/features/chat/Composer';
 import { refreshChats } from '@/features/chat/useChats';
-import { Avatar, placeName } from '@/features/matches/MatchParts';
+import { Avatar, placeName, SwapRow } from '@/features/matches/MatchParts';
 import { findMatch } from '@/features/matches/useMatches';
 import { offerMessageAlerts } from '@/features/notifications/push';
 import { t, type TKey } from '@/i18n';
@@ -34,6 +34,7 @@ import { haptics } from '@/lib/haptics';
 import { radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Icon } from '@/ui/icons/Icon';
+import { useKeyboardVisible } from '@/ui/dockVisibility';
 import { RoundButton } from '@/ui/RoundButton';
 import { StateView } from '@/ui/StateView';
 import { Txt } from '@/ui/Txt';
@@ -95,7 +96,7 @@ function Pinned({ chat }: { chat: Chat }) {
   return (
     <View
       accessible
-      accessibilityLabel={`${t(`chat.stage.${chat.stage}`)}. ${t('chat.youGive')} ${give.map(name).join(', ')}. ${t('chat.youGet')} ${get.map(name).join(', ')}.`}
+      accessibilityLabel={`${t(`chat.stage.${chat.stage}`)}. ${t('matches.theyGive')} ${get.map(name).join(', ')}. ${t('matches.youGive')} ${give.map(name).join(', ')}.`}
       style={{
         marginHorizontal: screenPadding,
         marginBottom: 8,
@@ -110,11 +111,11 @@ function Pinned({ chat }: { chat: Chat }) {
         borderColor: c.line,
       }}
     >
-      <SwapPair give={give} get={get} cards={cards} width={30} />
+      <SwapPair give={give} get={get} cards={cards} width={36} />
       <View style={{ flex: 1, gap: 4 }}>
         <StageTag stage={chat.stage} />
         <Txt size={12} muted numberOfLines={1}>
-          {`${t('chat.youGive')} ${give.map(name).join(', ')} · ${t('chat.youGet')} ${get.map(name).join(', ')}`}
+          {`${t('matches.theyGive')} ${get.map(name).join(', ')} · ${t('matches.youGive')} ${give.map(name).join(', ')}`}
         </Txt>
       </View>
     </View>
@@ -150,6 +151,7 @@ export default function ChatScreen() {
   const params = useLocalSearchParams<{ id: string; to?: string; propose?: string }>();
   const me = useSession()?.user.id;
   const { cards } = useCatalogData();
+  const keyboard = useKeyboardVisible();
 
   const [convId, setConvId] = useState(UUID.test(params.id) ? params.id : null);
   const otherParam = params.to && UUID.test(params.to) ? params.to : null;
@@ -170,6 +172,14 @@ export default function ChatScreen() {
     fetchChat(by)
       .then((x) => {
         setChat(x);
+        // the same trade is already on the table: don't offer to send it again
+        const sent = x?.offer && JSON.stringify([x.offer.give, x.offer.get]);
+        setDraft((d) =>
+          d &&
+          (sent === JSON.stringify([d.give, d.get]) || sent === JSON.stringify([d.get, d.give]))
+            ? null
+            : d,
+        );
         if (x?.id && !convId) {
           setLoaded(false); // already talking: continue that conversation
           setConvId(x.id);
@@ -206,13 +216,14 @@ export default function ChatScreen() {
       if (m.sender_id !== me) {
         haptics.selection();
         void markRead(convId);
+        loadHeader(); // their read time and the trade stage move with each message
       }
     });
     return () => {
       live = false;
       stop();
     };
-  }, [convId, me]);
+  }, [convId, me, loadHeader]);
 
   const loadOlder = () => {
     const oldest = messages[messages.length - 1];
@@ -289,6 +300,7 @@ export default function ChatScreen() {
     });
 
   const empty = loaded && !messages.length;
+  const match = chat ? findMatch(chat.other_id) : undefined;
 
   return (
     <KeyboardAvoidingView
@@ -310,9 +322,7 @@ export default function ChatScreen() {
           }}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={{ transform: [{ rotate: '-4deg' }] }}>
-            <Avatar username={chat.other_username} size={84} />
-          </View>
+          <Avatar username={chat.other_username} size={64} />
           <Txt
             variant="display"
             size={28}
@@ -324,6 +334,22 @@ export default function ChatScreen() {
           <Txt size={15} muted style={{ textAlign: 'center', maxWidth: 300 }}>
             {t('chat.startBody', { username: chat.other_username })}
           </Txt>
+          {match ? (
+            // what you two would swap, big, so the first message has a reason
+            <View
+              style={{
+                alignSelf: 'stretch',
+                paddingVertical: 18,
+                marginTop: 6,
+                borderRadius: radius.card,
+                backgroundColor: c.surface,
+                borderWidth: 1,
+                borderColor: c.line,
+              }}
+            >
+              <SwapRow m={match} cards={cards} width={84} />
+            </View>
+          ) : null}
           <SafetyTip />
         </ScrollView>
       ) : (
@@ -370,8 +396,8 @@ export default function ChatScreen() {
           error={error}
           sending={sending}
           draft={draft}
-          quick={!!chat.stage && chat.stage !== 'received'}
-          bottom={insets.bottom + 10}
+          quick={chat.stage === 'accept' || chat.stage === 'tracked' || chat.stage === 'shipped'}
+          bottom={keyboard ? 10 : insets.bottom + 10}
           onSend={(text) => send({ kind: 'text', body: text })}
           onSendDraft={() =>
             draft &&

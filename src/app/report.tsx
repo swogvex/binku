@@ -213,6 +213,7 @@ export default function ReportSheet() {
           onValueChange={setAlsoBlock}
           accessibilityLabel={t('chat.alsoBlock', { username: p.username })}
           trackColor={{ true: c.ink, false: c.line }}
+          thumbColor={c.surface}
         />
       </View>
 

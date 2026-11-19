@@ -2,6 +2,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { block, setMuted, unblock } from '@/data/chat';
 import { refreshChats } from '@/features/chat/useChats';
@@ -78,6 +79,7 @@ export default function ChatOptions() {
     muted?: string;
     blocked?: string;
   }>();
+  const insets = useSafeAreaInsets();
   const [problem, setProblem] = useState(false);
   const fail = () => setProblem(true);
 
@@ -99,7 +101,15 @@ export default function ChatOptions() {
     ]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: c.surface, padding: screenPadding, paddingTop: 28 }}>
+    // sized to its rows (fitToContents): no flex, or the sheet grows to half the screen
+    <View
+      style={{
+        backgroundColor: c.surface,
+        padding: screenPadding,
+        paddingTop: 28,
+        paddingBottom: insets.bottom + 16,
+      }}
+    >
       <Txt variant="title" size={22} accessibilityRole="header" style={{ marginBottom: 6 }}>
         @{p.username}
       </Txt>

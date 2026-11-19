@@ -6,7 +6,7 @@ import type { Chat, Proposal, ProposalType } from '@/data/chat';
 import { markerProps } from '@/features/catalog/cardView';
 import { locale, t } from '@/i18n';
 import { textOn } from '@/lib/contrast';
-import { era } from '@/theme/tokens';
+import { cardRatio, era } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { CardMarker } from '@/ui/CardMarker';
 import { Icon } from '@/ui/icons/Icon';
@@ -90,7 +90,37 @@ export function MiniCard({
 }) {
   const card = cards.find((x) => x.id === id);
   if (!card) return null;
-  return <CardMarker {...markerProps(card)} width={width} decorative />;
+  if (width >= 60) return <CardMarker {...markerProps(card)} width={width} decorative />;
+  // Under 60 px the full marker can't fit its text: a tile in the era colour with the name.
+  const bg = era[card.eraColor];
+  return (
+    <View
+      style={{
+        width,
+        aspectRatio: cardRatio,
+        borderRadius: Math.max(3, width * 0.1),
+        backgroundColor: bg,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingHorizontal: 2,
+        paddingBottom: width * 0.12,
+      }}
+    >
+      {width >= 26 ? (
+        <Txt
+          variant="display"
+          color={textOn(bg)}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.6}
+          allowFontScaling={false}
+          style={{ fontSize: Math.round(width * 0.3), lineHeight: Math.round(width * 0.34) }}
+        >
+          {card.memberName}
+        </Txt>
+      ) : null}
+    </View>
+  );
 }
 
 /** The latest offer seen from the viewer: what I give ⇄ what I get. */
@@ -98,7 +128,7 @@ export function viewerSides(offer: Extract<Proposal, { type: 'offer' }>, mine: b
   return mine ? { give: offer.give, get: offer.get } : { give: offer.get, get: offer.give };
 }
 
-/** Tiny "give ⇄ get" pair for rows and the pinned trade card. */
+/** Tiny pair, what you get on the left ⇄ what you give (same order as "Te da ⇄ Le das"). */
 export function SwapPair({
   give,
   get,
@@ -117,9 +147,9 @@ export function SwapPair({
       importantForAccessibility="no-hide-descendants"
       style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
     >
-      <MiniCard id={give[0]!} cards={cards} width={width} />
-      <Icon name="swap" size={14} color={c.muted} />
       <MiniCard id={get[0]!} cards={cards} width={width} />
+      <Icon name="swap" size={14} color={c.muted} />
+      <MiniCard id={give[0]!} cards={cards} width={width} />
     </View>
   );
 }

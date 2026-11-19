@@ -9,10 +9,10 @@ import type { Chat } from '@/data/chat';
 import { useCatalogData } from '@/features/catalog/useCatalog';
 import { chatTime, MiniCard, preview, StageTag, viewerSides } from '@/features/chat/ChatParts';
 import { unreadTotal, useChats } from '@/features/chat/useChats';
-import { Avatar } from '@/features/matches/MatchParts';
+import { Avatar, TradeSteps } from '@/features/matches/MatchParts';
 import { t } from '@/i18n';
 import { textOn } from '@/lib/contrast';
-import { screenPadding } from '@/theme/tokens';
+import { radius, screenPadding } from '@/theme/tokens';
 import { useTheme } from '@/theme/useTheme';
 import { Icon } from '@/ui/icons/Icon';
 import { RoundButton } from '@/ui/RoundButton';
@@ -26,7 +26,7 @@ function Row({ chat }: { chat: Chat }) {
   const unread = chat.unread > 0;
   const sides = chat.offer ? viewerSides(chat.offer, !!chat.offer_mine) : null;
   const names = sides
-    ? [sides.give[0], sides.get[0]].map((id) => cards.find((x) => x.id === id)?.memberName ?? '')
+    ? [sides.get[0], sides.give[0]].map((id) => cards.find((x) => x.id === id)?.memberName ?? '')
     : null;
   const text = preview(chat, cards);
   return (
@@ -135,12 +135,30 @@ export default function MessagesScreen() {
   const chats = res?.chats ?? [];
   const unread = unreadTotal(chats);
 
+  const steps = (
+    <View
+      style={{
+        padding: 18,
+        borderRadius: radius.card,
+        backgroundColor: c.surface,
+        borderWidth: 1,
+        borderColor: c.line,
+      }}
+    >
+      <TradeSteps />
+    </View>
+  );
+
   const footer = chats.length ? (
-    <View style={{ flexDirection: 'row', gap: 8, paddingTop: 18, alignItems: 'flex-start' }}>
-      <Icon name="lock" size={14} color={c.muted} />
-      <Txt size={12} muted style={{ flex: 1 }}>
-        {t('chat.retention')}
-      </Txt>
+    <View style={{ gap: 24, paddingTop: 18 }}>
+      <View style={{ flexDirection: 'row', gap: 8, alignItems: 'flex-start' }}>
+        <Icon name="lock" size={14} color={c.muted} />
+        <Txt size={12} muted style={{ flex: 1 }}>
+          {t('chat.retention')}
+        </Txt>
+      </View>
+      {/* a short inbox would leave half a blank screen: show how a trade goes instead */}
+      {chats.length < 4 ? steps : null}
     </View>
   ) : undefined;
 
@@ -185,16 +203,20 @@ export default function MessagesScreen() {
         res === null ? (
           <StateView illustration="pocket" title={t('chat.needAccount')} />
         ) : res.status !== 'loading' ? (
-          <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
+          <View style={{ flex: 1, justifyContent: 'center', gap: 24, paddingTop: 8 }}>
             <StateView
               illustration="pocket"
               title={t('chat.empty')}
               body={t('chat.emptyBody')}
               actions={[{ label: t('chat.toMatches'), onPress: () => router.push('/matches') }]}
             />
-            <Txt size={12} muted style={{ textAlign: 'center' }}>
-              {t('chat.retention')}
-            </Txt>
+            {steps}
+            <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'center' }}>
+              <Icon name="lock" size={14} color={c.muted} />
+              <Txt size={12} muted>
+                {t('chat.retention')}
+              </Txt>
+            </View>
           </View>
         ) : undefined
       }
