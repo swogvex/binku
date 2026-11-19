@@ -206,6 +206,7 @@ declare
   why text;
   msg public.messages;
   ptype text := p_proposal ->> 'type';
+  daily int;
 begin
   select * into me_p from public.profiles where id = me;
   if me is null or me_p.username is null or me_p.deletion_requested_at is not null then
@@ -239,9 +240,9 @@ begin
       and not exists (select 1 from public.match_list(other) m where m.user_id = me) then
       raise exception 'only matches' using errcode = 'BK011';
     end if;
+    daily := case when me_p.created_at > now() - interval '7 days' then 5 else 20 end;
     if not me_p.trusted and (select count(*) from public.conversations
-        where created_by = me and created_at > now() - interval '1 day')
-      >= case when me_p.created_at > now() - interval '7 days' then 5 else 20 end then
+        where created_by = me and created_at > now() - interval '1 day') >= daily then
       raise exception 'too many new chats' using errcode = 'BK012';
     end if;
   end if;
