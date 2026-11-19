@@ -9,6 +9,7 @@ import { removePhoto, type Photo, type PhotoKind } from '@/data/photos';
 import { setMark } from '@/data/userCards';
 import { Card3D } from '@/features/card/Card3D';
 import { CardBack } from '@/features/card/CardBack';
+import { OfferSection } from '@/features/card/OfferSection';
 import { owned } from '@/features/binder/pages';
 import { markerProps } from '@/features/catalog/cardView';
 import { useCatalogData } from '@/features/catalog/useCatalog';
@@ -375,6 +376,14 @@ export default function CardScreen() {
                 />
               </View>
             </View>
+          ) : null}
+
+          {mark?.status === 'dupe' ? (
+            <OfferSection
+              mark={mark}
+              hasConditionPhoto={!!cardPhotos?.condition_front}
+              onChange={update}
+            />
           ) : null}
 
           <View>

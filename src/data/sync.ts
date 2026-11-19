@@ -41,6 +41,8 @@ type ServerMark = {
   card_id: string;
   status: string;
   qty: number;
+  offer: string | null;
+  price_cents: number | null;
   updated_at: string;
   deleted_at: string | null;
 };
@@ -59,15 +61,24 @@ async function linkedUser(db: SQLiteDatabase) {
 async function push(db: SQLiteDatabase, r: QueueRow): Promise<PgError> {
   if (r.entity === 'photo') return pushPhoto(db, r.key);
   if (r.entity === 'mark') {
-    const m = db.getFirstSync<{ status: string; qty: number }>(
-      'select status, qty from user_cards where card_id = ?',
-      r.key,
-    );
+    const m = db.getFirstSync<{
+      status: string;
+      qty: number;
+      offer: string | null;
+      price_cents: number | null;
+    }>('select status, qty, offer, price_cents from user_cards where card_id = ?', r.key);
     const res = m
       ? await supabase
           .from('user_cards')
           .upsert(
-            { card_id: r.key, status: m.status, qty: m.qty, deleted_at: null },
+            {
+              card_id: r.key,
+              status: m.status,
+              qty: m.qty,
+              offer: m.offer,
+              price_cents: m.price_cents,
+              deleted_at: null,
+            },
             { onConflict: 'user_id,card_id' },
           )
       : await supabase.from('user_cards').update({ deleted_at: now() }).eq('card_id', r.key);
@@ -240,12 +251,16 @@ async function pullMarks(db: SQLiteDatabase) {
       if (m.deleted_at) db.runSync('delete from user_cards where card_id = ?', m.card_id);
       else
         db.runSync(
-          `insert into user_cards (id, card_id, status, qty, updated_at) values (?1, ?1, ?2, ?3, ?4)
-           on conflict (card_id) do update set status = ?2, qty = ?3, updated_at = ?4`,
+          `insert into user_cards (id, card_id, status, qty, updated_at, offer, price_cents)
+           values (?1, ?1, ?2, ?3, ?4, ?5, ?6)
+           on conflict (card_id) do update set status = ?2, qty = ?3, updated_at = ?4, offer = ?5,
+             price_cents = ?6`,
           m.card_id,
           m.status,
           m.qty,
           m.updated_at,
+          m.offer,
+          m.price_cents,
         );
     }
   });

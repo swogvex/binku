@@ -86,6 +86,11 @@ const MIGRATIONS = [
     original text, thumb text, bytes integer, state text not null, updated_at text not null,
     unique (card_id, kind));
   `,
+  // Offers (M5): trade / sale / both, optional price in the profile's currency (card sheet only).
+  `
+  alter table user_cards add column offer text;
+  alter table user_cards add column price_cents integer;
+  `,
 ];
 
 /** Oldest timestamp: bundled rows lose to anything the server sends. */

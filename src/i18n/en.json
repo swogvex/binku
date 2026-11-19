@@ -399,6 +399,17 @@
     "title": "You are trying Binku",
     "body": "Without an account Binku is a demo: whatever you add is erased when the app closes. Create an account or sign in to keep your collection."
   },
+  "offer": {
+    "title": "Offer for",
+    "trade": "Trade only",
+    "sale": "Sale",
+    "both": "Both",
+    "needsPhoto": "To offer it, add the front photo first.",
+    "price": "Price ({currency}, optional)",
+    "pricePlaceholder": "E.g. 5.50",
+    "priceHint": "Only shown on this card sheet. Never in lists or matches.",
+    "priceShown": "{price} · only shown on this card sheet."
+  },
   "viewer": {
     "close": "Close",
     "open": "View full screen"

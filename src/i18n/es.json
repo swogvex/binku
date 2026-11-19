@@ -399,6 +399,17 @@
     "title": "Estás probando Binku",
     "body": "Sin cuenta, Binku es una demo: lo que añadas se borra al cerrar la app. Crea una cuenta o inicia sesión para guardar tu colección."
   },
+  "offer": {
+    "title": "Ofrecer para",
+    "trade": "Solo intercambio",
+    "sale": "Venta",
+    "both": "Ambas",
+    "needsPhoto": "Para ofrecerla, añade antes la foto del frente.",
+    "price": "Precio ({currency}, opcional)",
+    "pricePlaceholder": "Ej. 5,50",
+    "priceHint": "Solo se ve en esta ficha. Nunca en listas ni coincidencias.",
+    "priceShown": "{price} · solo se ve en esta ficha."
+  },
   "viewer": {
     "close": "Cerrar",
     "open": "Ver a pantalla completa"
