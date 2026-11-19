@@ -140,6 +140,10 @@ export default function Gallery() {
         <Txt variant="display" size={40}>
           ¿DÓNDE? CATÁLOGO ÑÜ
         </Txt>
+        {/* "@" must sit level with the capitals (Txt swaps the display font's low glyph). */}
+        <Txt variant="display" size={40}>
+          ¡HOLA, @SWOGVEX!
+        </Txt>
       </Section>
 
       <Section title="Colour tokens">
